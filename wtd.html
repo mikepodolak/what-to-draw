@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>What To Draw</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #050814;
+      --bg-elevated: #0c101f;
+      --bg-elevated-soft: #101528;
+      --bg-chip: #151a2b;
+      --accent: #4aa8ff;
+      --accent-soft: rgba(74, 168, 255, 0.2);
+      --border-subtle: rgba(255,255,255,0.06);
+      --text-main: #f7f8ff;
+      --text-muted: #a3acc7;
+      --text-soft: #6e7692;
+      --danger: #ff5c7a;
+      --corner-radius-lg: 18px;
+      --corner-radius-md: 12px;
+      --shadow-soft: 0 22px 60px rgba(0,0,0,0.6);
+      --font-sans: -apple-system, BlinkMacSystemFont, system-ui, "SF Pro Text",
+        -system-ui, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      color: var(--text-main);
+      background: radial-gradient(circle at top, #1a2340 0%, #050814 55%, #02030a 100%);
+      background-attachment: fixed;
+      background-size: cover;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(79, 185, 255, 0.16), transparent 55%),
+        radial-gradient(circle at 100% 0%, rgba(255, 88, 178, 0.16), transparent 55%);
+      opacity: 0.8;
+      mix-blend-mode: screen;
+      z-index: -1;
+    }
+
+    .app-shell {
+      max-width: 1240px;
+      margin: 26px auto 40px auto;
+      padding: 0 20px 40px 20px;
+    }
+
+    h1 {
+      margin: 0;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      font-size: clamp(32px, 4vw, 40px);
+    }
+
+    .subtitle {
+      margin-top: 6px;
+      font-size: 14px;
+      color: var(--text-soft);
+    }
+
+    /* Top controls */
+
+    .top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 22px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .controls-main {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: 10px 22px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      transition: background 0.14s ease, transform 0.08s ease, box-shadow 0.14s ease,
+        border-color 0.14s ease, color 0.14s ease;
+      background: transparent;
+      color: var(--text-main);
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, #45a2ff, #8b7bff);
+      color: white;
+      box-shadow: 0 12px 30px rgba(34, 142, 255, 0.55);
+      border-color: rgba(255,255,255,0.1);
+    }
+
+    .btn.primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 40px rgba(34, 142, 255, 0.7);
+    }
+
+    .btn.toggle {
+      background: rgba(10, 15, 30, 0.7);
+      border-color: rgba(255,255,255,0.04);
+      color: var(--text-muted);
+    }
+
+    .btn.toggle.active {
+      background: rgba(32, 45, 90, 0.95);
+      border-color: var(--accent-soft);
+      color: var(--text-main);
+      box-shadow: 0 0 0 1px rgba(113, 190, 255, 0.4);
+    }
+
+    .btn.ghost {
+      padding-inline: 16px;
+      border-color: rgba(255,255,255,0.08);
+      background: rgba(6, 9, 22, 0.7);
+      color: var(--text-soft);
+      font-size: 13px;
+    }
+
+    .btn.ghost span.count {
+      font-variant-numeric: tabular-nums;
+      opacity: 0.9;
+    }
+
+    .btn.ghost.active {
+      background: rgba(22, 30, 55, 0.95);
+      border-color: rgba(255,255,255,0.18);
+      color: var(--text-main);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    .emoji {
+      font-size: 16px;
+    }
+
+    /* Branch pills */
+
+    .branch-row-wrapper {
+      margin-top: 18px;
+    }
+
+    .branch-label {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-bottom: 6px;
+    }
+
+    .branch-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .branch-pill {
+      border-radius: 999px;
+      background: rgba(10, 14, 30, 0.86);
+      border: 1px solid rgba(255,255,255,0.04);
+      padding: 6px 14px 7px 14px;
+      font-size: 13px;
+      color: var(--text-soft);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.14s ease, border-color 0.14s ease, color 0.14s ease,
+        box-shadow 0.14s ease, transform 0.08s ease;
+    }
+
+    .branch-pill span.icon {
+      font-size: 14px;
+    }
+
+    .branch-pill.active {
+      background: rgba(33, 52, 101, 0.98);
+      border-color: var(--accent-soft);
+      color: var(--text-main);
+      box-shadow: 0 10px 26px rgba(0,0,0,0.5);
+      transform: translateY(-0.5px);
+    }
+
+    .branch-row.disabled .branch-pill {
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    /* Main content card */
+
+    .card {
+      margin-top: 18px;
+      border-radius: var(--corner-radius-lg);
+      background: rgba(7, 10, 24, 0.96);
+      border: 1px solid rgba(255,255,255,0.04);
+      box-shadow: var(--shadow-soft);
+      padding: 18px 22px 18px 22px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 10px;
+    }
+
+    .card-header-main {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .branch-icon-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 25% 20%, #ffffff, #d2d9ff);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 26px rgba(0,0,0,0.65);
+      flex-shrink: 0;
+    }
+
+    .branch-icon-circle span {
+      font-size: 18px;
+    }
+
+    .card-title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .card-title-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .card-title-main {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .card-title-sub {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .card-header-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* Layout: details + palette */
+
+    .card-body {
+      margin-top: 6px;
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(260px, 1.1fr);
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 900px) {
+      .card-body {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .detail-block {
+      padding-top: 4px;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 140px minmax(0, 1fr);
+      column-gap: 16px;
+      row-gap: 4px;
+      font-size: 13px;
+    }
+
+    @media (max-width: 640px) {
+      .detail-grid {
+        grid-template-columns: 120px minmax(0, 1fr);
+      }
+    }
+
+    .field-label {
+      color: var(--text-soft);
+      font-weight: 500;
+      padding: 2px 0;
+      white-space: nowrap;
+    }
+
+    .field-value {
+      color: var(--text-main);
+      padding: 2px 0;
+    }
+
+    .field-muted {
+      color: var(--text-soft);
+      font-style: italic;
+    }
+
+    /* Palette card */
+
+    .palette-card {
+      border-radius: var(--corner-radius-md);
+      background: var(--bg-elevated-soft);
+      border: 1px solid var(--border-subtle);
+      padding: 10px 12px 12px 12px;
+    }
+
+    .palette-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .palette-title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .palette-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-soft);
+    }
+
+    .palette-sub {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .palette-controls {
+      margin-bottom: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .palette-controls-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    select {
+      background: #050816;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text-main);
+      font-size: 11px;
+      padding: 5px 28px 5px 10px;
+      outline: none;
+      appearance: none;
+      background-image: linear-gradient(45deg, transparent 50%, #ffffff 50%),
+        linear-gradient(135deg, #ffffff 50%, transparent 50%);
+      background-position: calc(100% - 13px) 8px, calc(100% - 9px) 8px;
+      background-size: 5px 5px, 5px 5px;
+      background-repeat: no-repeat;
+    }
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    input[type="range"] {
+      flex: 1;
+      accent-color: var(--accent);
+    }
+
+    .swatch-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .swatch {
+      width: 30px;
+      height: 30px;
+      border-radius: 9px;
+      border: 1px solid rgba(0,0,0,0.35);
+      box-shadow: 0 5px 14px rgba(0,0,0,0.65);
+    }
+
+    .hex-row {
+      margin-top: 6px;
+      font-size: 10px;
+      color: var(--text-soft);
+      word-break: break-all;
+    }
+
+    /* Favorites panel */
+
+    .favorites-panel {
+      margin-top: 16px;
+      border-radius: var(--corner-radius-lg);
+      background: rgba(5, 7, 17, 0.96);
+      border: 1px solid rgba(255,255,255,0.04);
+      padding: 10px 16px 12px 16px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.7);
+      display: none;
+    }
+
+    .favorites-panel.visible {
+      display: block;
+    }
+
+    .favorites-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .favorites-header-title {
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .favorites-empty {
+      padding: 6px 0 4px 0;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .favorite-item {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 8px 0 9px 0;
+    }
+
+    .favorite-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-bottom: 4px;
+    }
+
+    .favorite-branch {
+      font-weight: 500;
+      color: var(--text-main);
+    }
+
+    .favorite-body {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-bottom: 4px;
+    }
+
+    .favorite-swatches {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 6px;
+    }
+
+    .favorite-swatch {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      border: 1px solid rgba(0,0,0,0.35);
+    }
+
+    .favorite-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-mini {
+      border-radius: 999px;
+      padding: 3px 9px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(13, 16, 30, 0.95);
+      font-size: 10px;
+      color: var(--text-soft);
+      cursor: pointer;
+    }
+
+    .btn-mini.danger {
+      border-color: rgba(255,93,114,0.75);
+      color: #ff9aa9;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header>
+      <h1>WHAT TO DRAW</h1>
+      <div class="subtitle">
+        Tap once to get a structured idea: characters, devices, buildings,
+        creatures, plants, scenes, and more.
+      </div>
+    </header>
+
+    <!-- Top controls -->
+    <div class="top-row">
+      <div class="controls-main">
+        <button id="btn-generate" class="btn primary">
+          <span>Generate Idea</span> <span class="emoji">🎲</span>
+        </button>
+
+        <button id="btn-random-mode" class="btn toggle active">
+          Random Branch
+        </button>
+        <button id="btn-pick-mode" class="btn toggle">
+          Pick Branch
+        </button>
+      </div>
+
+      <button id="btn-favorites-toggle" class="btn ghost">
+        ⭐ Favorites (<span id="favorites-count">0</span>)
+      </button>
+    </div>
+
+    <!-- Branch row -->
+    <div class="branch-row-wrapper">
+      <div class="branch-label">Branches:</div>
+      <div id="branch-row" class="branch-row">
+        <!-- pills inserted by JS -->
+      </div>
+    </div>
+
+    <!-- Main result card -->
+    <section class="card" id="result-card">
+      <div class="card-header">
+        <div class="card-header-main">
+          <div class="branch-icon-circle" id="branch-icon">
+            <span>🎲</span>
+          </div>
+          <div class="card-title-block">
+            <div class="card-title-eyebrow" id="branch-eyebrow">Branch</div>
+            <div class="card-title-main" id="branch-title">Waiting for idea...</div>
+            <div class="card-title-sub" id="branch-subtitle">
+              Tap Generate to get started.
+            </div>
+          </div>
+        </div>
+        <div class="card-header-actions">
+          <button id="btn-copy-idea" class="btn toggle">Copy Idea 📋</button>
+          <button id="btn-favorite-current" class="btn toggle">
+            Add to Favorites ⭐
+          </button>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="detail-block">
+          <div class="detail-grid" id="detail-grid">
+            <!-- detail rows via JS -->
+          </div>
+        </div>
+
+        <aside class="palette-card">
+          <div class="palette-header">
+            <div class="palette-title-block">
+              <div class="palette-title">Color Palette</div>
+              <div class="palette-sub" id="palette-label">
+                Random (curated vibe / math)
+              </div>
+            </div>
+            <button id="btn-copy-hex" class="btn-mini">Copy HEX</button>
+          </div>
+
+          <div class="palette-controls">
+            <div class="palette-controls-row">
+              <select id="palette-mode">
+                <option value="random">Random (Curated Vibe / Math)</option>
+                <option value="warm">Warm / Energetic</option>
+                <option value="cool">Cool / Calm</option>
+                <option value="muted">Muted / Dusty</option>
+                <option value="noir">Noir / High Contrast</option>
+                <option value="earth">Earthy / Natural</option>
+              </select>
+            </div>
+            <div class="slider-row">
+              <span>Colors: <span id="color-count-label">5</span></span>
+              <input id="color-count" type="range" min="3" max="8" value="5" />
+            </div>
+          </div>
+
+          <div class="swatch-row" id="swatch-row"></div>
+          <div class="hex-row" id="hex-row"></div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Favorites panel -->
+    <section id="favorites-panel" class="favorites-panel">
+      <div class="favorites-header">
+        <div class="favorites-header-title">Saved Favorites</div>
+        <button id="btn-favorites-close" class="btn-mini">Close</button>
+      </div>
+      <div id="favorites-empty" class="favorites-empty">
+        No favorites yet.
+      </div>
+      <div id="favorites-list"></div>
+    </section>
+  </div>
+
+  <script>
+    // ---------- BRANCH DEFINITIONS & ICONS ----------
+
+    const branches = [
+      { id: "characterType", label: "Character Type", icon: "🧙‍♂️" },
+      { id: "characterBuild", label: "Character Build", icon: "🧍" },
+      { id: "device", label: "Device", icon: "📟" },
+      { id: "weapon", label: "Weapon", icon: "⚔️" },
+      { id: "artifact", label: "Artifact", icon: "🗿" },
+      { id: "vehicle", label: "Vehicle", icon: "🚙" },
+      { id: "building", label: "Building", icon: "🏛️" },
+      { id: "environment", label: "Environment", icon: "🌆" },
+      { id: "plant", label: "Plant / Flora", icon: "🌿" },
+      { id: "creature", label: "Creature / Species", icon: "🐾" },
+      { id: "scene", label: "Scene", icon: "🎬" }
+    ];
+
+    // ---------- UTILITIES ----------
+
+    const randChoice = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+    function createDetailRows(container, details) {
+      container.innerHTML = "";
+      details.forEach((item) => {
+        const label = document.createElement("div");
+        label.className = "field-label";
+        label.textContent = item.label;
+
+        const value = document.createElement("div");
+        value.className = "field-value";
+        value.textContent = item.value || "—";
+        if (!item.value) value.classList.add("field-muted");
+
+        container.appendChild(label);
+        container.appendChild(value);
+      });
+    }
+
+    // ---------- BRANCH GENERATORS ----------
+    // NOTE: Replace or extend these with the full versions we built earlier.
+    // Layout will continue to work; content lives entirely in these functions.
+
+    function genCharacterType() {
+      return {
+        subtitle: "Character type for your next project.",
+        details: [
+          { label: "Archetype", value: randChoice([
+            "Wanderer", "Mystic", "Soldier / Veteran",
+            "Scholar", "Outcast", "Detective", "Caretaker"
+          ]) },
+          { label: "Genre Flavor", value: randChoice([
+            "Grounded modern", "Post-apocalyptic", "Low fantasy",
+            "Space opera", "Urban occult", "Soft sci-fi"
+          ]) },
+          { label: "Social Role", value: randChoice([
+            "Underworld / criminal", "Corporate", "Nomadic",
+            "Academic", "Religious order", "Blue-collar"
+          ]) },
+          { label: "Core Motivation", value: randChoice([
+            "Curiosity", "Revenge", "Survival", "Love / Connection",
+            "Power / Control", "Redemption"
+          ]) },
+          { label: "Typical Vibe", value: randChoice([
+            "Calm and observant", "Intense and focused", "Chaotic but charming",
+            "Detached and cold", "Playful and irreverent"
+          ]) }
+        ]
+      };
+    }
+
+    function genCharacterBuild() {
+      return {
+        subtitle: "Randomized physical build & expression.",
+        details: [
+          { label: "Gender", value: randChoice(["Male","Female","Other"]) },
+          { label: "Height", value: randChoice(["Tall","Average","Short"]) },
+          { label: "Stature", value: randChoice(["Skinny","Athletic","Heavyset"]) },
+          { label: "Torso", value: randChoice([
+            "Balanced torso", "Long torso / short legs", "Short torso / long legs"
+          ]) },
+          { label: "Neck", value: randChoice([
+            "Thin long neck","Thick short neck","Standard"
+          ]) },
+          { label: "Arms", value: randChoice([
+            "Normal long arms","Short thick arms","Standard"
+          ]) },
+          { label: "Hands", value: randChoice([
+            "Thin small hands","Thick large hands","Standard"
+          ]) },
+          { label: "Feet", value: randChoice([
+            "Thin small feet","Thick large feet","Standard"
+          ]) },
+          { label: "Legs", value: randChoice([
+            "Normal long legs","Short stocky legs","Standard"
+          ]) },
+          { label: "Head Shape", value: randChoice([
+            "Circle","Vertical oval","Horizontal rectangle",
+            "Triangle up","Triangle down","Diamond"
+          ]) },
+          { label: "Feature Layout", value: randChoice([
+            "Features high on the head","Features mid on the head","Features low on the head"
+          ]) },
+          { label: "Posture", value: randChoice([
+            "Relaxed","Aggressive","Alert","Tired","Neutral","Slouched"
+          ]) },
+          { label: "Activity", value: randChoice([
+            "Standing casually","Moving gesturally","Behaving in a focused manner","Holding an object"
+          ]) },
+          { label: "Mouth", value: randChoice([
+            "Thin","Full","Smirk","Frown","Open","Basic line","Neutral"
+          ]) },
+          { label: "Nose", value: randChoice([
+            "Round","Straight","Squiggle","Wide","Short","Tall / long","No nose"
+          ]) },
+          { label: "Eyes", value: randChoice([
+            "Dots","Standard","Highly emotive","Droopy","Blank","Closed"
+          ]) },
+          { label: "Hair", value: randChoice([
+            "Short","Long","Average","Bald","Messy","Outlandish","Classy"
+          ]) },
+          { label: "Clothing", value: randChoice([
+            "Tight","Flowing","Casual","Formal","Sparse","Layered","Activewear"
+          ]) },
+          { label: "Accessories", value: randChoice([
+            "Minimal jewelry", "Sunglasses, bag, patches", "Scarf & earphones",
+            "Pouches & tools", "Visible tattoos & piercings"
+          ]) },
+          { label: "Footwear", value: randChoice([
+            "Barefoot / minimal","Casual sneakers","Industrial / utility boots",
+            "Combat / military boots","Formal shoes","Experimental / unusual"
+          ]) },
+          { label: "Emotion", value: randChoice([
+            "Calm / relaxed","Focused / determined","Angry / tense","Sad / melancholic",
+            "Amused","Exhausted","Detached / blank"
+          ]) },
+          { label: "Gaze", value: randChoice([
+            "Direct / forward","Downcast / avoidant","Sideward / glancing",
+            "Wide / startled","Half-lidded / tired","Closed"
+          ]) },
+          { label: "Build Accent", value: randChoice([
+            "Broad shoulders","Narrow shoulders","Sloped shoulders",
+            "Large head relative to body","Small head relative to body",
+            "Uneven stance / hip drop","Asymmetry in limbs","Missing / augmented limb"
+          ]) }
+        ]
+      };
+    }
+
+    function genDevice() {
+      return {
+        subtitle: "Randomized device / gadget idea.",
+        details: [
+          { label: "Category", value: "Device" },
+          { label: "Form Factor", value: randChoice([
+            "Handheld","Wearable","Remote / drone unit","Mounted console"
+          ]) },
+          { label: "Interface", value: randChoice([
+            "Buttons / switches","Touchscreen","Voice-activated",
+            "Neural / bio-link","Hybrid controls"
+          ]) },
+          { label: "Power Source", value: randChoice([
+            "Battery / stored energy","Solar","Kinetic / manual",
+            "Fusion / high-density","Biological / symbiotic","Unknown"
+          ]) },
+          { label: "Material", value: randChoice([
+            "Plastic / polymer","Metal","Ceramic / glass",
+            "Carbon-fiber composite","Bio-grown material"
+          ]) },
+          { label: "Condition", value: randChoice([
+            "New / clean","Patched / modified","Worn / scuffed",
+            "Damaged / semi-functional","Ancient but working","Glitchy / unstable"
+          ]) },
+          { label: "Capabilities", value: randChoice([
+            "Recording & playback","Diagnostics & analysis",
+            "Remote control capability","Scanning / mapping",
+            "Life-support assistance","Communication relay"
+          ]) },
+          { label: "Aesthetic", value: randChoice([
+            "Sleek / modern","Brutalist / industrial","Ornate / retro-tech",
+            "Improvised / kitbashed","Organic / bio-sculpted","Alien"
+          ]) },
+          { label: "Accents", value: randChoice([
+            "Warning labels, stickers, iconography",
+            "Exposed wiring & scratched surfaces",
+            "Runes / carvings in the casing",
+            "Custom paint & worn grip",
+            "No visible ornament"
+          ]) }
+        ]
+      };
+    }
+
+    function genWeapon() {
+      return {
+        subtitle: "Randomized weapon idea.",
+        details: [
+          { label: "Category", value: "Weapon" },
+          { label: "Class", value: randChoice([
+            "Melee","Ranged","Thrown","Improvised","Exotic","Dual-purpose tool/weapon"
+          ]) },
+          { label: "Subtype", value: randChoice([
+            "Sword","Knife / Dagger","Axe","Hammer / Maul","Spear / Polearm",
+            "Pistol","Rifle","Energy projector","Gravity weapon","Artifact blade"
+          ]) },
+          { label: "Size", value: randChoice([
+            "Small","Medium","Large","Massive / two-handed"
+          ]) },
+          { label: "Material", value: randChoice([
+            "Metal","Wood","Stone","Synthetic / polymer","Crystal",
+            "Bone / organic","Composite / mixed"
+          ]) },
+          { label: "Condition", value: randChoice([
+            "Pristine","Well-kept","Worn","Damaged","Broken but usable"
+          ]) },
+          { label: "Style", value: randChoice([
+            "Sleek / modern","Brutal / heavy","Elegant / ornate",
+            "Primitive / crude","Ritualistic / decorated","Makeshift / assembled"
+          ]) },
+          { label: "Functional Features", value: randChoice([
+            "Sharpened & serrated edge","Energy emitter & trigger mechanism",
+            "Modular parts with sheath","Reinforced spine & counterweight",
+            "Elemental effect (fire/electric/chemical)"
+          ]) },
+          { label: "Accents", value: randChoice([
+            "Engravings & blood grooves","Runes / glyphs along blade",
+            "Stickers & personal markings","Taped repairs & charms",
+            "None / unadorned"
+          ]) },
+          { label: "Context", value: randChoice([
+            "Military-issued","Civilian-modified","Ritual / ceremonial",
+            "Ancient heirloom","Found object","Prototype / experimental"
+          ]) }
+        ]
+      };
+    }
+
+    function genArtifact() {
+      return {
+        subtitle: "Randomized artifact / relic idea.",
+        details: [
+          { label: "Category", value: randChoice([
+            "Relic / object of veneration","Idol / statue",
+            "Tool / implement","Text / tablet / scroll",
+            "Container / vessel","Key / seal / sigil","Map / chart / diagram"
+          ]) },
+          { label: "Origin", value: randChoice([
+            "Ancient civilization","Classical empire","Medieval culture",
+            "Industrial age society","Contemporary culture",
+            "Futuristic / high-tech","Alien / non-human","Unknown / disputed"
+          ]) },
+          { label: "Apparent Age", value: randChoice([
+            "Ancient","Old","Recent","Timeless / hard to date"
+          ]) },
+          { label: "Material", value: randChoice([
+            "Stone","Metal","Wood","Bone / organic","Clay / ceramic",
+            "Glass / crystal","Fabric / leather","Composite","Unidentifiable"
+          ]) },
+          { label: "Scale", value: randChoice([
+            "Tiny / palm-sized","Small / handheld","Medium / torso-sized",
+            "Large / body-scale","Monumental / hard to move"
+          ]) },
+          { label: "Design Style", value: randChoice([
+            "Minimal","Ornate","Geometric","Organic / flowing",
+            "Chaotic / assembled","Ritualistic / symbolic","Mechanical / engineered",
+            "Alien / unreadable"
+          ]) },
+          { label: "Condition", value: randChoice([
+            "Intact","Worn smooth","Chipped","Cracked but stable",
+            "Fragmentary","Restored / repaired","Corroded"
+          ]) },
+          { label: "Markings", value: randChoice([
+            "None visible","Simple symbols / tallies","Legible text",
+            "Unknown script","Pictograms / narrative scenes",
+            "Layered additions from different eras","Graffiti / defacement",
+            "Faint traces, mostly worn away"
+          ]) },
+          { label: "Perceived Aura", value: randChoice([
+            "Sacred / protective","Cursed / ominous","Communicative / message-bearing",
+            "Key to something","Memory-recording","Seems mundane but rumored to matter",
+            "Completely unreadable","Tied to specific legend"
+          ]) }
+        ]
+      };
+    }
+
+    function genVehicle() {
+      return {
+        subtitle: "Randomized vehicle idea.",
+        details: [
+          { label: "Category", value: "Vehicle" },
+          { label: "Vehicle Type", value: randChoice([
+            "Ground","Air","Water","Space","Hybrid / multi-terrain",
+            "Biological / living","Improvised / homemade"
+          ]) },
+          { label: "Class / Scale", value: randChoice([
+            "Personal (1 person)","Small crew (2–6)","Transport (6–20)",
+            "Heavy vehicle (industrial/military)","Massive / capital scale"
+          ]) },
+          { label: "Propulsion", value: randChoice([
+            "Wheels / tracks","Legs (walker)","Rotors / fans",
+            "Jet / rocket","Magnetic / hover","Sails / currents",
+            "Biological motion","Exotic / unknown"
+          ]) },
+          { label: "Construction Material", value: randChoice([
+            "Metal","Composite","Ceramic / heat shield","Fabric / lightweight",
+            "Wood","Bone / organic","Unknown alloy"
+          ]) },
+          { label: "Primary Role", value: randChoice([
+            "Civilian transport","Freight / cargo","Military / armed",
+            "Scientific / research","Emergency / rescue",
+            "Stealth / reconnaissance","Sport / racing","Luxury / ceremonial",
+            "Improvised survival vehicle"
+          ]) },
+          { label: "Condition", value: randChoice([
+            "Pristine","Used / maintained","Weathered / old",
+            "Damaged","Salvaged / rebuilt","Barely functional"
+          ]) },
+          { label: "Aesthetic", value: randChoice([
+            "Sleek","Brutal / angular","Rounded / retro","Patchwork / scavenged",
+            "Ornate","Alien","Organic / grown"
+          ]) },
+          { label: "Features", value: randChoice([
+            "Weapon mount & reinforced armor","Cargo compartments & sensors array",
+            "Cockpit canopy & stabilizers","Deployable limbs & auxiliary power",
+            "Autopilot / AI core","No notable extra features"
+          ]) }
+        ]
+      };
+    }
+
+    function genBuilding() {
+      return {
+        subtitle: "Randomized building / structure idea.",
+        details: [
+          { label: "Primary function", value: randChoice([
+            "Residential (home/apartment)","Commercial (shops/offices)",
+            "Industrial (factory/plant)","Religious (temple/shrine)",
+            "Civic / institutional","Military / fortified","Informal dwelling",
+            "Ruin / derelict structure"
+          ]) },
+          { label: "Structure", value: randChoice([
+            "Geometric / Brutalist style, sprawling / horizontal emphasis",
+            "Vertical tower with narrow footprint",
+            "Courtyard-centered cluster",
+            "Labyrinthine interior layout",
+            "Modules connected by walkways",
+            "Embedded in terrain / carved into rock"
+          ]) },
+          { label: "Primary Material", value: randChoice([
+            "Stone masonry","Brick","Concrete","Wood / timber",
+            "Steel and glass","Scrap / patchwork materials",
+            "Organic / grown structures"
+          ]) },
+          { label: "Facade Details", value: randChoice([
+            "Large window bays","Tiny slit windows","Balconies",
+            "Mostly blank walls","Recessed entries","Arcades / colonnades",
+            "No notable facade features"
+          ]) },
+          { label: "Roof Type", value: randChoice([
+            "Flat roof / usable surface","Gabled roof","Domes",
+            "Stepped / tiered roofs","Green roof / overgrown",
+            "No roof / open or ruined"
+          ]) },
+          { label: "Surroundings", value: randChoice([
+            "Dense urban streetfront","Narrow alley / inner courtyard",
+            "Hilltop / elevated position","Waterfront / shoreline",
+            "Forest edge / natural environment","Desert / exposed landscape",
+            "Isolated lone structure"
+          ]) },
+          { label: "Ornamentation / signage", value: randChoice([
+            "No ornamentation / very plain","Carvings / relief panels",
+            "Painted murals","Graffiti layers","Religious symbols",
+            "Corporate logos","Hanging lanterns / lights",
+            "Utility cabling / exposed pipes"
+          ]) },
+          { label: "Interior mood", value: randChoice([
+            "Warm / inviting and lived-in","Cold / institutional","Cluttered / hoarded",
+            "Sparse / minimal","Industrial / noisy and mechanical",
+            "Sacred / quiet and focused","Secretive / locked and restricted",
+            "Repurposed from original function"
+          ]) }
+        ]
+      };
+    }
+
+    function genEnvironment() {
+      return {
+        subtitle: "Randomized environment / setting idea.",
+        details: [
+          { label: "Biome", value: randChoice([
+            "Dense urban core","Suburban fringe","Rural farmland",
+            "Forest","Mountain","Desert","Coastal","Arctic","Otherworldly"
+          ]) },
+          { label: "Time of Day", value: randChoice([
+            "Blazing midday","Golden hour","Twilight","Night","Pre-dawn"
+          ]) },
+          { label: "Weather", value: randChoice([
+            "Clear","Overcast","Rainy","Stormy","Snowing","Foggy","Windy dust"
+          ]) },
+          { label: "Dominant Mood", value: randChoice([
+            "Calm","Harsh","Oppressive","Melancholic","Hopeful","Surreal"
+          ]) },
+          { label: "Key Landmarks", value: randChoice([
+            "Single dominant tower","Cluster of small structures",
+            "Ruins half-buried","Bridge or overpass","Huge natural rock formation",
+            "Endless repeating infrastructure"
+          ]) },
+          { label: "Foreground Element", value: randChoice([
+            "Silhouetted figure","Fence or railing","Vehicle",
+            "Plants / debris","Water / reflection","Scattered objects"
+          ]) },
+          { label: "Visual Noise Level", value: randChoice([
+            "Minimal, clean forms","Moderately busy","Very cluttered"
+          ]) }
+        ]
+      };
+    }
+
+    function genPlant() {
+      return {
+        subtitle: "Randomized plant / flora idea.",
+        details: [
+          { label: "Category", value: randChoice([
+            "Tree","Shrub / bush","Vine / creeper","Herb / small plant",
+            "Fungus","Grasslike / reed","Aquatic plant","Alien flora"
+          ]) },
+          { label: "Growth Habit", value: randChoice([
+            "Upright","Spreading","Climbing","Hanging","Floating",
+            "Burrowing / emerging","Pulsing / animated"
+          ]) },
+          { label: "Size", value: randChoice([
+            "Tiny","Small","Medium","Large","Massive / towering"
+          ]) },
+          { label: "Stem / Trunk", value: randChoice([
+            "Single trunk","Multi-stalk","Hollow","Fibrous",
+            "Woody","Fleshy","Porous / spongy"
+          ]) },
+          { label: "Leaves / Surface", value: randChoice([
+            "Broad leaves","Needles","Fronds","Tiny clustered leaves",
+            "Wax-coated","Fuzzy / hairy","Transparent","Bioluminescent"
+          ]) },
+          { label: "Reproductive Structures", value: randChoice([
+            "Flowers","Spores","Pods","Cones","Berries / fruit",
+            "Chemical sacs","Symbiotic nodes","Pulsing bulbs"
+          ]) },
+          { label: "Habitat", value: randChoice([
+            "Forest","Desert","Wetlands","Mountain","Urban environment",
+            "Cavern / subterranean","Ocean / aquatic","Alien biome"
+          ]) },
+          { label: "Traits", value: randChoice([
+            "Edible","Medicinal","Toxic","Hallucinogenic",
+            "Carnivorous","Parasitic","Bioluminescent",
+            "Nervelike / reactive","Symbiotic with creatures"
+          ]) }
+        ]
+      };
+    }
+
+    function genCreature() {
+      return {
+        subtitle: "Randomized creature / species idea.",
+        details: [
+          { label: "Ecological Domain", value: randChoice([
+            "Terrestrial","Aquatic","Amphibious","Aerial",
+            "Burrowing","Arboreal","Extra-dimensional"
+          ]) },
+          { label: "Body Plan", value: randChoice([
+            "Humanoid","Quadruped","Hexapod","Many-legged",
+            "Serpentine","Amorphous","Radial symmetry",
+            "Crustacean-like","Soft-bodied / jelly-like"
+          ]) },
+          { label: "Analogue", value: randChoice([
+            "Mammalian","Reptilian","Avian","Amphibian",
+            "Insectoid","Arachnid","Fungal","Plant-like",
+            "Mineral / rock-like","Energy / ethereal"
+          ]) },
+          { label: "Size Class", value: randChoice([
+            "Tiny (insect)","Small (cat)","Medium (human)",
+            "Large (horse / bear)","Huge (elephant / whale)",
+            "Colossal (building-scale)"
+          ]) },
+          { label: "Surface", value: randChoice([
+            "Fur / hair","Scales","Smooth skin","Armored plates",
+            "Hard carapace","Chitin segments","Slime-coated",
+            "Feathers","Bark-like","Translucent","Bioluminescent patterns"
+          ]) },
+          { label: "Head / Face", value: randChoice([
+            "Elongated snout","Beaked face","Mandibles","Circular lamprey mouth",
+            "Toothless wide maw","Mask-like face","Faceless",
+            "One large central eye","Cluster of small eyes","Stalked eyes",
+            "Tiny recessed eyes","Enormous expressive eyes"
+          ]) },
+          { label: "Limbs", value: randChoice([
+            "Two arms, two legs","Four legs only","Multiple paired limbs",
+            "Tentacles instead of limbs","Wing-limbs that also act as arms",
+            "Stubby limbs / reduced mobility","No limbs, entire body moves",
+            "Fine manipulators / delicate graspers"
+          ]) },
+          { label: "Extra Structures", value: randChoice([
+            "Tail (simple)","Tail (prehensile)","Back spines / ridges",
+            "Frills or crests","Horns","Antlers","Sacs / bulges",
+            "Gills / breathing slits","Bioluminescent nodes",
+            "Membrane fins or sails","Protective shell sections",
+            "No notable extra structures"
+          ]) },
+          { label: "Abilities", value: randChoice([
+            "Venomous bite or sting","Regenerative healing",
+            "Camouflage / color-shifting","Extreme bursts of speed",
+            "Wall-climbing","Gliding or short flight","Sonic scream",
+            "Electric discharge","Toxin secretion","Ink / smoke defense",
+            "Heat / cold resistance","Psychic presence"
+          ]) },
+          { label: "Temperament", value: randChoice([
+            "Docile","Curious","Territorial","Predatory",
+            "Skittish","Pack-oriented","Solitary","Parasitic","Symbiotic"
+          ]) },
+          { label: "Intelligence", value: randChoice([
+            "Instinct-driven","Animal cunning","Tool-using",
+            "Socially complex","Fully sapient","Hive-mind"
+          ]) },
+          { label: "Ecological Role", value: randChoice([
+            "Apex predator","Active predator","Ambush predator",
+            "Herbivore / grazer","Omnivore / opportunist",
+            "Scavenger","Decomposer","Symbiont","Parasite"
+          ]) }
+        ]
+      };
+    }
+
+    function genScene() {
+      return {
+        subtitle: "Randomized scene concept.",
+        details: [
+          { label: "Subject Focus", value: randChoice([
+            "Character portrait","Small group moment","Wide establishing shot",
+            "Creature encounter","Interior workspace","Exterior street vignette"
+          ]) },
+          { label: "Camera Viewpoint", value: randChoice([
+            "Eye-level","Low angle","High angle","Over-the-shoulder",
+            "Close-up","Distant wide shot"
+          ]) },
+          { label: "Composition", value: randChoice([
+            "Rule-of-thirds focus","Centered / iconic","L-shaped framing",
+            "Diagonal tension","Symmetrical","Asymmetrical with heavy foreground"
+          ]) },
+          { label: "Energy Level", value: randChoice([
+            "Still / contemplative","Quietly tense","Chaotic / many elements in motion",
+            "Dynamic but readable","Crowded but ordered"
+          ]) },
+          { label: "Scene Mood", value: randChoice([
+            "Hopeful / uplifting","Somber / heavy","Uncanny / surreal",
+            "Playful","Threatening","Clinical / detached"
+          ]) },
+          { label: "Detail Goal", value: randChoice([
+            "Loose sketch with clear forms","Clean lines, flat color",
+            "Fully rendered with lighting & texture","High contrast, graphic shapes"
+          ]) },
+          { label: "Subject Hint", value: randChoice([
+            "Character-first composition","Environment-first composition",
+            "Prop / object study","Gesture and motion study"
+          ]) }
+        ]
+      };
+    }
+
+    const branchGenerators = {
+      characterType: genCharacterType,
+      characterBuild: genCharacterBuild,
+      device: genDevice,
+      weapon: genWeapon,
+      artifact: genArtifact,
+      vehicle: genVehicle,
+      building: genBuilding,
+      environment: genEnvironment,
+      plant: genPlant,
+      creature: genCreature,
+      scene: genScene
+    };
+
+    // ---------- COLOR PALETTES (CURATED + MATH) ----------
+
+    const basePalettes = {
+      warm: [
+        ["#d4453c", "#f29c4b", "#ffd07a", "#b23c63", "#732743"],
+        ["#ffb199", "#ff8c94", "#ff5964", "#d7263d", "#5c1a1b"],
+        ["#f08660", "#ffcf73", "#f29e4c", "#d45d79", "#8c1c13"]
+      ],
+      cool: [
+        ["#2b4c7e", "#567ebb", "#9dbfe8", "#cbd2e8", "#1b2845"],
+        ["#24476f", "#3c6e71", "#6daedb", "#b8d8d8", "#f7f3e3"],
+        ["#23395d", "#406e8e", "#8ea8c3", "#cbd4e6", "#1a1b41"]
+      ],
+      muted: [
+        ["#b8a9c9", "#d6cfcb", "#e7e9eb", "#c2c1c2", "#9fa8a3"],
+        ["#d7b9aa", "#f4d6cc", "#f5f0e8", "#b3b6b7", "#8a9a9d"],
+        ["#d8c3a5", "#eae7dc", "#c3c9e9", "#ada8be", "#8e9aaf"]
+      ],
+      noir: [
+        ["#111111", "#1f1f1f", "#353535", "#fafafa", "#d7263d"],
+        ["#050608", "#151515", "#3b3b3b", "#f5f5f5", "#ff3366"],
+        ["#0b0c10", "#1f2833", "#c5c6c7", "#45a29e", "#66fcf1"]
+      ],
+      earth: [
+        ["#3b4d3b", "#8aa05f", "#c2c084", "#e3d9a4", "#6f5b3e"],
+        ["#6b5849", "#b18f6a", "#e0c9a6", "#7a8f74", "#415d43"],
+        ["#4b3f36", "#8c6d4c", "#c0a080", "#96a87d", "#5a6b4a"]
+      ]
+    };
+
+    function randomFromPaletteGroup(group) {
+      const palettes = basePalettes[group];
+      const base = randChoice(palettes);
+      return [...base];
+    }
+
+    function tweakColor(hex, satJitter = 6, lightJitter = 6) {
+      // hex to hsl, jitter, back to hex
+      let c = hex.replace("#", "");
+      if (c.length === 3) c = c.split("").map(ch => ch + ch).join("");
+      const num = parseInt(c, 16);
+      const r = (num >> 16) & 255;
+      const g = (num >> 8) & 255;
+      const b = num & 255;
+
+      const rNorm = r / 255, gNorm = g / 255, bNorm = b / 255;
+      const max = Math.max(rNorm, gNorm, bNorm);
+      const min = Math.min(rNorm, gNorm, bNorm);
+      const delta = max - min;
+      let h = 0, s = 0, l = (max + min) / 2;
+
+      if (delta !== 0) {
+        s = delta / (1 - Math.abs(2 * l - 1));
+        switch(max) {
+          case rNorm: h = 60 * (((gNorm - bNorm) / delta) % 6); break;
+          case gNorm: h = 60 * (((bNorm - rNorm) / delta) + 2); break;
+          case bNorm: h = 60 * (((rNorm - gNorm) / delta) + 4); break;
+        }
+      }
+
+      s = Math.min(1, Math.max(0, s + (Math.random() * 2 - 1) * satJitter / 100));
+      l = Math.min(1, Math.max(0, l + (Math.random() * 2 - 1) * lightJitter / 100));
+
+      h = (h + 360) % 360;
+      const c2 = (1 - Math.abs(2 * l - 1)) * s;
+      const x = c2 * (1 - Math.abs(((h / 60) % 2) - 1));
+      const m = l - c2 / 2;
+      let r2 = 0, g2 = 0, b2 = 0;
+
+      if (h < 60) { r2 = c2; g2 = x; }
+      else if (h < 120) { r2 = x; g2 = c2; }
+      else if (h < 180) { g2 = c2; b2 = x; }
+      else if (h < 240) { g2 = x; b2 = c2; }
+      else if (h < 300) { r2 = x; b2 = c2; }
+      else { r2 = c2; b2 = x; }
+
+      const R = Math.round((r2 + m) * 255);
+      const G = Math.round((g2 + m) * 255);
+      const B = Math.round((b2 + m) * 255);
+
+      return "#" + [R,G,B].map(v => v.toString(16).padStart(2,"0")).join("");
+    }
+
+    function generatePalette(mode, count) {
+      let group;
+      if (mode === "random") {
+        const all = ["warm","cool","muted","noir","earth"];
+        group = randChoice(all);
+      } else {
+        group = mode;
+      }
+      const base = randomFromPaletteGroup(group);
+      const colors = [];
+
+      // Start from base, jitter slightly per requested count
+      for (let i = 0; i < count; i++) {
+        const baseColor = base[i % base.length];
+        colors.push(tweakColor(baseColor, 4, 6));
+      }
+
+      const labelMap = {
+        random: "Random — curated vibe",
+        warm: "Warm / energetic",
+        cool: "Cool / calm",
+        muted: "Muted / dusty",
+        noir: "Noir / high contrast",
+        earth: "Earthy / natural"
+      };
+
+      return { colors, label: labelMap[mode] || labelMap.random };
+    }
+
+    // ---------- FAVORITES STORAGE ----------
+
+    const FAVORITES_KEY = "wtd_favorites_v1";
+    let favorites = [];
+
+    function loadFavorites() {
+      try {
+        const raw = localStorage.getItem(FAVORITES_KEY);
+        if (raw) favorites = JSON.parse(raw);
+      } catch (e) {
+        favorites = [];
+      }
+      updateFavoritesUI();
+    }
+
+    function saveFavorites() {
+      localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
+      updateFavoritesUI();
+    }
+
+    function addFavorite(entry) {
+      favorites.unshift(entry);
+      saveFavorites();
+    }
+
+    function deleteFavorite(idx) {
+      favorites.splice(idx, 1);
+      saveFavorites();
+    }
+
+    function updateFavoritesUI() {
+      const countEl = document.getElementById("favorites-count");
+      countEl.textContent = favorites.length.toString();
+
+      const listEl = document.getElementById("favorites-list");
+      const emptyEl = document.getElementById("favorites-empty");
+      listEl.innerHTML = "";
+
+      if (!favorites.length) {
+        emptyEl.style.display = "block";
+        return;
+      }
+      emptyEl.style.display = "none";
+
+      favorites.forEach((fav, idx) => {
+        const item = document.createElement("div");
+        item.className = "favorite-item";
+
+        const meta = document.createElement("div");
+        meta.className = "favorite-meta";
+        const left = document.createElement("div");
+        left.innerHTML = `<span class="favorite-branch">${fav.branchLabel}</span>`;
+        const right = document.createElement("div");
+        right.textContent = fav.timestamp;
+        meta.appendChild(left);
+        meta.appendChild(right);
+
+        const body = document.createElement("div");
+        body.className = "favorite-body";
+        body.textContent = fav.summary;
+
+        const swatchesRow = document.createElement("div");
+        swatchesRow.className = "favorite-swatches";
+        fav.palette.forEach(col => {
+          const sw = document.createElement("div");
+          sw.className = "favorite-swatch";
+          sw.style.background = col;
+          swatchesRow.appendChild(sw);
+        });
+
+        const actions = document.createElement("div");
+        actions.className = "favorite-actions";
+        const copyBtn = document.createElement("button");
+        copyBtn.className = "btn-mini";
+        copyBtn.textContent = "Copy";
+        copyBtn.onclick = () => copyToClipboard(fav.fullText);
+
+        const delBtn = document.createElement("button");
+        delBtn.className = "btn-mini danger";
+        delBtn.textContent = "Delete";
+        delBtn.onclick = () => deleteFavorite(idx);
+
+        actions.appendChild(copyBtn);
+        actions.appendChild(delBtn);
+
+        item.appendChild(meta);
+        item.appendChild(body);
+        item.appendChild(swatchesRow);
+        item.appendChild(actions);
+        listEl.appendChild(item);
+      });
+    }
+
+    // ---------- RENDER + INTERACTION ----------
+
+    let mode = "random"; // 'random' or 'pick'
+    let currentBranchId = null;
+    let currentIdea = null;
+    let currentPalette = { colors: [], label: "" };
+
+    const branchRowEl = document.getElementById("branch-row");
+
+    function buildBranchPills() {
+      branchRowEl.innerHTML = "";
+      branches.forEach((b) => {
+        const pill = document.createElement("button");
+        pill.className = "branch-pill";
+        pill.dataset.id = b.id;
+        pill.innerHTML = `<span class="icon">${b.icon}</span><span>${b.label}</span>`;
+        pill.addEventListener("click", () => {
+          setActiveBranch(b.id);
+          generateIdea();
+        });
+        branchRowEl.appendChild(pill);
+      });
+    }
+
+    function setActiveBranch(id) {
+      currentBranchId = id;
+      [...branchRowEl.querySelectorAll(".branch-pill")].forEach((pill) => {
+        pill.classList.toggle("active", pill.dataset.id === id);
+      });
+    }
+
+    function updateBranchRowEnabled() {
+      if (mode === "pick") {
+        branchRowEl.classList.remove("disabled");
+      } else {
+        branchRowEl.classList.add("disabled");
+      }
+    }
+
+    function copyToClipboard(text) {
+      navigator.clipboard?.writeText(text).catch(() => {});
+    }
+
+    function generateIdea() {
+      let branch;
+      if (mode === "random") {
+        branch = randChoice(branches);
+        setActiveBranch(branch.id);
+      } else {
+        branch =
+          branches.find((b) => b.id === currentBranchId) ??
+          randChoice(branches);
+        setActiveBranch(branch.id);
+      }
+
+      const generator = branchGenerators[branch.id];
+      if (!generator) return;
+
+      const idea = generator();
+      currentIdea = {
+        branchId: branch.id,
+        branchLabel: branch.label,
+        icon: branch.icon,
+        subtitle: idea.subtitle,
+        details: idea.details
+      };
+
+      renderIdea(currentIdea);
+      regeneratePalette();
+    }
+
+    function renderIdea(idea) {
+      const iconEl = document.getElementById("branch-icon");
+      iconEl.innerHTML = `<span>${idea.icon}</span>`;
+
+      document.getElementById("branch-eyebrow").textContent = "Branch";
+      document.getElementById("branch-title").textContent = idea.branchLabel;
+      document.getElementById("branch-subtitle").textContent =
+        idea.subtitle || "";
+
+      const gridEl = document.getElementById("detail-grid");
+      createDetailRows(gridEl, idea.details || []);
+
+      // Reset "Add to favorites" button label
+      document.getElementById("btn-favorite-current").textContent =
+        "Add to Favorites ⭐";
+    }
+
+    function regeneratePalette() {
+      const modeSel = document.getElementById("palette-mode");
+      const slider = document.getElementById("color-count");
+      const count = parseInt(slider.value, 10);
+      const pal = generatePalette(modeSel.value, count);
+      currentPalette = pal;
+
+      document.getElementById("palette-label").textContent = pal.label;
+      document.getElementById("color-count-label").textContent = count;
+
+      const swatchRow = document.getElementById("swatch-row");
+      const hexRow = document.getElementById("hex-row");
+      swatchRow.innerHTML = "";
+      hexRow.textContent = pal.colors.join(", ");
+
+      pal.colors.forEach((col) => {
+        const sw = document.createElement("div");
+        sw.className = "swatch";
+        sw.style.background = col;
+        swatchRow.appendChild(sw);
+      });
+    }
+
+    function currentIdeaText() {
+      if (!currentIdea) return "";
+      const lines = [];
+      lines.push(`Branch: ${currentIdea.branchLabel}`);
+      lines.push(currentIdea.subtitle);
+      lines.push("");
+      (currentIdea.details || []).forEach((d) => {
+        lines.push(`${d.label}: ${d.value}`);
+      });
+      lines.push("");
+      lines.push(`Colors: ${currentPalette.colors.join(", ")}`);
+      return lines.join("\n");
+    }
+
+    function summarizeIdeaForFavorite(idea) {
+      if (!idea) return "";
+      const primary = idea.details?.slice(0, 3) || [];
+      return primary.map((d) => `${d.label}: ${d.value}`).join(" · ");
+    }
+
+    // ---------- EVENT WIRING ----------
+
+    document.getElementById("btn-generate").addEventListener("click", () => {
+      generateIdea();
+    });
+
+    document.getElementById("btn-random-mode").addEventListener("click", () => {
+      mode = "random";
+      document
+        .getElementById("btn-random-mode")
+        .classList.add("active");
+      document.getElementById("btn-pick-mode").classList.remove("active");
+      updateBranchRowEnabled();
+    });
+
+    document.getElementById("btn-pick-mode").addEventListener("click", () => {
+      mode = "pick";
+      document.getElementById("btn-pick-mode").classList.add("active");
+      document.getElementById("btn-random-mode").classList.remove("active");
+      updateBranchRowEnabled();
+    });
+
+    document.getElementById("palette-mode").addEventListener("change", () => {
+      regeneratePalette();
+    });
+
+    document.getElementById("color-count").addEventListener("input", () => {
+      regeneratePalette();
+    });
+
+    document.getElementById("btn-copy-idea").addEventListener("click", () => {
+      copyToClipboard(currentIdeaText());
+    });
+
+    document.getElementById("btn-copy-hex").addEventListener("click", () => {
+      if (!currentPalette.colors.length) return;
+      copyToClipboard(currentPalette.colors.join(", "));
+    });
+
+    document
+      .getElementById("btn-favorite-current")
+      .addEventListener("click", () => {
+        if (!currentIdea) return;
+        const entry = {
+          branchId: currentIdea.branchId,
+          branchLabel: currentIdea.branchLabel,
+          summary: summarizeIdeaForFavorite(currentIdea),
+          fullText: currentIdeaText(),
+          palette: currentPalette.colors,
+          timestamp: new Date().toLocaleString()
+        };
+        addFavorite(entry);
+        document.getElementById("btn-favorite-current").textContent =
+          "Saved ⭐";
+      });
+
+    const favoritesPanel = document.getElementById("favorites-panel");
+
+    document
+      .getElementById("btn-favorites-toggle")
+      .addEventListener("click", () => {
+        favoritesPanel.classList.toggle("visible");
+        document
+          .getElementById("btn-favorites-toggle")
+          .classList.toggle("active");
+      });
+
+    document
+      .getElementById("btn-favorites-close")
+      .addEventListener("click", () => {
+        favoritesPanel.classList.remove("visible");
+        document
+          .getElementById("btn-favorites-toggle")
+          .classList.remove("active");
+      });
+
+    // ---------- INIT ----------
+
+    buildBranchPills();
+    updateBranchRowEnabled();
+    loadFavorites();
+    // Auto-generate a random idea on first load
+    generateIdea();
+  </script>
+</body>
+</html>
