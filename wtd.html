@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>What To Draw</title>
+  <title>What To Draw — Updated Palette System</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
@@ -24,9 +24,7 @@
         -system-ui, sans-serif;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -69,8 +67,6 @@
       font-size: 14px;
       color: var(--text-soft);
     }
-
-    /* Top controls */
 
     .top-row {
       display: flex;
@@ -138,31 +134,15 @@
       font-size: 13px;
     }
 
-    .btn.ghost span.count {
-      font-variant-numeric: tabular-nums;
-      opacity: 0.9;
-    }
-
     .btn.ghost.active {
       background: rgba(22, 30, 55, 0.95);
       border-color: rgba(255,255,255,0.18);
       color: var(--text-main);
     }
 
-    .btn:active {
-      transform: translateY(0);
-      box-shadow: none;
-    }
+    .emoji { font-size: 16px; }
 
-    .emoji {
-      font-size: 16px;
-    }
-
-    /* Branch pills */
-
-    .branch-row-wrapper {
-      margin-top: 18px;
-    }
+    .branch-row-wrapper { margin-top: 18px; }
 
     .branch-label {
       font-size: 11px;
@@ -193,9 +173,7 @@
         box-shadow 0.14s ease, transform 0.08s ease;
     }
 
-    .branch-pill span.icon {
-      font-size: 14px;
-    }
+    .branch-pill span.icon { font-size: 14px; }
 
     .branch-pill.active {
       background: rgba(33, 52, 101, 0.98);
@@ -209,8 +187,6 @@
       opacity: 0.35;
       pointer-events: none;
     }
-
-    /* Main content card */
 
     .card {
       margin-top: 18px;
@@ -247,9 +223,7 @@
       flex-shrink: 0;
     }
 
-    .branch-icon-circle span {
-      font-size: 18px;
-    }
+    .branch-icon-circle span { font-size: 18px; }
 
     .card-title-block {
       display: flex;
@@ -280,8 +254,6 @@
       flex-wrap: wrap;
     }
 
-    /* Layout: details + palette */
-
     .card-body {
       margin-top: 6px;
       display: grid;
@@ -296,9 +268,7 @@
       }
     }
 
-    .detail-block {
-      padding-top: 4px;
-    }
+    .detail-block { padding-top: 4px; }
 
     .detail-grid {
       display: grid;
@@ -330,8 +300,6 @@
       color: var(--text-soft);
       font-style: italic;
     }
-
-    /* Palette card */
 
     .palette-card {
       border-radius: var(--corner-radius-md);
@@ -381,6 +349,21 @@
       flex-wrap: wrap;
     }
 
+    .palette-count-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .palette-count-buttons {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
     select {
       background: #050816;
       border-radius: 999px;
@@ -397,19 +380,6 @@
       background-repeat: no-repeat;
     }
 
-    .slider-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 11px;
-      color: var(--text-soft);
-    }
-
-    input[type="range"] {
-      flex: 1;
-      accent-color: var(--accent);
-    }
-
     .swatch-row {
       display: flex;
       gap: 6px;
@@ -423,7 +393,25 @@
       border-radius: 9px;
       border: 1px solid rgba(0,0,0,0.35);
       box-shadow: 0 5px 14px rgba(0,0,0,0.65);
+      position: relative;
+      cursor: pointer;
     }
+
+    .swatch::after {
+      content: attr(data-role);
+      position: absolute;
+      left: 50%;
+      bottom: -18px;
+      transform: translateX(-50%);
+      font-size: 9px;
+      color: var(--text-soft);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.12s ease;
+      white-space: nowrap;
+    }
+
+    .swatch:hover::after { opacity: 1; }
 
     .hex-row {
       margin-top: 6px;
@@ -432,7 +420,11 @@
       word-break: break-all;
     }
 
-    /* Favorites panel */
+    .hex-note {
+      font-size: 10px;
+      color: var(--text-soft);
+      opacity: 0.9;
+    }
 
     .favorites-panel {
       margin-top: 16px;
@@ -444,9 +436,7 @@
       display: none;
     }
 
-    .favorites-panel.visible {
-      display: block;
-    }
+    .favorites-panel.visible { display: block; }
 
     .favorites-header {
       display: flex;
@@ -526,6 +516,11 @@
       border-color: rgba(255,93,114,0.75);
       color: #ff9aa9;
     }
+
+    .btn-mini:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
   </style>
 </head>
 <body>
@@ -538,7 +533,6 @@
       </div>
     </header>
 
-    <!-- Top controls -->
     <div class="top-row">
       <div class="controls-main">
         <button id="btn-generate" class="btn primary">
@@ -558,15 +552,11 @@
       </button>
     </div>
 
-    <!-- Branch row -->
     <div class="branch-row-wrapper">
       <div class="branch-label">Branches:</div>
-      <div id="branch-row" class="branch-row">
-        <!-- pills inserted by JS -->
-      </div>
+      <div id="branch-row" class="branch-row"></div>
     </div>
 
-    <!-- Main result card -->
     <section class="card" id="result-card">
       <div class="card-header">
         <div class="card-header-main">
@@ -591,9 +581,7 @@
 
       <div class="card-body">
         <div class="detail-block">
-          <div class="detail-grid" id="detail-grid">
-            <!-- detail rows via JS -->
-          </div>
+          <div class="detail-grid" id="detail-grid"></div>
         </div>
 
         <aside class="palette-card">
@@ -601,7 +589,7 @@
             <div class="palette-title-block">
               <div class="palette-title">Color Palette</div>
               <div class="palette-sub" id="palette-label">
-                Random (curated vibe / math)
+                Palette mode
               </div>
             </div>
             <button id="btn-copy-hex" class="btn-mini">Copy HEX</button>
@@ -610,27 +598,50 @@
           <div class="palette-controls">
             <div class="palette-controls-row">
               <select id="palette-mode">
-                <option value="random">Random (Curated Vibe / Math)</option>
+                <!-- Conceptual / curated vibe modes -->
                 <option value="warm">Warm / Energetic</option>
                 <option value="cool">Cool / Calm</option>
                 <option value="muted">Muted / Dusty</option>
                 <option value="noir">Noir / High Contrast</option>
                 <option value="earth">Earthy / Natural</option>
+                <option value="pastel">Pastel / Soft</option>
+                <option value="neon">Neon / Cyber</option>
+                <option value="rust">Rust / Industrial</option>
+                <option value="cosmic">Cosmic / Iridescent</option>
+                <option disabled>──────────</option>
+                <!-- Color theory modes -->
+                <option value="mono">Monochromatic</option>
+                <option value="analogous">Analogous</option>
+                <option value="complementary">Complementary</option>
+                <option value="splitComp">Split-Complementary</option>
+                <option value="triadic">Triadic</option>
               </select>
+              <button id="btn-palette-random" class="btn-mini" title="Random palette mode & colors">
+                🎲
+              </button>
             </div>
-            <div class="slider-row">
-              <span>Colors: <span id="color-count-label">5</span></span>
-              <input id="color-count" type="range" min="3" max="8" value="5" />
+
+            <div class="palette-count-row">
+              <span>Colors:</span>
+              <div class="palette-count-buttons">
+                <button id="btn-colors-minus" class="btn-mini" disabled>-</button>
+                <span id="color-count-label">5</span>
+                <button id="btn-colors-plus" class="btn-mini">+</button>
+              </div>
             </div>
           </div>
 
           <div class="swatch-row" id="swatch-row"></div>
           <div class="hex-row" id="hex-row"></div>
+          <div class="hex-row">
+            <span class="hex-note">
+              Click a color to copy it • Left to right: Primary, Secondary, Accent, Neutral, Pop (then extended accents)
+            </span>
+          </div>
         </aside>
       </div>
     </section>
 
-    <!-- Favorites panel -->
     <section id="favorites-panel" class="favorites-panel">
       <div class="favorites-header">
         <div class="favorites-header-title">Saved Favorites</div>
@@ -644,7 +655,7 @@
   </div>
 
   <script>
-    // ---------- BRANCH DEFINITIONS & ICONS ----------
+    // ---------- BRANCHES ----------
 
     const branches = [
       { id: "characterType", label: "Character Type", icon: "🧙‍♂️" },
@@ -659,8 +670,6 @@
       { id: "creature", label: "Creature / Species", icon: "🐾" },
       { id: "scene", label: "Scene", icon: "🎬" }
     ];
-
-    // ---------- UTILITIES ----------
 
     const randChoice = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
@@ -681,9 +690,7 @@
       });
     }
 
-    // ---------- BRANCH GENERATORS ----------
-    // NOTE: Replace or extend these with the full versions we built earlier.
-    // Layout will continue to work; content lives entirely in these functions.
+    // ---------- BRANCH GENERATORS (unchanged from your previous version) ----------
 
     function genCharacterType() {
       return {
@@ -1222,116 +1229,296 @@
       scene: genScene
     };
 
-    // ---------- COLOR PALETTES (CURATED + MATH) ----------
+    // ---------- COLOR PALETTE SYSTEM ----------
 
-    const basePalettes = {
+    // Palette role labels (for hover hints)
+    const paletteRoles = [
+      "Primary",
+      "Secondary",
+      "Accent",
+      "Neutral",
+      "Pop",
+      "Shadow",
+      "Highlight",
+      "Variant"
+    ];
+
+    // Conceptual modes: 100% curated, no math/jitter
+    const conceptualPaletteSets = {
       warm: [
-        ["#d4453c", "#f29c4b", "#ffd07a", "#b23c63", "#732743"],
-        ["#ffb199", "#ff8c94", "#ff5964", "#d7263d", "#5c1a1b"],
-        ["#f08660", "#ffcf73", "#f29e4c", "#d45d79", "#8c1c13"]
+        ["#C73E1D","#E86252","#FF9F68","#FFC46B","#9A2E2E","#732626","#E5553C","#FFB45E"],
+        ["#B33C2F","#E8704F","#FFB37A","#FFD98E","#8E2D3A","#6A2333","#D46257","#FFCA73"],
+        ["#D9483B","#F07F4E","#FFB26B","#FFD188","#B1393C","#7C2A33","#E6674C","#FFC96C"],
+        ["#E4572E","#F5853F","#FFB55A","#FFD06F","#B23C39","#7F2D37","#E7714A","#FFCA7A"],
+        ["#D64550","#FF924A","#FFCF56","#E28413","#A63D40","#822E3A","#F08A4B","#FFD670"],
+        ["#E35D45","#FF9F68","#FFC46B","#FFE082","#B63A3A","#8C2F3F","#F27D57","#FFD08A"],
+        ["#E76F51","#F4A261","#E9C46A","#F6AE2D","#C44536","#8C2F39","#F08A5D","#FFD67D"],
+        ["#F25C54","#FF8C42","#FFA552","#FFC857","#C3423F","#7F2A2A","#EF6F6C","#FFB26B"],
+        ["#E63946","#F3722C","#F8961E","#F9C74F","#B72B34","#7C2030","#F28482","#FFD166"],
+        ["#F94144","#F3722C","#F8961E","#F9C74F","#C0392B","#8E2C2C","#FF7C43","#FFD166"]
       ],
       cool: [
-        ["#2b4c7e", "#567ebb", "#9dbfe8", "#cbd2e8", "#1b2845"],
-        ["#24476f", "#3c6e71", "#6daedb", "#b8d8d8", "#f7f3e3"],
-        ["#23395d", "#406e8e", "#8ea8c3", "#cbd4e6", "#1a1b41"]
+        ["#1D3557","#457B9D","#A8DADC","#F1FAEE","#0B1F3B","#2B4C7E","#4F8BC9","#86BBD8"],
+        ["#0B132B","#1C2541","#3A506B","#5BC0BE","#6FFFE9","#070C1F","#274060","#3E6B89"],
+        ["#102542","#235789","#4B8BBE","#8DB8DA","#D5E4F2","#0A1B30","#2E5984","#4F86C6"],
+        ["#0D3B66","#3E5C76","#748CAB","#F0EBE3","#1B2A41","#324A5F","#5F7E9C","#9BB1D4"],
+        ["#03045E","#0077B6","#00B4D8","#90E0EF","#CAF0F8","#001845","#023E8A","#0096C7"],
+        ["#001219","#005F73","#0A9396","#94D2BD","#E9D8A6","#0B2838","#1A5C73","#3A86A8"],
+        ["#14213D","#1F3C88","#2D5F9A","#1B98E0","#E8F1F2","#091833","#12355B","#33658A"],
+        ["#202040","#283C63","#4A6FA5","#87A8D0","#D9E4F5","#181B3A","#2E4272","#5E7FB0"],
+        ["#1B1B3A","#2C3E50","#3F5C94","#6EA4BF","#C4E0E5","#10152A","#273469","#4B88A2"],
+        ["#050816","#1B1F3B","#273469","#4361EE","#4895EF","#090D1F","#2A4A7A","#75AADB"]
       ],
       muted: [
-        ["#b8a9c9", "#d6cfcb", "#e7e9eb", "#c2c1c2", "#9fa8a3"],
-        ["#d7b9aa", "#f4d6cc", "#f5f0e8", "#b3b6b7", "#8a9a9d"],
-        ["#d8c3a5", "#eae7dc", "#c3c9e9", "#ada8be", "#8e9aaf"]
+        ["#D8C3A5","#EAE7DC","#C3C9E9","#ADA8BE","#8E9AAF","#B0A8B9","#CBC0D3","#F1E9E5"],
+        ["#C9CBA3","#FFE1A8","#E26D5C","#723D46","#472D30","#D8E2DC","#B0C4B1","#F0EAD2"],
+        ["#E5D4C0","#D0B8AC","#F3D5B5","#E7D7C1","#C2B8A3","#A5A58D","#B7B7A4","#E9EDC9"],
+        ["#CFC2B8","#E2D4BA","#E8D7F1","#D3C0CD","#A9A0AF","#8E9AAF","#AEB8FE","#CCD6F6"],
+        ["#F4E1D2","#D9B08C","#C17C74","#6C567B","#393D3F","#8D89A6","#C7CCDB","#F6F5F3"],
+        ["#D9D0C7","#CBB3A7","#A68A7F","#8D9F87","#6C8480","#9AA5A1","#C1CFC0","#F6F4F0"],
+        ["#F6E8E0","#EBD4CB","#D6C1B1","#B49D89","#8F8073","#A3A9A4","#C1C6C3","#ECE9E4"],
+        ["#DFD3C3","#F5EDE0","#E8D6CB","#D0B8A8","#B29F94","#A68A7C","#C4C1B7","#F5F1EB"],
+        ["#D1C6AD","#E4D8C4","#F0E3D0","#C2B8A3","#9E9586","#8E8A79","#B7B5A4","#E7E4D5"],
+        ["#DAD7CD","#E5E5E5","#F0EFEB","#C2C5AA","#A3B18A","#8A817C","#B6AD90","#F5F2E8"]
       ],
       noir: [
-        ["#111111", "#1f1f1f", "#353535", "#fafafa", "#d7263d"],
-        ["#050608", "#151515", "#3b3b3b", "#f5f5f5", "#ff3366"],
-        ["#0b0c10", "#1f2833", "#c5c6c7", "#45a29e", "#66fcf1"]
+        ["#000000","#121212","#262626","#F8F9FA","#E63946","#1D1D1D","#343A40","#CED4DA"],
+        ["#050608","#151515","#3B3B3B","#F5F5F5","#FF3366","#0B0C10","#1F2833","#C5C6C7"],
+        ["#070707","#181818","#2B2B2B","#FDFDFD","#FF5C7A","#3A3A3A","#6A6A6A","#E9ECEF"],
+        ["#050816","#141824","#262A38","#F8F9FF","#FF5C39","#212529","#495057","#DEE2E6"],
+        ["#0B132B","#1C2541","#3A506B","#F8F9FA","#FF4D6D","#343A40","#ADB5BD","#FFFFFF"],
+        ["#050811","#10141F","#202531","#F1F3F5","#FF4D6D","#343A40","#ADB5BD","#FFFFFF"],
+        ["#020203","#111111","#222222","#FFFFFF","#D90429","#2B2D42","#8D99AE","#EDF2F4"],
+        ["#040404","#161616","#2A2A2A","#FAFAFA","#F72585","#343434","#7E7E7E","#EDEDED"],
+        ["#050505","#131313","#252525","#F7F7F7","#FF006E","#1E1E1E","#4B4B4B","#DDDDDD"],
+        ["#010101","#151515","#2A2A2A","#FAFAFA","#FF595E","#323232","#6E6E6E","#E6E6E6"]
       ],
       earth: [
-        ["#3b4d3b", "#8aa05f", "#c2c084", "#e3d9a4", "#6f5b3e"],
-        ["#6b5849", "#b18f6a", "#e0c9a6", "#7a8f74", "#415d43"],
-        ["#4b3f36", "#8c6d4c", "#c0a080", "#96a87d", "#5a6b4a"]
+        ["#3B4D3B","#8AA05F","#C2C084","#E3D9A4","#6F5B3E","#415D43","#798478","#D8D5C7"],
+        ["#6B5849","#B18F6A","#E0C9A6","#7A8F74","#415D43","#3D405B","#81B29A","#F2CC8F"],
+        ["#4B3F36","#8C6D4C","#C0A080","#96A87D","#5A6B4A","#A98467","#B6AD90","#D9CAB3"],
+        ["#5E503F","#9C6644","#C18C5D","#C2C5AA","#656D4A","#936639","#B08968","#EDE0D4"],
+        ["#3F4238","#696D3A","#A1A77D","#D1D3B4","#8D5524","#C68642","#E0AC69","#F1E3D3"],
+        ["#463F3A","#8A817C","#BCB8B1","#F4F3EE","#A5A58D","#6B705C","#CB997E","#DDBEA9"],
+        ["#2F3E46","#52796F","#84A98C","#CAD2C5","#354F52","#5E7C60","#A3B18A","#E0E1DD"],
+        ["#433425","#705335","#A47551","#C5A880","#6B705C","#A5A58D","#B7B7A4","#E9EDC9"],
+        ["#3C2F2F","#7F4F24","#A65F46","#C37B59","#E9C46A","#F4A261","#6D6875","#463F3A"],
+        ["#3B3024","#6F4F33","#9C6644","#C18C5D","#DDB892","#EDE0D4","#8C5C3F","#704C35"]
+      ],
+      pastel: [
+        ["#FFC8DD","#FFAFCC","#BDE0FE","#A2D2FF","#F8F9FA","#FFE5EC","#E2ECE9","#DEE2FF"],
+        ["#FFE5D9","#FFCDB2","#FFB4A2","#E5989B","#B5838D","#6D6875","#F2E9E4","#FAF9F6"],
+        ["#FBF8CC","#FDE4CF","#FFCFD2","#F1C0E8","#CFBAF0","#A3C4F3","#90DBF4","#8EECF5"],
+        ["#E2ECE9","#FDE2E4","#FAD2E1","#E9FFFB","#D7F9F8","#CDE7F0","#D9E2F2","#F1F3F8"],
+        ["#FFF1E6","#FDE2E4","#FAD2E1","#E2ECE9","#BEE1E6","#CDDFFD","#E2F0CB","#F9F7F3"],
+        ["#FDF0D5","#FDE2E4","#FAD2E1","#E2ECE9","#CDE7F0","#C8D6E5","#E2ECE9","#F8F9FA"],
+        ["#F6D6D6","#FFD6BA","#FFE5B4","#F9F7CF","#D8F3DC","#B7E4C7","#95D5B2","#F5F3F4"],
+        ["#FFE0F7","#F9E2FF","#E5D9F2","#D5E1DF","#F0EFEB","#FFE5EC","#E4C1F9","#D0BDF4"],
+        ["#E5F4E3","#F3E5F5","#FFE3E3","#FFF0F0","#E3F2FD","#E8EAF6","#E0F2F1","#FFFDE7"],
+        ["#F3E5F5","#E8EAF6","#E3F2FD","#E0F7FA","#E8F5E9","#FFFDE7","#FFF3E0","#FBE9E7"]
+      ],
+      neon: [
+        ["#FF006E","#FB5607","#FFBE0B","#3A86FF","#8338EC","#FF0A54","#FF5400","#FFBD00"],
+        ["#FF6B6B","#F9C74F","#90BE6D","#00F5D4","#5A189A","#9D4EDD","#00BBF9","#FF595E"],
+        ["#FF1654","#FF9F1C","#2EC4B6","#00F5D4","#3A86FF","#FF006E","#FFBA08","#80FFDB"],
+        ["#FF4D6D","#FF758F","#FFB5A7","#3F37C9","#4895EF","#4CC9F0","#F72585","#B5179E"],
+        ["#F72585","#B5179E","#7209B7","#4361EE","#4895EF","#4CC9F0","#FFBA08","#FAA307"],
+        ["#FF0054","#9B5DE5","#00BBF9","#00F5D4","#FEE440","#FFBD00","#FF006E","#FB5607"],
+        ["#FF10F0","#FF2079","#FFBD00","#FFF740","#32FF6A","#18DCFF","#7EFFF5","#7158E2"],
+        ["#FF47DA","#FF6AC1","#FF9A76","#F9ED69","#8AC926","#3A86FF","#8338EC","#FF006E"],
+        ["#FF61A6","#FF85A1","#FFC971","#FFEA00","#00F5D4","#00BBF9","#3A86FF","#7209B7"],
+        ["#FF3366","#FF6B6B","#FFD93D","#9B5DE5","#00BBF9","#00F5D4","#FF99C8","#FCF6BD"]
+      ],
+      rust: [
+        ["#5A3A31","#8C5B3F","#B77946","#D9A66A","#3E2A22","#704C36","#9D6C47","#CFA474"],
+        ["#4A3328","#7A533B","#A06E4F","#CCA37B","#36261F","#6C4B35","#926A4B","#BFA27A"],
+        ["#422419","#6F3C2C","#99582A","#B08968","#DDB892","#EDE0D4","#7F4F24","#936639"],
+        ["#3D2A20","#7A4F35","#B56535","#D4A276","#EDE0D4","#6F1D1B","#BB9457","#432818"],
+        ["#4E342E","#6F4E37","#936639","#C08552","#E0B588","#F2DCC5","#7F5539","#5B3A29"],
+        ["#3C2F2F","#7F4F24","#A65F46","#C37B59","#E9C46A","#F4A261","#6D6875","#463F3A"],
+        ["#3B3024","#6F4F33","#9C6644","#C18C5D","#DDB892","#EDE0D4","#8C5C3F","#704C35"],
+        ["#3F2F2F","#704438","#A15C3B","#C4784A","#DFAD71","#EDD8B5","#7F5B3A","#5C4033"],
+        ["#452F28","#744234","#A45E3C","#C97A4D","#E1A96B","#F2D2A9","#815640","#5D3C30"],
+        ["#3E2B26","#6D4338","#9A5D42","#C17B54","#DFA56D","#F0D2A8","#7B523C","#57382F"]
+      ],
+      cosmic: [
+        ["#0B1E3D","#1B3B6F","#274060","#3A506B","#5BC0BE","#9FB4FF","#F4F4FF","#FAD4FF"],
+        ["#050816","#1A1B41","#3A0CA3","#7209B7","#F72585","#FF9E00","#FFBA08","#F4F1DE"],
+        ["#03045E","#023E8A","#0077B6","#00B4D8","#48CAE4","#ADE8F4","#CAF0F8","#F1FAEE"],
+        ["#0B0B45","#25256B","#5A189A","#9D4EDD","#F72585","#7209B7","#4CC9F0","#FFC8DD"],
+        ["#02010A","#10002B","#240046","#3C096C","#7B2CBF","#FF6F91","#FF9671","#FFC75F"],
+        ["#050816","#12192F","#2B2D42","#3F37C9","#4895EF","#4CC9F0","#B5179E","#FFB3C6"],
+        ["#050714","#151B3D","#1B3A4B","#27496D","#00909E","#00B4D8","#9D4EDD","#FFC8FF"],
+        ["#04030F","#1A1635","#34227C","#513B9C","#7B5EA4","#C77DFF","#FFBDFF","#FFEEFF"],
+        ["#090921","#1B1B3A","#2C3E50","#4C5B7A","#6C6E90","#A58FCC","#F2B5D4","#FDE2FF"],
+        ["#05010D","#161327","#292F45","#3C4F76","#4F7CAC","#8FB8ED","#B5EAEA","#FFE5F1"]
       ]
     };
 
-    function randomFromPaletteGroup(group) {
-      const palettes = basePalettes[group];
-      const base = randChoice(palettes);
-      return [...base];
-    }
+    const conceptualModes = Object.keys(conceptualPaletteSets);
 
-    function tweakColor(hex, satJitter = 6, lightJitter = 6) {
-      // hex to hsl, jitter, back to hex
-      let c = hex.replace("#", "");
-      if (c.length === 3) c = c.split("").map(ch => ch + ch).join("");
-      const num = parseInt(c, 16);
-      const r = (num >> 16) & 255;
-      const g = (num >> 8) & 255;
-      const b = num & 255;
+    const theoryModes = [
+      "mono",
+      "analogous",
+      "complementary",
+      "splitComp",
+      "triadic"
+    ];
 
-      const rNorm = r / 255, gNorm = g / 255, bNorm = b / 255;
-      const max = Math.max(rNorm, gNorm, bNorm);
-      const min = Math.min(rNorm, gNorm, bNorm);
-      const delta = max - min;
-      let h = 0, s = 0, l = (max + min) / 2;
+    const allPaletteModes = [...conceptualModes, ...theoryModes];
 
-      if (delta !== 0) {
-        s = delta / (1 - Math.abs(2 * l - 1));
-        switch(max) {
-          case rNorm: h = 60 * (((gNorm - bNorm) / delta) % 6); break;
-          case gNorm: h = 60 * (((bNorm - rNorm) / delta) + 2); break;
-          case bNorm: h = 60 * (((rNorm - gNorm) / delta) + 4); break;
-        }
-      }
+    const paletteLabels = {
+      warm: "Warm / energetic",
+      cool: "Cool / calm",
+      muted: "Muted / dusty",
+      noir: "Noir / high contrast",
+      earth: "Earthy / natural",
+      pastel: "Pastel / soft",
+      neon: "Neon / cyber",
+      rust: "Rust / industrial",
+      cosmic: "Cosmic / iridescent",
+      mono: "Monochromatic color scheme",
+      analogous: "Analogous color scheme",
+      complementary: "Complementary color scheme",
+      splitComp: "Split-complementary color scheme",
+      triadic: "Triadic color scheme"
+    };
 
-      s = Math.min(1, Math.max(0, s + (Math.random() * 2 - 1) * satJitter / 100));
-      l = Math.min(1, Math.max(0, l + (Math.random() * 2 - 1) * lightJitter / 100));
+    // HSL -> HEX for theory modes
+    function hslToHex(h, s, l) {
+      h = ((h % 360) + 360) % 360;
+      s = Math.min(1, Math.max(0, s));
+      l = Math.min(1, Math.max(0, l));
 
-      h = (h + 360) % 360;
-      const c2 = (1 - Math.abs(2 * l - 1)) * s;
-      const x = c2 * (1 - Math.abs(((h / 60) % 2) - 1));
-      const m = l - c2 / 2;
+      const c = (1 - Math.abs(2 * l - 1)) * s;
+      const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+      const m = l - c / 2;
+
       let r2 = 0, g2 = 0, b2 = 0;
 
-      if (h < 60) { r2 = c2; g2 = x; }
-      else if (h < 120) { r2 = x; g2 = c2; }
-      else if (h < 180) { g2 = c2; b2 = x; }
-      else if (h < 240) { g2 = x; b2 = c2; }
-      else if (h < 300) { r2 = x; b2 = c2; }
-      else { r2 = c2; b2 = x; }
+      if (h < 60) { r2 = c; g2 = x; }
+      else if (h < 120) { r2 = x; g2 = c; }
+      else if (h < 180) { g2 = c; b2 = x; }
+      else if (h < 240) { g2 = x; b2 = c; }
+      else if (h < 300) { r2 = x; b2 = c; }
+      else { r2 = c; b2 = x; }
 
       const R = Math.round((r2 + m) * 255);
       const G = Math.round((g2 + m) * 255);
       const B = Math.round((b2 + m) * 255);
 
-      return "#" + [R,G,B].map(v => v.toString(16).padStart(2,"0")).join("");
+      return "#" + [R,G,B].map(v => v.toString(16).padStart(2,"0")).join("").toUpperCase();
     }
 
-    function generatePalette(mode, count) {
-      let group;
-      if (mode === "random") {
-        const all = ["warm","cool","muted","noir","earth"];
-        group = randChoice(all);
-      } else {
-        group = mode;
-      }
-      const base = randomFromPaletteGroup(group);
+    function generateTheoryPalette(mode) {
+      const baseH = Math.random() * 360;
+      const baseS = 0.65;
+      const baseL = 0.45;
       const colors = [];
 
-      // Start from base, jitter slightly per requested count
-      for (let i = 0; i < count; i++) {
-        const baseColor = base[i % base.length];
-        colors.push(tweakColor(baseColor, 4, 6));
+      if (mode === "mono") {
+        const lights = [0.18,0.28,0.38,0.48,0.58,0.68,0.78,0.88];
+        lights.forEach(lv => colors.push(hslToHex(baseH, baseS, lv)));
       }
 
-      const labelMap = {
-        random: "Random — curated vibe",
-        warm: "Warm / energetic",
-        cool: "Cool / calm",
-        muted: "Muted / dusty",
-        noir: "Noir / high contrast",
-        earth: "Earthy / natural"
-      };
+      if (mode === "analogous") {
+        const hues = [baseH - 40, baseH - 20, baseH, baseH + 20, baseH + 40];
+        const lightness = [0.25,0.35,0.45,0.55,0.65,0.4,0.3,0.6];
+        for (let i = 0; i < 8; i++) {
+          const h = hues[i % hues.length];
+          const l = lightness[i];
+          colors.push(hslToHex(h, baseS, l));
+        }
+      }
 
-      return { colors, label: labelMap[mode] || labelMap.random };
+      if (mode === "complementary") {
+        const compH = baseH + 180;
+        const roles = [
+          [baseH, 0.80, 0.30],
+          [compH, 0.85, 0.55],
+          [baseH, 0.60, 0.65],
+          [compH, 0.75, 0.22],
+          [baseH, 0.90, 0.48],
+          [compH, 0.55, 0.72],
+          [baseH, 0.70, 0.88],
+          [compH, 0.80, 0.40]
+        ];
+        roles.forEach(([h,s,l]) => colors.push(hslToHex(h,s,l)));
+      }
+
+      if (mode === "splitComp") {
+        const leftH = baseH + 150;
+        const rightH = baseH + 210;
+        const roles = [
+          [baseH,   0.70, 0.30],
+          [leftH,   0.80, 0.45],
+          [rightH,  0.80, 0.55],
+          [baseH,   0.60, 0.65],
+          [leftH,   0.75, 0.25],
+          [rightH,  0.75, 0.35],
+          [baseH,   0.85, 0.78],
+          [leftH,   0.65, 0.55]
+        ];
+        roles.forEach(([h,s,l]) => colors.push(hslToHex(h,s,l)));
+      }
+
+      if (mode === "triadic") {
+        const h2 = baseH + 120;
+        const h3 = baseH + 240;
+        const roles = [
+          [baseH, 0.75, 0.30],
+          [h2,    0.75, 0.40],
+          [h3,    0.75, 0.50],
+          [baseH, 0.60, 0.60],
+          [h2,    0.65, 0.70],
+          [h3,    0.65, 0.80],
+          [baseH, 0.85, 0.50],
+          [h2,    0.85, 0.35]
+        ];
+        roles.forEach(([h,s,l]) => colors.push(hslToHex(h,s,l)));
+      }
+
+      if (!colors.length) {
+        // fallback = monochrome
+        const lights = [0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9];
+        lights.forEach(lv => colors.push(hslToHex(baseH, baseS, lv)));
+      }
+
+      return {
+        colors,
+        label: paletteLabels[mode] || "Color theory scheme"
+      };
+    }
+
+    function generateConceptualPalette(mode) {
+      const pool = conceptualPaletteSets[mode];
+      if (!pool || !pool.length) {
+        // Fallback to a theory mono palette if something is wrong
+        return generateTheoryPalette("mono");
+      }
+      const colors = randChoice(pool).slice(0, 8);
+      return {
+        colors,
+        label: paletteLabels[mode] || "Conceptual palette"
+      };
+    }
+
+    function randomPaletteMode() {
+      return randChoice(allPaletteModes);
+    }
+
+    function generatePalette(mode) {
+      if (conceptualModes.includes(mode)) {
+        return generateConceptualPalette(mode);
+      }
+      if (theoryModes.includes(mode)) {
+        return generateTheoryPalette(mode);
+      }
+      const fallbackMode = randomPaletteMode();
+      if (conceptualModes.includes(fallbackMode)) {
+        return generateConceptualPalette(fallbackMode);
+      }
+      return generateTheoryPalette("mono");
     }
 
     // ---------- FAVORITES STORAGE ----------
@@ -1427,12 +1614,14 @@
       });
     }
 
-    // ---------- RENDER + INTERACTION ----------
+    // ---------- IDEA + PALETTE RENDERING ----------
 
-    let mode = "random"; // 'random' or 'pick'
+    let mode = "random"; // 'random' | 'pick'
     let currentBranchId = null;
     let currentIdea = null;
+
     let currentPalette = { colors: [], label: "" };
+    let visibleColorCount = 5;
 
     const branchRowEl = document.getElementById("branch-row");
 
@@ -1495,7 +1684,6 @@
       };
 
       renderIdea(currentIdea);
-      regeneratePalette();
     }
 
     function renderIdea(idea) {
@@ -1510,32 +1698,55 @@
       const gridEl = document.getElementById("detail-grid");
       createDetailRows(gridEl, idea.details || []);
 
-      // Reset "Add to favorites" button label
       document.getElementById("btn-favorite-current").textContent =
         "Add to Favorites ⭐";
     }
 
-    function regeneratePalette() {
-      const modeSel = document.getElementById("palette-mode");
-      const slider = document.getElementById("color-count");
-      const count = parseInt(slider.value, 10);
-      const pal = generatePalette(modeSel.value, count);
-      currentPalette = pal;
-
-      document.getElementById("palette-label").textContent = pal.label;
-      document.getElementById("color-count-label").textContent = count;
-
+    function applyPaletteToUI() {
+      const labelEl = document.getElementById("palette-label");
       const swatchRow = document.getElementById("swatch-row");
       const hexRow = document.getElementById("hex-row");
-      swatchRow.innerHTML = "";
-      hexRow.textContent = pal.colors.join(", ");
+      const countLabel = document.getElementById("color-count-label");
+      const btnMinus = document.getElementById("btn-colors-minus");
+      const btnPlus = document.getElementById("btn-colors-plus");
 
-      pal.colors.forEach((col) => {
+      const maxVisible = Math.min(8, currentPalette.colors.length);
+      visibleColorCount = Math.min(visibleColorCount, maxVisible);
+      visibleColorCount = Math.max(5, visibleColorCount);
+
+      labelEl.textContent = currentPalette.label || "Palette";
+      countLabel.textContent = visibleColorCount.toString();
+
+      swatchRow.innerHTML = "";
+      const visibleColors = currentPalette.colors.slice(0, visibleColorCount);
+      hexRow.textContent = visibleColors.join(", ");
+
+      visibleColors.forEach((col, index) => {
         const sw = document.createElement("div");
         sw.className = "swatch";
         sw.style.background = col;
+
+        const role = paletteRoles[index % paletteRoles.length];
+        sw.dataset.role = role;
+        sw.title = `${role}: ${col}`;
+        sw.addEventListener("click", () => {
+          copyToClipboard(col);
+        });
+
         swatchRow.appendChild(sw);
       });
+
+      btnMinus.disabled = visibleColorCount <= 5;
+      btnPlus.disabled = visibleColorCount >= maxVisible;
+    }
+
+    function resetAndRegeneratePalette() {
+      const modeSel = document.getElementById("palette-mode");
+      const selectedMode = modeSel.value;
+      const pal = generatePalette(selectedMode);
+      currentPalette = pal;
+      visibleColorCount = 5;
+      applyPaletteToUI();
     }
 
     function currentIdeaText() {
@@ -1548,7 +1759,8 @@
         lines.push(`${d.label}: ${d.value}`);
       });
       lines.push("");
-      lines.push(`Colors: ${currentPalette.colors.join(", ")}`);
+      const visibleColors = currentPalette.colors.slice(0, visibleColorCount);
+      lines.push(`Colors (${visibleColorCount}): ${visibleColors.join(", ")}`);
       return lines.join("\n");
     }
 
@@ -1558,17 +1770,19 @@
       return primary.map((d) => `${d.label}: ${d.value}`).join(" · ");
     }
 
-    // ---------- EVENT WIRING ----------
+    // ---------- EVENTS ----------
 
     document.getElementById("btn-generate").addEventListener("click", () => {
       generateIdea();
+      const modeSel = document.getElementById("palette-mode");
+      const rndMode = randomPaletteMode();
+      modeSel.value = rndMode;
+      resetAndRegeneratePalette();
     });
 
     document.getElementById("btn-random-mode").addEventListener("click", () => {
       mode = "random";
-      document
-        .getElementById("btn-random-mode")
-        .classList.add("active");
+      document.getElementById("btn-random-mode").classList.add("active");
       document.getElementById("btn-pick-mode").classList.remove("active");
       updateBranchRowEnabled();
     });
@@ -1581,11 +1795,26 @@
     });
 
     document.getElementById("palette-mode").addEventListener("change", () => {
-      regeneratePalette();
+      resetAndRegeneratePalette();
     });
 
-    document.getElementById("color-count").addEventListener("input", () => {
-      regeneratePalette();
+    document
+      .getElementById("btn-palette-random")
+      .addEventListener("click", () => {
+        const modeSel = document.getElementById("palette-mode");
+        const rndMode = randomPaletteMode();
+        modeSel.value = rndMode;
+        resetAndRegeneratePalette();
+      });
+
+    document.getElementById("btn-colors-plus").addEventListener("click", () => {
+      visibleColorCount = Math.min(8, visibleColorCount + 1);
+      applyPaletteToUI();
+    });
+
+    document.getElementById("btn-colors-minus").addEventListener("click", () => {
+      visibleColorCount = Math.max(5, visibleColorCount - 1);
+      applyPaletteToUI();
     });
 
     document.getElementById("btn-copy-idea").addEventListener("click", () => {
@@ -1594,19 +1823,21 @@
 
     document.getElementById("btn-copy-hex").addEventListener("click", () => {
       if (!currentPalette.colors.length) return;
-      copyToClipboard(currentPalette.colors.join(", "));
+      const visibleColors = currentPalette.colors.slice(0, visibleColorCount);
+      copyToClipboard(visibleColors.join(", "));
     });
 
     document
       .getElementById("btn-favorite-current")
       .addEventListener("click", () => {
         if (!currentIdea) return;
+        const visibleColors = currentPalette.colors.slice(0, visibleColorCount);
         const entry = {
           branchId: currentIdea.branchId,
           branchLabel: currentIdea.branchLabel,
           summary: summarizeIdeaForFavorite(currentIdea),
           fullText: currentIdeaText(),
-          palette: currentPalette.colors,
+          palette: visibleColors,
           timestamp: new Date().toLocaleString()
         };
         addFavorite(entry);
@@ -1639,8 +1870,12 @@
     buildBranchPills();
     updateBranchRowEnabled();
     loadFavorites();
-    // Auto-generate a random idea on first load
+
     generateIdea();
+    const modeSelInit = document.getElementById("palette-mode");
+    const initialMode = randomPaletteMode();
+    modeSelInit.value = initialMode;
+    resetAndRegeneratePalette();
   </script>
 </body>
 </html>
