@@ -55,6 +55,10 @@
       margin: 26px auto 40px auto;
       padding: 0 20px 40px 20px;
     }
+    
+    .subtitle {
+  display: none;
+}
 
     h1 {
       margin: 0;
@@ -84,6 +88,45 @@
       gap: 10px;
       flex-wrap: wrap;
     }
+
+.mode-toggle-row {
+  display: flex;
+  gap: 8px;
+}
+
+/* Mobile / tablet adjustments */
+@media (max-width: 1024px) {
+  .top-row {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .controls-main {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .mode-toggle-row {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  /* Favorites: icon + count only */
+  #btn-favorites-toggle {
+    font-size: 0;
+    padding-inline: 14px;
+  }
+  #btn-favorites-toggle::before {
+    content: "⭐";
+    font-size: 16px;
+    margin-right: 4px;
+  }
+  #btn-favorites-toggle span#favorites-count {
+    font-size: 14px;
+  }
+}
+
 
     .btn {
       border-radius: 999px;
@@ -250,10 +293,17 @@
     }
 
     .card-header-actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
+  display: flex;
+  gap: 8px;
+  flex-wrap: nowrap;      /* keep copy + star on one line */
+  align-items: center;
+}
+
+.card-header-actions .btn {
+  padding: 6px 10px;
+  font-size: 18px;
+}
+
 
     .card-body {
       margin-top: 6px;
@@ -329,6 +379,72 @@
       letter-spacing: 0.16em;
       color: var(--text-soft);
     }
+    
+/* default: no inline preview on desktop */
+.palette-preview-inline {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .palette-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    position: relative;     /* for absolute positioning of preview */
+  }
+
+  .palette-title-block {
+    display: flex;
+    flex-direction: row;    /* title in a row, not column */
+    align-items: center;
+    gap: 8px;
+  }
+
+  .palette-title {
+    white-space: nowrap;    /* keep "CUSTOM PALETTES" on one line */
+  }
+
+  /* Small preview squares, positioned top-right of the header */
+  .palette-preview-inline {
+    position: absolute;
+    right: 14px;
+    top: 8px;
+    display: inline-flex;
+    gap: 3px;
+  }
+
+  .palette-preview-inline div {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+  }
+
+  /* hide preview when drawer is open */
+  .palette-card.drawer-open .palette-preview-inline {
+    display: none;
+  }
+
+  /* hide controls when drawer is collapsed */
+  .palette-card:not(.drawer-open) .palette-controls {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* fully visible when drawer is open */
+  .palette-card.drawer-open .palette-controls {
+    opacity: 1;
+  }
+
+  /* hide swatches + hex line when drawer is collapsed */
+  .palette-card:not(.drawer-open) .swatch-row,
+  .palette-card:not(.drawer-open) .hex-row {
+    display: none;
+  }
+}
+
+
+
+
 
     /* REMOVED .palette-sub and associated controls */
 
@@ -507,41 +623,139 @@
       display: flex;
       gap: 6px;
     }
+    
+/* Tablet/phone layout tweaks */
+@media (max-width: 1024px) {
+  .detail-grid {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 4px;
+  }
+
+  .field-label {
+    white-space: normal;
+  }
+
+  /* Hide "Add to Favorites" text on iPad + phone, keep star visible */
+  .btn-fav-text {
+    display: none !important;
+  }
+}
+
+/* Hide the circular branch icon ONLY on small phones */
+@media (max-width: 640px) {
+  .branch-icon-circle {
+    display: none;
+  }
+}
+
+/* Accordion for branch row */
+@media (max-width: 1024px) {
+  #branch-accordion {
+    border-radius: 14px;
+    background: rgba(7, 10, 24, 0.9);
+    border: 1px solid rgba(255,255,255,0.05);
+    padding: 10px 12px;
+    margin-top: 16px;
+  }
+
+  #branch-accordion .branch-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    padding: 2px 8px;          /* larger tap target, more right padding */
+    min-height: 40px;
+  }
+
+  #branch-accordion .branch-label::after {
+    content: "▾";
+    font-size: 50px;            /* noticeably bigger arrow */
+    line-height: 1;
+    color: var(--text-soft);
+    margin-left: 10px;
+  }
+
+  #branch-accordion.open .branch-label::after {
+    content: "▴";
+  }
+
+  #branch-accordion .branch-row {
+    margin-top: 10px;
+  }
+
+  #branch-accordion:not(.open) .branch-row {
+    display: none;
+  }
+}
+
+
+/* Palette drawer behavior on tablets/phones */
+@media (max-width: 1024px) {
+  .card-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  @media (max-width: 1024px) {
+  .palette-card {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    border-radius: 16px 16px 0 0;
+    padding: 8px 14px 16px 14px;
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.7);
+    transform: translateY(calc(100% - 52px)); /* show full header when collapsed */
+    transition: transform 0.2s ease;
+    z-index: 50;
+  }
+
+  .palette-card.drawer-open {
+    transform: translateY(0);
+  }
+}
+
+
+  .palette-header {
+    cursor: pointer;
+  }
+}
+
+
   </style>
 </head>
 <body>
   <div class="app-shell">
-    <header>
-      <h1>WHAT TO DRAW</h1>
-      <div class="subtitle">
-        Tap once to get a structured idea: characters, devices, buildings,
-        creatures, plants, scenes, and more.
-      </div>
-    </header>
+   <header>
+ 	 <h1>WHAT TO DRAW</h1>
+	</header>
 
     <div class="top-row">
-      <div class="controls-main">
-        <button id="btn-generate" class="btn primary">
-          <span>Generate Idea</span> <span class="emoji">🎲</span>
-        </button>
+  <div class="controls-main">
+    <button id="btn-generate" class="btn primary">
+      <span class="emoji">🎲</span>
+    </button>
 
-        <button id="btn-random-mode" class="btn toggle active">
-          Random Branch
-        </button>
-        <button id="btn-pick-mode" class="btn toggle">
-          Pick Branch
-        </button>
-      </div>
-
-      <button id="btn-favorites-toggle" class="btn ghost">
-        ⭐ Favorites (<span id="favorites-count">0</span>)
+    <div class="mode-toggle-row">
+      <button id="btn-random-mode" class="btn toggle active">
+        Random
+      </button>
+      <button id="btn-pick-mode" class="btn toggle">
+        Pick
       </button>
     </div>
+  </div>
 
-    <div class="branch-row-wrapper">
-      <div class="branch-label">Branches:</div>
-      <div id="branch-row" class="branch-row"></div>
-    </div>
+  <button id="btn-favorites-toggle" class="btn ghost">
+    ⭐ <span id="favorites-count">0</span>
+  </button>
+</div>
+
+
+    <div class="branch-row-wrapper" id="branch-accordion">
+  <div class="branch-label">Branches</div>
+  <div id="branch-row" class="branch-row"></div>
+</div>
 
     <section class="card" id="result-card">
       <div class="card-header">
@@ -558,11 +772,14 @@
           </div>
         </div>
         <div class="card-header-actions">
-          <button id="btn-copy-idea" class="btn toggle">Copy Idea 📋</button>
-          <button id="btn-favorite-current" class="btn toggle">
-            Add to Favorites ⭐
-          </button>
-        </div>
+  <button id="btn-copy-idea" class="btn toggle" title="Copy Idea">📋</button>
+  <button id="btn-favorite-current" class="btn toggle" title="Add to Favorites">
+    <span class="btn-fav-text">Add to Favorites</span>
+    <span aria-hidden="true">⭐+</span>
+  </button>
+</div>
+
+
       </div>
 
       <div class="card-body">
@@ -571,26 +788,29 @@
         </div>
 
         <aside class="palette-card">
-          <div class="palette-header">
-            <div class="palette-title-block">
-              <div class="palette-title">Custom Palettes</div>
-              </div>
-           <div style="display: flex; gap: 6px;">
-  <button id="btn-palette-lock" class="btn-mini" title="Palette unlocked – click to lock">🔓</button>
-  <button id="btn-palette-random" class="btn-mini" title="Randomize palette">🎲</button>
-  <button id="btn-copy-hex" class="btn-mini" title="Copy HEX codes">Copy HEX</button>
+  <div class="palette-header">
+  <div class="palette-title-block">
+    <div class="palette-title">Custom Palettes</div>
+    <div class="palette-preview-inline" id="palette-preview-inline"></div>
+  </div>
+
+  <div class="palette-controls">
+    <button id="btn-palette-lock" class="btn-mini" title="Palette unlocked – click to lock">🔓</button>
+    <button id="btn-palette-random" class="btn-mini" title="Randomize palette">🎲</button>
+    <button id="btn-copy-hex" class="btn-mini" title="Copy HEX codes">Copy HEX</button>
+  </div>
 </div>
 
-          </div>
 
-          <div class="swatch-row" id="swatch-row"></div>
-          <div class="hex-row" id="hex-row"></div>
-          <!--<div class="hex-row">
-            <span class="hex-note">
-              Click a color to copy it • Left to right: Primary, Secondary, Accent, Neutral, Pop
-            </span>
-          </div>-->
-        </aside>
+  <!-- REMOVE this old line entirely:
+  <div class="palette-preview-strip" id="palette-preview-strip"></div>
+  -->
+
+  <div class="swatch-row" id="swatch-row"></div>
+  <div class="hex-row" id="hex-row"></div>
+</aside>
+
+
       </div>
     </section>
 
@@ -650,23 +870,38 @@
         details: [
           { label: "Archetype", value: randChoice([
             "Wanderer", "Mystic", "Soldier / Veteran",
-            "Scholar", "Outcast", "Detective", "Caretaker"
+            "Scholar", "Outcast", "Detective", "Caretaker","Engineer / Tinkerer",
+			"Cultist / Believer", "Smuggler / Fixer", "Archivist of the Signal",
+			"Reluctant Leader", "Experiment / Test Subject", "Handler / Interrogator",
+			"Street Prophet"
           ]) },
           { label: "Genre Flavor", value: randChoice([
             "Grounded modern", "Post-apocalyptic", "Low fantasy",
-            "Space opera", "Urban occult", "Soft sci-fi"
+            "Space opera", "Urban occult", "Soft sci-fi", "Retro-futurist",
+			"Corporate dystopia", "Cyberpunk-adjacent", "Solar-punk gone wrong",
+			"Weird West", "Cosmic horror", "Analog sci-fi (tapes, CRTs)", "Dreamlike / liminal"
           ]) },
           { label: "Social Role", value: randChoice([
             "Underworld / criminal", "Corporate", "Nomadic",
-            "Academic", "Religious order", "Blue-collar"
+            "Academic", "Religious order", "Blue-collar", "Government agent / inspector",
+			"Security / paramilitary", "DCS bureaucrat / analyst", "Black-market dealer",
+			"Data broker / information trader", "Cult adherent / initiate", "Test facility staff",
+			"Off-grid drifter"
+
           ]) },
           { label: "Core Motivation", value: randChoice([
             "Curiosity", "Revenge", "Survival", "Love / Connection",
-            "Power / Control", "Redemption"
+            "Power / Control", "Redemption", "Escape from the system", "Obsession with truth",
+			"Loyalty to a cause", "Fear of being replaced", "Guilt / atonement", "Preserving someone’s memory",
+			"Curating forbidden knowledge", "Proving they are the ‘original’"
+
           ]) },
           { label: "Typical Vibe", value: randChoice([
             "Calm and observant", "Intense and focused", "Chaotic but charming",
-            "Detached and cold", "Playful and irreverent"
+            "Detached and cold", "Playful and irreverent", "Secretive and paranoid",
+			"Burned-out but persistent", "Quietly furious", "Nervous but hopeful",
+			"Deadpan and sardonic", "Warm but guarded", "Cheerful mask over stress"
+
           ]) }
         ]
       };
@@ -723,10 +958,17 @@
             "Short","Long","Average","Bald","Messy","Outlandish","Classy"
           ]) },
           { label: "Clothing", value: randChoice([
-            "Tight","Flowing","Casual","Formal","Sparse","Layered","Activewear"
+            "Tight","Flowing","Casual","Formal","Sparse","Layered","Activewear", "Monastic / ritual robes",
+			"Corporate uniform with badge", "Layered streetwear / techwear", "Heavy coat with hidden pockets",
+			"Utility jumpsuit / coveralls", "Patchwork / scavenged layers", "Traditional / cultural garments",
+			"Hospital / lab attire"
+
           ]) },
           { label: "Accessories", value: randChoice([
-            "Minimal jewelry", "Sunglasses, bag, patches", "Scarf & earphones", "Pouches & tools", "Visible tattoos & piercings"
+            "Minimal jewelry", "Sunglasses, bag, patches", "Scarf & earphones", "Pouches & tools", "Visible tattoos & piercings",
+            "Bandages, braces, medical gear", "Analog gadgets (tapes, cameras)", "Charm chains / talismans",
+			"Headset / comm rigs", "Masks or respirators", "Gloves, wrist braces, tape", "Heavy backpack / field kit"
+
           ]) },
           { label: "Footwear", value: randChoice([
             "Barefoot / minimal","Casual sneakers","Industrial / utility boots",
@@ -734,16 +976,25 @@
           ]) },
           { label: "Emotion", value: randChoice([
             "Calm / relaxed","Focused / determined","Angry / tense","Sad / melancholic",
-            "Amused","Exhausted","Detached / blank"
+            "Amused","Exhausted","Detached / blank", "On the verge of tears", "Suppressing laughter",
+			"Suspicious / side-eyeing", "Startled / recently interrupted", "Zen / meditative",
+			"Haunted / thousand-yard stare"
+
           ]) },
           { label: "Gaze", value: randChoice([
             "Direct / forward","Downcast / avoidant","Sideward / glancing",
-            "Wide / startled","Half-lidded / tired","Closed"
+            "Wide / startled","Half-lidded / tired","Closed", "Looking slightly off-frame",
+			"Eyes locked on a small object", "Staring into middle distance", "Squinting as if against light",
+			"Averted toward the floor", "Searching the crowd"
+
           ]) },
           { label: "Build Accent", value: randChoice([
             "Broad shoulders","Narrow shoulders","Sloped shoulders",
             "Large head relative to body","Small head relative to body",
-            "Uneven stance / hip drop","Asymmetry in limbs","Missing / augmented limb"
+            "Uneven stance / hip drop","Asymmetry in limbs","Missing / augmented limb", "Old injuries / scars visible",
+			"Prosthetic limb or implant", "Noticeably hunched forward", "Rigid, military bearing",
+			"Extremely flexible / loose posture", "Weight shifted away from viewer"
+
           ]) }
         ]
       };
@@ -755,15 +1006,23 @@
         details: [
           { label: "Category", value: "Device" },
           { label: "Form Factor", value: randChoice([
-            "Handheld","Wearable","Remote / drone unit","Mounted console"
+            "Handheld","Wearable","Remote / drone unit","Mounted console", "Implanted module",
+			"Desk-sized console", "Suit-integrated system", "Floating orb / drone",
+			"Wall-mounted terminal", "Foldable / transforming unit"
+
           ]) },
           { label: "Interface", value: randChoice([
             "Buttons / switches","Touchscreen","Voice-activated",
-            "Neural / bio-link","Hybrid controls"
+            "Neural / bio-link","Hybrid controls", "Holographic controls", "Analog dials & gauges",
+			"Gesture / proximity sensors","Bio-feedback pads", "Card / token reader", "Voice + gesture hybrid"
+
           ]) },
           { label: "Power Source", value: randChoice([
             "Battery / stored energy","Solar","Kinetic / manual",
-            "Fusion / high-density","Biological / symbiotic","Unknown"
+            "Fusion / high-density","Biological / symbiotic","Unknown", "Crystal / resonant core",
+			"Ambient signal / broadcast", "Chemical cartridges", "Tethered to infrastructure",
+			"Parasitic on other devices", "Stolen / jury-rigged feed"
+
           ]) },
           { label: "Material", value: randChoice([
             "Plastic / polymer","Metal","Ceramic / glass",
@@ -776,18 +1035,34 @@
           { label: "Capabilities", value: randChoice([
             "Recording & playback","Diagnostics & analysis",
             "Remote control capability","Scanning / mapping",
-            "Life-support assistance","Communication relay"
+            "Life-support assistance","Communication relay", "Memory capture / playback",
+			"Reality-distortion overlay", "Environmental monitoring", "Signal translation / decoding",
+			"Door / lock override", "Medical diagnostics", "Drone or swarm control",
+			"Holographic projection"
+
           ]) },
           { label: "Aesthetic", value: randChoice([
             "Sleek / modern","Brutalist / industrial","Ornate / retro-tech",
-            "Improvised / kitbashed","Organic / bio-sculpted","Alien"
+            "Improvised / kitbashed","Organic / bio-sculpted","Alien", "Over-labeled corporate hardware",
+			"Medical / clinical white plastic", "Military-spec matte and angles", "Toy-like but dangerous",
+			"Brutalist slab with ports", "Delicate, jewelry-like device",
+			"Salvaged from multiple eras"
+
           ]) },
           { label: "Accents", value: randChoice([
             "Warning labels, stickers, iconography",
             "Exposed wiring & scratched surfaces",
             "Runes / carvings in the casing",
             "Custom paint & worn grip",
-            "No visible ornament"
+            "No visible ornament", 
+            "Cracks in the casing with light leaking",
+			"Slotted cartridges / tapes visible",
+			"Strange residue around vents",
+			"Embedded symbols from unknown language",
+			"Owner’s scribbled notes / diagrams",
+			"Hanging tags and seals",
+			"Color-coded cables and clamps"
+
           ]) }
         ]
       };
@@ -799,39 +1074,59 @@
         details: [
           { label: "Category", value: "Weapon" },
           { label: "Class", value: randChoice([
-            "Melee","Ranged","Thrown","Improvised","Exotic","Dual-purpose tool/weapon"
+            "Melee","Ranged","Thrown","Improvised","Exotic","Dual-purpose tool/weapon", "Non-lethal control",
+			"Ritual only", "Living / symbiotic", "Trap-based", "Heavy support"
+
           ]) },
           { label: "Subtype", value: randChoice([
             "Sword","Knife / Dagger","Axe","Hammer / Maul","Spear / Polearm",
-            "Pistol","Rifle","Energy projector","Gravity weapon","Artifact blade"
+            "Pistol","Rifle","Energy projector","Gravity weapon","Artifact blade", "Whip / chain",
+			"Staff / rod", "Launcher / grenade system", "Railgun / coil weapon", "Implanted weapon",
+			"Improvised tool weapon", "Energy blade", "Needle / spike weapon"
+
           ]) },
           { label: "Size", value: randChoice([
             "Small","Medium","Large","Massive / two-handed"
           ]) },
           { label: "Material", value: randChoice([
             "Metal","Wood","Stone","Synthetic / polymer","Crystal",
-            "Bone / organic","Composite / mixed"
+            "Bone / organic","Composite / mixed", "Corroded alloy", "Glass / obsidian", "Bone and metal hybrid",
+			"Bio-grown chitin", "Translucent crystal shell", "Repurposed industrial parts"
+
           ]) },
           { label: "Condition", value: randChoice([
             "Pristine","Well-kept","Worn","Damaged","Broken but usable"
           ]) },
           { label: "Style", value: randChoice([
             "Sleek / modern","Brutal / heavy","Elegant / ornate",
-            "Primitive / crude","Ritualistic / decorated","Makeshift / assembled"
+            "Primitive / crude","Ritualistic / decorated","Makeshift / assembled","Corporate clean / branded",
+			"Sacred artifact aesthetic", "Jury-rigged wasteland style", "High-ceremony, almost impractical",
+			"Stealth / low-profile", "Playful exterior hiding danger"
+
           ]) },
           { label: "Functional Features", value: randChoice([
             "Sharpened & serrated edge","Energy emitter & trigger mechanism",
             "Modular parts with sheath","Reinforced spine & counterweight",
-            "Elemental effect (fire/electric/chemical)"
+            "Elemental effect (fire/electric/chemical)", "Modular attachments / rail system",
+			"Built-in stabilizer or recoil sink", "Secondary hidden blade or barrel",
+			"Charge-up indicator lights", "Deployable shield or barrier", "Damage that marks / brands targets"
+
           ]) },
           { label: "Accents", value: randChoice([
             "Engravings & blood grooves","Runes / glyphs along blade",
             "Stickers & personal markings","Taped repairs & charms",
-            "None / unadorned"
+            "None / unadorned", "Kill tallies or carved marks", "Charms and trinkets tied on",
+			"Warning tape or hazard stripes", "Dried bloodstains or scorch marks", "Religious or cult symbols",
+			"Owner’s name scratched in"
+
           ]) },
           { label: "Context", value: randChoice([
             "Military-issued","Civilian-modified","Ritual / ceremonial",
-            "Ancient heirloom","Found object","Prototype / experimental"
+            "Ancient heirloom","Found object","Prototype / experimental", "Standard issue for a specific faction",
+			"Confiscated / evidence locker piece", "Ritual object never meant for combat",
+			"Museum display now re-weaponized", "Looted from a fallen enemy", "Prototype escaped quality control",
+			"Passed down through multiple owners"
+
           ]) }
         ]
       };
@@ -844,12 +1139,24 @@
           { label: "Category", value: randChoice([
             "Relic / object of veneration","Idol / statue",
             "Tool / implement","Text / tablet / scroll",
-            "Container / vessel","Key / seal / sigil","Map / chart / diagram"
+            "Container / vessel","Key / seal / sigil","Map / chart / diagram", "Mask / faceplate",
+"Mechanical puzzle device",
+"Music-making object",
+"Reliquary / bone container",
+"Navigation instrument",
+"Timekeeping device"
+
           ]) },
           { label: "Origin", value: randChoice([
             "Ancient civilization","Classical empire","Medieval culture",
             "Industrial age society","Contemporary culture",
-            "Futuristic / high-tech","Alien / non-human","Unknown / disputed"
+            "Futuristic / high-tech","Alien / non-human","Unknown / disputed", "Failed utopian project",
+"Secret black-site lab",
+"Ancient underground cult",
+"Off-world colony",
+"Parallel timeline version",
+"Mythic or disputed origin story"
+
           ]) },
           { label: "Apparent Age", value: randChoice([
             "Ancient","Old","Recent","Timeless / hard to date"
@@ -864,20 +1171,43 @@
           ]) },
           { label: "Design Style", value: randChoice([
             "Geometric / symmetrical","Organic / flowing","Abstract / chaotic",
-            "Minimalist / sleek","Overly ornate / detailed","Runic / symbolic"
+            "Minimalist / sleek","Overly ornate / detailed","Runic / symbolic", "Brutalist blocky mass",
+"Clockwork / gear-heavy",
+"Minimal slab with one detail",
+"Organic bone-like growths",
+"Patchwork of repairs",
+"Child-like carvings but powerful"
+
           ]) },
           { label: "Condition", value: randChoice([
             "Pristine","Weathered / patinated","Broken but whole",
-            "Shattered / fragmented","Repaired / pieced together"
+            "Shattered / fragmented","Repaired / pieced together", "Half-restored with visible repairs",
+"Encrusted with minerals / salt",
+"Burned or heat-warped",
+"Half-melted / fused to another object",
+"Surprisingly intact amid destruction"
+
           ]) },
           { label: "Primary Function", value: randChoice([
             "Power source","Portal / gateway","Record keeper",
-            "Control mechanism","Warning device","Curse / blessing dispenser"
+            "Control mechanism","Warning device","Curse / blessing dispenser", "Anchor for a specific memory",
+"Failsafe shutdown for a system",
+"Key to a forgotten network",
+"Beacon for something else",
+"Test of worthiness / trial device",
+"Recorder of parallel outcomes"
+
           ]) },
           { label: "Accents", value: randChoice([
             "Glows / emits light","Emits sound / music",
             "Changes temperature","Floats / defies gravity",
-            "Covered in unknown script","Visibly humming with energy"
+            "Covered in unknown script","Visibly humming with energy", "Whispers or faint voices near it",
+"Drips or bleeds unusual fluid",
+"Changes weight when held",
+"Shadow doesn’t match shape",
+"Reflections show a different scene",
+"Responds to certain symbols or words"
+
           ]) }
         ]
       };
@@ -898,29 +1228,64 @@
           ]) },
           { label: "Power/Propulsion", value: randChoice([
             "Electric / Battery","Combustion / Fuel","Jet / Turbine",
-            "Gravitational / Repulsor","Steam / Mechanical","Biological / Muscle"
+            "Gravitational / Repulsor","Steam / Mechanical","Biological / Muscle", "Hybrid improvised fuel mix",
+"Solar sail / panel arrays",
+"Signal-powered / anomalous",
+"Clockwork / spring-driven",
+"Magnetic rail / track-bound",
+"Pedal-assisted / human-augment"
+
           ]) },
           { label: "Aesthetic Era", value: randChoice([
             "1950s Atomic Age","1980s Boxy Retro","Modern Minimalist",
-            "Brutalist Industrial","Cyberpunk Neo-Tokyo","Post-Apocalyptic Scavenged"
+            "Brutalist Industrial","Cyberpunk Neo-Tokyo","Post-Apocalyptic Scavenged", "Art-deco rocket age",
+"Used future industrial",
+"Luxury corporate shuttle",
+"Patchwork refugee transport",
+"Ornate ceremonial carriage",
+"Military APC look-alike"
+
           ]) },
           { label: "Body Style", value: randChoice([
             "Coupe / Sleek","Utility / Boxy","Open Cockpit","Armored Shell",
-            "Asymmetrical","Low Profile / Ground Hugging"
+            "Asymmetrical","Low Profile / Ground Hugging", "Multi-segment / articulated",
+"Sphere / pod-shaped",
+"Walking mech frame",
+"Hover platform / skiff",
+"Cargo container repurposed as vehicle",
+"Stealthy, featureless slab"
+
           ]) },
           { label: "Condition", value: randChoice([
             "Showroom New","Rusted & Weathered","Heavily Modified",
-            "Patched with Scrap","Camo Painted","Covered in Decals"
+            "Patched with Scrap","Camo Painted","Covered in Decals", "Freshly repainted over rust",
+"Half-disassembled for parts",
+"Held together with cables and straps",
+"Battle-scarred but trusted",
+"Prototype with missing panels"
+
           ]) },
           { label: "Features", value: randChoice([
             "Exposed Engine / Wiring","Oversized Tires / Tracks",
             "Integrated Weapons System","Rooftop Cargo Rack / Bedroll",
-            "Advanced Sensor Array","Custom Decals / Nose Art"
+            "Advanced Sensor Array","Custom Decals / Nose Art", "Improvised armor plates",
+"Jammed or sealed doors",
+"Hanging charms / flags",
+"External fuel or cargo tanks",
+"Secret smuggling compartment",
+"Mounted tools (shovel, pick, etc.)"
+
           ]) },
           { label: "Context", value: randChoice([
             "Abandoned in a dust field","Racing down a neon street",
             "Docked at a busy port","Flying through an asteroid field",
-            "Stuck in the mud / snow"
+            "Stuck in the mud / snow", "Parked beneath a megastructure",
+"Half-buried in sand or snow",
+"Used as a static home / shelter",
+"Prepped at a clandestine checkpoint",
+"Mid-repair with parts scattered",
+"Abandoned in a flooded street"
+
           ]) }
         ]
       };
@@ -933,11 +1298,23 @@
           { label: "Category", value: "Building" },
           { label: "Function", value: randChoice([
             "Residential Tower","Religious Site / Temple","Industrial Factory",
-            "Government/Military Base","Commercial Market","Entertainment Venue"
+            "Government/Military Base","Commercial Market","Entertainment Venue", "Data center / archive",
+"Clinic or improvised hospital",
+"Safehouse / hideout",
+"Transit hub / station",
+"Ritual hall / cult compound",
+"Corporate front with secret use"
+
           ]) },
           { label: "Architectural Style", value: randChoice([
             "Brutalist / Concrete","Victorian / Gothic","Japanese Wood/Paper",
-            "Cyberpunk / Verticality","Ancient Stone / Mayan-inspired","Modern Glass & Steel"
+            "Cyberpunk / Verticality","Ancient Stone / Mayan-inspired","Modern Glass & Steel", "Stacked shipping containers",
+"Neo-brutalist with light slits",
+"Organic growth over framework",
+"Modular prefab cubes",
+"Retro neon signage front",
+"Traditional façade hiding new core"
+
           ]) },
           { label: "Scale", value: randChoice([
             "Small / Hut","Medium / Townhouse","Large / High-Rise",
@@ -945,7 +1322,13 @@
           ]) },
           { label: "Condition", value: randChoice([
             "Pristine / New","Well-Maintained","Abandoned / Ruined",
-            "Under Construction","Overgrown by Nature","Heavy Water Damage"
+            "Under Construction","Overgrown by Nature","Heavy Water Damage", "Under heavy renovation",
+"Shell with only façade standing",
+"Burned out inside",
+"Reinforced and fortified",
+"Partially submerged",
+"Encased in scaffolding / tarps"
+
           ]) },
           { label: "Roof Type", value: randChoice([
             "Flat / Helipad","Pitched / Slanted","Domed / Arched",
@@ -962,6 +1345,14 @@
           { label: "Surroundings", value: randChoice([
             "Busy Urban Center","Isolated Mountain Peak","Dense Jungle",
             "Waterfront / Coast","Barren Desert","On another planet"
+          ]) },
+        { label: "Context", value: randChoice([
+            "Pressed against a highway or rail",
+"In a tight alley canyon",
+"Isolated on a hill / outcrop",
+"Built over older ruins",
+"Adjacent to improvised markets",
+"Border between two factions"
           ]) }
         ]
       };
@@ -974,11 +1365,22 @@
           { label: "Category", value: "Environment" },
           { label: "Type", value: randChoice([
             "Forest / Woods","Mountain Range","Desert / Dune Sea",
-            "Coastal / Beach","Swamp / Marsh","Tundra / Ice Caps","Cave / Cavern"
+            "Coastal / Beach","Swamp / Marsh","Tundra / Ice Caps","Cave / Cavern", "Rooftop forest or garden",
+"Flooded city level",
+"Cliffside settlement",
+"Underground transit tunnel",
+"Factory interior maze",
+"Open plaza beneath towers"
           ]) },
           { label: "Weather / Atmosphere", value: randChoice([
             "Sunny / Clear","Heavy Fog / Mist","Driving Rainstorm",
-            "Snow / Blizzard","Dust Storm","Eerie Green Sky"
+            "Snow / Blizzard","Dust Storm","Eerie Green Sky", "Harsh, directional spotlighting",
+"Orange smog / wildfire haze",
+"Flashing emergency lights",
+"Heavy dust in the air",
+"Soft snow dampening sound",
+"Digital rain / glitch overlays"
+
           ]) },
           { label: "Time of Day", value: randChoice([
             "Sunrise / Golden Hour","Midday / Harsh Light","Sunset / Dusk",
@@ -991,11 +1393,12 @@
           { label: "Man-made Element", value: randChoice([
             "Single Tower / Lighthouse","Broken Fence / Barbed Wire",
             "Small Camp / Tent","Satellite Dish","Hydroponics Farm",
-            "No Visible Man-made Element"
-          ]) },
-          { label: "Color Palette Focus", value: randChoice([
-            "Monochromatic Greens/Blues","High Contrast Black/White",
-            "Warm Earth Tones","Vibrant Neons and Purples"
+            "No Visible Man-made Element", "Monolithic statue or icon",
+"Improvised shrine or memorial",
+"Collapsed structure in mid-frame",
+"Massive screen or billboard",
+"Gateway / archway",
+"Vehicle or machine centerpiece"
           ]) },
           { label: "Mood / Vibe", value: randChoice([
             "Peaceful / Serene","Dangerous / Foreboding","Mysterious / Unsettling",
@@ -1020,15 +1423,29 @@
           ]) },
           { label: "Habitat", value: randChoice([
             "Deep Forest Floor","Desert Rock Crevice","Volcanic Soil",
-            "Deep Sea Vents","Urban Crack","Toxic Wasteland"
-          ]) },
-          { label: "Coloration", value: randChoice([
-            "Vibrant Greens & Yellows","Deep Purples & Blues","Monochromatic Gray",
-            "Glowing Whites & Pale Reds","Translucent / Glass-like","Metallic Sheen"
+            "Deep Sea Vents","Urban Crack","Toxic Wasteland", "Grows in cracks of buildings",
+"Thrives in polluted soil",
+"Clustered around power sources",
+"Only in deep shade",
+"Found near water leaks or pipes",
+"Growing on old machinery"
+
           ]) },
           { label: "Key Feature", value: randChoice([
             "Exaggerated Thorns / Spikes","Soft, Furry Texture","Emits a Strong Scent",
-            "Produces a Bio-Luminescence","Hollow/Cage-like Structure","Moves Slowly"
+            "Produces a Bio-Luminescence","Hollow/Cage-like Structure","Moves Slowly", "Bioluminescent vine",
+"Glass-like crystalline plant",
+"Floating seed cluster",
+"Carnivorous blossom",
+"Fungus colony / shelf growth",
+"Metallic leaf plant", "Leaves that resemble circuitry",
+"Flowers that close when watched",
+"Spines that drip sap",
+"Pods that rattle when shaken",
+"Roots that surface like cables",
+"Symmetrical, artificial-looking growth"
+
+
           ]) },
           { label: "Defense/Adaptation", value: randChoice([
             "Camouflage","Poisonous Sap / Spores","Armored Bark",
@@ -1040,7 +1457,7 @@
           ]) },
           { label: "Context", value: randChoice([
             "Clinging to a cliff face","Growing through metal debris",
-            "Rooted in a perfectly clear pool","Illuminating a dark cavern"
+            "Rooted in a perfectly clear pool","Illuminating a dark cavern", 
           ]) },
           { label: "Inspiration", value: randChoice([
             "Cactus & Coral","Deep Sea Creature","Fungal Bloom & Moss",
@@ -1057,7 +1474,13 @@
           { label: "Category", value: "Creature" },
           { label: "Body Plan", value: randChoice([
             "Bipedal (Humanoid)","Quadrupedal (Mammalian)","Hexapodal (Insectile)",
-            "Serpentine / Legless","Avian (Winged)","Aquatic (Fish/Cephalopod)"
+            "Serpentine / Legless","Avian (Winged)","Aquatic (Fish/Cephalopod)", "Elongated, eel-like body",
+"Thin, insectoid frame",
+"Bulky, quadruped mass",
+"Centaur-like hybrid",
+"Cloud / swarm of small bodies",
+"Amorphous slime / shadow"
+
           ]) },
           { label: "Size", value: randChoice([
             "Tiny (Insect/Rodent)","Small (Cat/Dog)","Medium (Human/Deer)",
@@ -1075,17 +1498,36 @@
             "Multiple Eyes / Limbs","A Massive Tail / Fin","Bioluminescent Spots",
             "A Symmetrical Crest / Horns","An Exposed Organ / Skeleton"
           ]) },
-          { label: "Color Palette Focus", value: randChoice([
-            "Aposematic (Warning) Colors","Deep Sea Blues & Blacks",
-            "Desert Camouflage (Browns/Tans)","Arctic White & Icy Blue"
+ { label: "Locomotion", value: randChoice([
+           "Glides just above the ground",
+"Burrows quickly under surfaces",
+"Hops or jerks unpredictably",
+"Climbs with many limbs",
+"Floats with no visible support",
+"Moves in short, sudden bursts"
+
           ]) },
           { label: "Diet", value: randChoice([
             "Carnivore (Hunter)","Herbivore (Grazer)","Omnivore (Scavenger)",
             "Photosynthetic (Plant-like)","Energy Vampire"
           ]) },
+           { label: "Accents", value: randChoice([
+           "Eyes that reflect symbols",
+"Translucent flesh with visible organs",
+"Patchwork cybernetic additions",
+"Mouths in unexpected places",
+"Sound it makes precedes its arrival",
+"Leaves strange residue where it walks"
+          ]) },
           { label: "Behavior", value: randChoice([
             "Solitary / Territorial","Pack Hunter / Social",
-            "Migratory / Nomadic","Burrowing / Sedentary"
+            "Migratory / Nomadic","Burrowing / Sedentary", "Curious but easily spooked",
+"Predatory if cornered",
+"Guard dog for a location",
+"Parasitic but subtle",
+"Symbiotic if treated well",
+"Emotionally responsive to fear"
+
           ]) }
         ]
       };
@@ -1102,7 +1544,13 @@
           ]) },
           { label: "Setting", value: randChoice([
             "A Busy Marketplace","A Forgotten Library","The Edge of a Cliff",
-            "Inside a Spaceship Cockpit","A Small Forest Clearing","An Underground Lab"
+            "Inside a Spaceship Cockpit","A Small Forest Clearing","An Underground Lab", "Overlook inside a megastructure",
+"Cluttered workbench space",
+"Threshold of a doorway",
+"Alley between glowing towers",
+"Interior of transit vehicle",
+"Bridge or catwalk over void"
+
           ]) },
           { label: "Time of Day", value: randChoice([
             "Golden Hour (Sunset/Sunrise)","Mid-Day (Harsh Light)","Blue Hour (Twilight)",
@@ -1114,11 +1562,23 @@
           ]) },
           { label: "Action / Conflict", value: randChoice([
             "A Chase is in Progress","Two Characters are Arguing","A Moment of Quiet Relief",
-            "Someone is Fixing Something","A Ritual is Being Performed"
+            "Someone is Fixing Something","A Ritual is Being Performed", "Someone arriving late or out of breath",
+"A tense handoff or exchange",
+"Someone hiding or eavesdropping",
+"An experiment going wrong",
+"Cleanup after something terrible",
+"Characters waiting in uneasy silence"
+
           ]) },
           { label: "Weather / Mood", value: randChoice([
             "Light Rain / Melancholy","Bright Sun / Optimistic","Heavy Fog / Mysterious",
-            "Windy / Tense","Eerie Silence / Dread"
+            "Windy / Tense","Eerie Silence / Dread", "Harsh backlighting / strong silhouettes",
+"Flickering artificial lights",
+"Power outage with emergency glow",
+"Dust motes or debris in air",
+"Sunset casting long shadows",
+"Muted, overcast light"
+
           ]) },
           { label: "Camera Angle", value: randChoice([
             "Low Angle (Looking Up)","High Angle (Looking Down)","Eye Level (Direct View)",
@@ -1126,7 +1586,13 @@
           ]) },
           { label: "Composition Hint", value: randChoice([
             "Use leading lines (roads, paths)","Use the rule of thirds",
-            "Focus on depth and layering","Symmetry and reflection"
+            "Focus on depth and layering","Symmetry and reflection", "Strong diagonal leading lines",
+"Foreground obstruction / over-the-shoulder",
+"Character framed in doorway or window",
+"Central object with characters orbiting",
+"Layered depth with haze / silhouettes",
+"Asymmetrical balance around a bright element"
+
           ]) }
         ]
       };
@@ -1683,7 +2149,7 @@ let isPaletteLocked = false; // NEW: palette lock flag
       createDetailRows(detailGrid, ideaData.details);
 
       document.getElementById("btn-favorite-current").textContent =
-        "Add to Favorites ⭐"; // Reset button text
+        "⭐"; // Reset button text
 
       // Update branch pills state
       updateBranchPills(branchInfo.id);
@@ -1703,42 +2169,52 @@ let isPaletteLocked = false; // NEW: palette lock flag
 }
 
 function renderPalette() {
-      if (!currentPalette) return;
+  if (!currentPalette) return;
 
-      swatchRow.innerHTML = "";
-      hexRow.innerHTML = ""; // allow multiple lines
+  swatchRow.innerHTML = "";
+  hexRow.innerHTML = ""; // allow multiple lines
 
-      const colorRoles = ["Primary", "Secondary", "Accent", "Neutral", "Pop"]; // Fixed 5 roles
+  // NEW: inline preview next to title (mobile/tablet)
+  const previewInline = document.getElementById("palette-preview-inline");
+  if (previewInline) {
+    previewInline.innerHTML = "";
+  }
 
-      const colorsToShow = currentPalette.colors.slice(0, visibleColorCount);
+  const colorsToShow = currentPalette.colors.slice(0, visibleColorCount);
 
-      colorsToShow.forEach((hex, index) => {
-        const swatch = document.createElement("div");
-        swatch.className = "swatch";
-        swatch.style.backgroundColor = hex;
-        // Use fixed roles since count is fixed at 5
-        // swatch.setAttribute("data-role", colorRoles[index] || "Color " + (index + 1));
-        swatch.addEventListener("click", () => copyColor(hex));
-        swatchRow.appendChild(swatch);
-      });
+  colorsToShow.forEach((hex) => {
+    const swatch = document.createElement("div");
+    swatch.className = "swatch";
+    swatch.style.backgroundColor = hex;
+    swatch.addEventListener("click", () => copyColor(hex));
+    swatchRow.appendChild(swatch);
 
-      // Line 1: hex values
-      const hexLine = document.createElement("div");
-      hexLine.textContent = colorsToShow.join(" • ").toUpperCase();
-      hexRow.appendChild(hexLine);
-
-      // Line 2: Palette ID, e.g. "Palette #007 of 182"
-      if (typeof currentPalette.paletteIndex === "number") {
-        const total = fixedCustomPalettes.length; // whatever your current length is (182/198/etc.)
-        const humanIndex = currentPalette.paletteIndex + 1; // 1-based for humans
-        const padded = String(humanIndex).padStart(3, "0");
-
-        const idLine = document.createElement("div");
-        idLine.className = "palette-id-row";
-        idLine.textContent = `Palette #${padded} of ${total}`;
-        hexRow.appendChild(idLine);
-      }
+    // five tiny squares inline with the title
+    if (previewInline && previewInline.childElementCount < 5) {
+      const sq = document.createElement("div");
+      sq.style.backgroundColor = hex;
+      previewInline.appendChild(sq);
     }
+  });
+
+  // Line 1: hex values
+  const hexLine = document.createElement("div");
+  hexLine.textContent = colorsToShow.join(" • ").toUpperCase();
+  hexRow.appendChild(hexLine);
+
+  // Line 2: Palette #xxx of N (keep your existing code here)
+  if (typeof currentPalette.paletteIndex === "number") {
+    const total = fixedCustomPalettes.length;
+    const humanIndex = currentPalette.paletteIndex + 1;
+    const padded = String(humanIndex).padStart(3, "0");
+
+    const idLine = document.createElement("div");
+    idLine.className = "palette-id-row";
+    idLine.textContent = `Palette #${padded} of ${total}`;
+    hexRow.appendChild(idLine);
+  }
+}
+
 
 
 
@@ -1873,22 +2349,21 @@ function renderPalette() {
       });
 
     document
-      .getElementById("btn-favorite-current")
-      .addEventListener("click", () => {
-        if (!currentIdea) return;
-        const visibleColors = currentPalette.colors.slice(0, visibleColorCount);
-        const entry = {
-          branchId: currentIdea.branchId,
-          branchLabel: currentIdea.branchLabel,
-          summary: summarizeIdeaForFavorite(currentIdea),
-          fullText: currentIdeaText(),
-          palette: visibleColors,
-          timestamp: new Date().toLocaleString()
-        };
-        addFavorite(entry);
-        document.getElementById("btn-favorite-current").textContent =
-          "Saved ⭐";
-      });
+  .getElementById("btn-favorite-current")
+  .addEventListener("click", () => {
+    if (!currentIdea) return;
+    const visibleColors = currentPalette.colors.slice(0, visibleColorCount);
+    const entry = {
+      branchId: currentIdea.branchId,
+      branchLabel: currentIdea.branchLabel,
+      summary: summarizeIdeaForFavorite(currentIdea),
+      fullText: currentIdeaText(),
+      palette: visibleColors,
+      timestamp: new Date().toLocaleString()
+    };
+    addFavorite(entry);
+  });
+
 
     const favoritesPanel = document.getElementById("favorites-panel");
 
@@ -1937,6 +2412,110 @@ if (paletteLockBtn) {
     // Initial load: generate an idea and an initial custom palette
     generateIdea(null);
     resetAndRegeneratePalette();
+    
+    // --- Accordion for branch row (mobile/tablet) ---
+(function() {
+  const accordion = document.getElementById("branch-accordion");
+  const branchRow = document.getElementById("branch-row");
+  const label = accordion ? accordion.querySelector(".branch-label") : null;
+  const btnRandom = document.getElementById("btn-random-mode");
+  const btnPick = document.getElementById("btn-pick-mode");
+
+  function isSmallScreen() {
+    return window.innerWidth <= 1024;
+  }
+
+  function openAccordion() {
+    if (accordion && isSmallScreen()) {
+      accordion.classList.add("open");
+    }
+  }
+
+  function closeAccordion() {
+    if (accordion && isSmallScreen()) {
+      accordion.classList.remove("open");
+    }
+  }
+
+  // default: closed in Random mode on small screens
+  if (accordion && isSmallScreen()) {
+    accordion.classList.remove("open");
+  }
+
+  // toggle by tapping the label
+  if (accordion && label) {
+    label.addEventListener("click", () => {
+      if (!isSmallScreen()) return;
+      accordion.classList.toggle("open");
+    });
+  }
+
+  // hook into existing mode buttons just for visual accordion state
+  if (btnRandom) {
+    btnRandom.addEventListener("click", () => {
+      closeAccordion();
+    });
+  }
+  if (btnPick) {
+    btnPick.addEventListener("click", () => {
+      openAccordion();
+    });
+  }
+
+  // when a branch pill is clicked, auto-close on small screens
+  if (branchRow) {
+    branchRow.addEventListener("click", () => {
+      closeAccordion();
+    });
+  }
+})();
+
+// --- Palette drawer toggle (mobile/tablet) ---
+(function() {
+  const paletteCard = document.querySelector(".palette-card");
+  const paletteHeader = paletteCard ? paletteCard.querySelector(".palette-header") : null;
+
+  function isSmallScreen() {
+    return window.innerWidth <= 1024;
+  }
+
+  function openDrawer() {
+    if (paletteCard && isSmallScreen()) {
+      paletteCard.classList.add("drawer-open");
+    }
+  }
+
+  function closeDrawer() {
+    if (paletteCard && isSmallScreen()) {
+      paletteCard.classList.remove("drawer-open");
+    }
+  }
+
+  // toggle drawer by tapping the palette header
+  if (paletteCard && paletteHeader) {
+    paletteHeader.addEventListener("click", () => {
+      if (!isSmallScreen()) return;
+      paletteCard.classList.toggle("drawer-open");
+    });
+  }
+
+  // collapse drawer after generating a new idea on small screens
+  const btnGenerate = document.getElementById("btn-generate");
+  if (btnGenerate) {
+    btnGenerate.addEventListener("click", () => {
+      closeDrawer();
+    });
+  }
+
+  // also collapse on resize up to desktop
+  window.addEventListener("resize", () => {
+    if (!isSmallScreen() && paletteCard) {
+      paletteCard.classList.remove("drawer-open");
+    }
+  });
+})();
+
+
   </script>
 </body>
 </html>
