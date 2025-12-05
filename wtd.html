@@ -907,98 +907,135 @@
       };
     }
 
-    function genCharacterBuild() {
-      return {
-        subtitle: "Randomized physical build & expression.",
-        details: [
-          { label: "Gender", value: randChoice(["Male","Female","Other"]) },
-          { label: "Height", value: randChoice(["Tall","Average","Short"]) },
-          { label: "Stature", value: randChoice(["Skinny","Athletic","Heavyset"]) },
-          { label: "Torso", value: randChoice([
-            "Balanced torso", "Long torso / short legs", "Short torso / long legs"
-          ]) },
-          { label: "Neck", value: randChoice([
-            "Thin long neck","Thick short neck","Standard"
-          ]) },
-          { label: "Arms", value: randChoice([
-            "Normal long arms","Short thick arms","Standard"
-          ]) },
-          { label: "Hands", value: randChoice([
-            "Thin small hands","Thick large hands","Standard"
-          ]) },
-          { label: "Feet", value: randChoice([
-            "Thin small feet","Thick large feet","Standard"
-          ]) },
-          { label: "Legs", value: randChoice([
-            "Normal long legs","Short stocky legs","Standard"
-          ]) },
-          { label: "Head Shape", value: randChoice([
-            "Circle","Vertical oval","Horizontal rectangle",
-            "Triangle up","Triangle down","Diamond"
-          ]) },
-          { label: "Feature Layout", value: randChoice([
-            "Features high on the head","Features mid on the head","Features low on the head"
-          ]) },
-          { label: "Posture", value: randChoice([
-            "Relaxed","Aggressive","Alert","Tired","Neutral","Slouched"
-          ]) },
-          { label: "Activity", value: randChoice([
-            "Standing casually","Moving gesturally","Behaving in a focused manner","Holding an object"
-          ]) },
-          { label: "Mouth", value: randChoice([
-            "Thin","Full","Smirk","Frown","Open","Basic line","Neutral"
-          ]) },
-          { label: "Nose", value: randChoice([
-            "Round","Straight","Squiggle","Wide","Short","Tall / long","No nose"
-          ]) },
-          { label: "Eyes", value: randChoice([
-            "Dots","Standard","Highly emotive","Droopy","Blank","Closed"
-          ]) },
-          { label: "Hair", value: randChoice([
-            "Short","Long","Average","Bald","Messy","Outlandish","Classy"
-          ]) },
-          { label: "Clothing", value: randChoice([
-            "Tight","Flowing","Casual","Formal","Sparse","Layered","Activewear", "Monastic / ritual robes",
-			"Corporate uniform with badge", "Layered streetwear / techwear", "Heavy coat with hidden pockets",
-			"Utility jumpsuit / coveralls", "Patchwork / scavenged layers", "Traditional / cultural garments",
-			"Hospital / lab attire"
+  function genCharacterBuild() {
+  // Framing options
+  const framingView = ["Frontside", "Backside", "Profile"];
+  const framingAngle = [
+    "Bird's-eye (downward)",
+    "Eye level",
+    "Floor level (upward)"
+  ];
+  const framingOrientation = [
+    "Straight forward",
+    "3/4 perspective (left)",
+    "3/4 perspective (right)"
+  ];
 
-          ]) },
-          { label: "Accessories", value: randChoice([
-            "Minimal jewelry", "Sunglasses, bag, patches", "Scarf & earphones", "Pouches & tools", "Visible tattoos & piercings",
-            "Bandages, braces, medical gear", "Analog gadgets (tapes, cameras)", "Charm chains / talismans",
-			"Headset / comm rigs", "Masks or respirators", "Gloves, wrist braces, tape", "Heavy backpack / field kit"
+  // Pick components
+  const view  = randChoice(framingView);
+  const angle = randChoice(framingAngle);
+  let framingValue;
 
-          ]) },
-          { label: "Footwear", value: randChoice([
-            "Barefoot / minimal","Casual sneakers","Industrial / utility boots",
-            "Combat / military boots","Formal shoes","Experimental / unusual"
-          ]) },
-          { label: "Emotion", value: randChoice([
-            "Calm / relaxed","Focused / determined","Angry / tense","Sad / melancholic",
-            "Amused","Exhausted","Detached / blank", "On the verge of tears", "Suppressing laughter",
-			"Suspicious / side-eyeing", "Startled / recently interrupted", "Zen / meditative",
-			"Haunted / thousand-yard stare"
+  // If Profile, don't use any orientation (side view only)
+  if (view === "Profile") {
+    framingValue = `${view} • ${angle}`;
+  } else {
+    const orientation = randChoice(framingOrientation);
+    framingValue = `${view} • ${angle} • ${orientation}`;
+  }
 
-          ]) },
-          { label: "Gaze", value: randChoice([
-            "Direct / forward","Downcast / avoidant","Sideward / glancing",
-            "Wide / startled","Half-lidded / tired","Closed", "Looking slightly off-frame",
-			"Eyes locked on a small object", "Staring into middle distance", "Squinting as if against light",
-			"Averted toward the floor", "Searching the crowd"
+  return {
+    subtitle: "Randomized physical build & expression.",
+    details: [
+      // 👇 New field goes BEFORE Gender
+      { label: "Framing", value: framingValue },
 
-          ]) },
-          { label: "Build Accent", value: randChoice([
-            "Broad shoulders","Narrow shoulders","Sloped shoulders",
-            "Large head relative to body","Small head relative to body",
-            "Uneven stance / hip drop","Asymmetry in limbs","Missing / augmented limb", "Old injuries / scars visible",
-			"Prosthetic limb or implant", "Noticeably hunched forward", "Rigid, military bearing",
-			"Extremely flexible / loose posture", "Weight shifted away from viewer"
-
-          ]) }
-        ]
-      };
-    }
+      { label: "Gender", value: randChoice(["Male","Female","Other"]) },
+      { label: "Height", value: randChoice(["Tall","Average","Short"]) },
+      { label: "Stature", value: randChoice(["Skinny","Athletic","Heavyset"]) },
+      { label: "Torso", value: randChoice([
+        "Balanced torso", "Long torso / short legs", "Short torso / long legs"
+      ]) },
+      { label: "Neck", value: randChoice([
+        "Thin long neck","Thick short neck","Standard"
+      ]) },
+      { label: "Arms", value: randChoice([
+        "Normal long arms","Short thick arms","Standard"
+      ]) },
+      { label: "Hands", value: randChoice([
+        "Thin small hands","Thick large hands","Standard"
+      ]) },
+      { label: "Feet", value: randChoice([
+        "Thin small feet","Thick large feet","Standard"
+      ]) },
+      { label: "Legs", value: randChoice([
+        "Normal long legs","Short stocky legs","Standard"
+      ]) },
+      { label: "Head Shape", value: randChoice([
+        "Circle","Vertical oval","Horizontal rectangle",
+        "Triangle up","Triangle down","Diamond"
+      ]) },
+      { label: "Feature Layout", value: randChoice([
+        "Features high on the head","Features mid on the head","Features low on the head"
+      ]) },
+      { label: "Posture", value: randChoice([
+        "Relaxed","Aggressive","Alert","Tired","Neutral","Slouched"
+      ]) },
+      { label: "Activity", value: randChoice([
+        "Standing casually","Moving gesturally","Behaving in a focused manner","Holding an object"
+      ]) },
+      { label: "Mouth", value: randChoice([
+        "Thin","Full","Smirk","Frown","Open","Basic line","Neutral"
+      ]) },
+      { label: "Nose", value: randChoice([
+        "Round","Straight","Squiggle","Wide","Short","Tall / long","No nose"
+      ]) },
+      { label: "Eyes", value: randChoice([
+        "Dots","Standard","Highly emotive","Droopy","Blank","Closed"
+      ]) },
+      { label: "Hair", value: randChoice([
+        "Short","Long","Average","Bald","Messy","Outlandish","Classy"
+      ]) },
+      { label: "Clothing", value: randChoice([
+        "Tight","Flowing","Casual","Formal","Sparse","Layered","Activewear",
+        "Monastic / ritual robes",
+        "Corporate uniform with badge",
+        "Layered streetwear / techwear",
+        "Heavy coat with hidden pockets",
+        "Utility jumpsuit / coveralls",
+        "Patchwork / scavenged layers",
+        "Traditional / cultural garments",
+        "Hospital / lab attire"
+      ]) },
+      { label: "Accessories", value: randChoice([
+        "Minimal jewelry", "Sunglasses, bag, patches", "Scarf & earphones", "Pouches & tools", "Visible tattoos & piercings",
+        "Bandages, braces, medical gear", "Analog gadgets (tapes, cameras)", "Charm chains / talismans",
+        "Headset / comm rigs", "Masks or respirators", "Gloves, wrist braces, tape", "Heavy backpack / field kit"
+      ]) },
+      { label: "Footwear", value: randChoice([
+        "Barefoot / minimal","Casual sneakers","Industrial / utility boots",
+        "Combat / military boots","Formal shoes","Experimental / unusual"
+      ]) },
+      { label: "Emotion", value: randChoice([
+        "Calm / relaxed","Focused / determined","Angry / tense","Sad / melancholic",
+        "Amused","Exhausted","Detached / blank", "On the verge of tears", "Suppressing laughter",
+        "Suspicious / side-eyeing", "Startled / recently interrupted", "Zen / meditative",
+        "Haunted / thousand-yard stare"
+      ]) },
+      { label: "Gaze", value: randChoice([
+        "Direct / forward","Downcast / avoidant","Sideward / glancing",
+        "Wide / startled","Half-lidded / tired","Closed",
+        "Looking slightly off-frame",
+        "Eyes locked on a small object",
+        "Staring into middle distance",
+        "Squinting as if against light",
+        "Averted toward the floor",
+        "Searching the crowd"
+      ]) },
+      { label: "Build Accent", value: randChoice([
+        "Broad shoulders","Narrow shoulders","Sloped shoulders",
+        "Large head relative to body","Small head relative to body",
+        "Uneven stance / hip drop","Asymmetry in limbs","Missing / augmented limb",
+        "Old injuries / scars visible",
+        "Prosthetic limb or implant",
+        "Noticeably hunched forward",
+        "Rigid, military bearing",
+        "Extremely flexible / loose posture",
+        "Weight shifted away from viewer"
+      ]) }
+    ]
+  };
+}
 
     function genDevice() {
       return {
@@ -1968,20 +2005,136 @@ function generatePalette(mode, count) {
     }
 
 
-    // A map for generating random names for ideas (unchanged)
-    const ideaTitleMap = {
-      characterType: ["The", "A lone", "The forgotten", "An ancient"],
-      characterBuild: ["The imposing", "The graceful", "The rugged", "The smooth"],
-      device: ["The obsolete", "The strange", "The new", "The powerful"],
-      weapon: ["The rusty", "The holy", "The futuristic", "The deadly"],
-      artifact: ["The shattered", "The glowing", "The legendary", "The cursed"],
-      vehicle: ["The bulky", "The fast", "The salvaged", "The massive"],
-      building: ["The collapsed", "The perfect", "The forgotten", "The imposing"],
-      environment: ["The deep", "The toxic", "The calm", "The hostile"],
-      plant: ["The towering", "The tiny", "The luminous", "The strange"],
-      creature: ["The majestic", "The terrifying", "The tiny", "The playful"],
-      scene: ["A tense", "A quiet", "An epic", "A serene"]
-    };
+   const ideaTitleMap = {
+  characterType: [
+    "The", "A Lone", "The Forgotten", "An Ancient", "The Wandering", "The Displaced",
+    "The Haunted", "The Reluctant", "The Obsessive", "The Exile", "The Quiet",
+    "The Inscrutable", "The Broken", "The Watchful", "The Feral", "The Lost",
+    "The Unmoored", "The Drifting", "The Ghostlike", "The Hollow", "The Paradoxical",
+    "The Unnamed", "The Masked", "The Shifting", "The Disguised", "The Returning",
+    "The Unsettled", "The Nomadic", "The Vigilant", "The Exposed", "The Unspoken",
+    "The Dreaming", "The Rootless", "The Frayed", "The Unfinished", "The Silent",
+    "The Weathered", "The Mutable", "The Enduring", "The Burdened", "The Witness"
+  ],
+
+  characterBuild: [
+    "The Imposing", "The Graceful", "The Rugged", "The Smooth", "The Angular",
+    "The Compact", "The Towering", "The Slight", "The Weathered", "The Statuesque",
+    "The Hunched", "The Coiled", "The Relaxed", "The Taut", "The Grounded",
+    "The Fluid", "The Blocky", "The Elongated", "The Delicate", "The Massive",
+    "The Balanced", "The Off-Center", "The Composed", "The Crooked", "The Animated",
+    "The Still", "The Heavy-Set", "The Light-Boned", "The Symmetrical", "The Distorted",
+    "The Hardened", "The Soft-Edged", "The Awkward", "The Agile", "The Sturdy",
+    "The Intimidating", "The Slouching", "The Upright", "The Coarse", "The Refined"
+  ],
+
+  device: [
+    "The Obsolete", "The Strange", "The New", "The Powerful", "The Unstable",
+    "The Experimental", "The Forbidden", "The Jury-Rigged", "The Corporate",
+    "The Clinical", "The Improvised", "The Elegant", "The Noisy", "The Temperamental",
+    "The Compact", "The Arcane", "The Modular", "The Primitive", "The Holographic",
+    "The Transmitting", "The Broken-Down", "The Repaired", "The Prototype",
+    "The Miniaturized", "The Overclocked", "The Rust-Ridden", "The Glitching",
+    "The Encrypted", "The Smuggled", "The Unregistered", "The Reverse-Engineered",
+    "The Biotech", "The Solar-Fed", "The Quantum", "The Analog", "The Repurposed",
+    "The Tampered", "The Volatile", "The Heat-Warped", "The Signal-Bound"
+  ],
+
+  weapon: [
+    "The Rusty", "The Holy", "The Futuristic", "The Deadly", "The Brutal",
+    "The Elegant", "The Improvised", "The Ceremonial", "The Heirloom", "The Cursed",
+    "The Silent", "The Reckless", "The Experimental", "The Archaic", "The Shattered",
+    "The Balanced", "The Twin-Edged", "The Jagged", "The Forged", "The Blessed",
+    "The Tainted", "The Repurposed", "The Heavy", "The Lightweight", "The Reinforced",
+    "The Glowing", "The Serrated", "The Rapid-Strike", "The Ancient", "The Cybernetic",
+    "The Bone-Carved", "The Ritual", "The Impact-Driven", "The Ionic", "The Molten",
+    "The Fused-Metal", "The Alloy-Bound", "The Hyperdense", "The Phase-Shifted"
+  ],
+
+  artifact: [
+    "The Shattered", "The Glowing", "The Legendary", "The Cursed", "The Dormant",
+    "The Humming", "The Forgotten", "The Revered", "The Fractured", "The Disputed",
+    "The Impossible", "The Encoded", "The Veiled", "The Unstable", "The Whispering",
+    "The Blood-Marked", "The Luminous", "The Mosaic", "The Ancient", "The Unearthed",
+    "The Forbidden", "The Chiseled", "The Petrified", "The Radiant", "The Cracked",
+    "The Singing", "The Cryptic", "The Hollowed", "The Floating", "The Anchored",
+    "The Twisting", "The Breathing", "The Multi-Faceted", "The Idolized", "The Broken-Idol",
+    "The Runic", "The Weather-Stained", "The Fossilized", "The Divine"
+  ],
+
+  vehicle: [
+    "The Bulky", "The Fast", "The Salvaged", "The Massive", "The Agile",
+    "The Armored", "The Patched-Together", "The Ceremonial", "The Menacing",
+    "The Graceful", "The Silent-Running", "The Overworked", "The Prototype",
+    "The Smuggler’s", "The Retro-Fitted", "The Hovering", "The Turbocharged",
+    "The Long-Haul", "The Hybrid", "The Unregistered", "The Black-Market",
+    "The Low-Altitude", "The Multi-Jointed", "The Cargo-Heavy", "The Aerodynamic",
+    "The Camouflaged", "The Weather-Proofed", "The Experimental-Drive",
+    "The All-Terrain", "The Sand-Scoured", "The Ice-Tracked", "The Ridge-Skimmer",
+    "The Radiant-Engine", "The Ghost-Vehicle", "The Solar-Winged",
+    "The Reinforced-Shell", "The Tri-Tread", "The Micro-Shuttle", "The Noise-Damped"
+  ],
+
+  building: [
+    "The Collapsed", "The Perfect", "The Forgotten", "The Imposing", "The Overgrown",
+    "The Fortified", "The Condemned", "The Repurposed", "The Sacred", "The Corporate",
+    "The Windowless", "The Towering", "The Labyrinthine", "The Hidden", "The Subterranean",
+    "The Flooded", "The Derelict", "The Brutalist", "The Neo-Futurist", "The Spired",
+    "The Shuttered", "The Reinforced", "The Hollow", "The Multi-Layered", "The Fragmented",
+    "The Soundproof", "The Abandoned", "The Converted", "The Encrypted", "The Occupied",
+    "The Burned-Out", "The Renovated", "The Shifting", "The Suspended", "The Leaning",
+    "The Ion-Scorched", "The Mist-Bound", "The Gated", "The Perched"
+  ],
+
+  environment: [
+    "The Deep", "The Toxic", "The Calm", "The Hostile", "The Flooded",
+    "The Fog-Choked", "The Neon-Soaked", "The Dust-Heavy", "The Overgrown",
+    "The Abandoned", "The Crowded", "The Echoing", "The Liminal", "The Wind-Scoured",
+    "The Dusklit", "The Sun-Blasted", "The Frozen", "The Sweltering", "The Quiet",
+    "The Breathing", "The Shifting", "The Night-Drenched", "The Sand-Drowned",
+    "The Moss-Covered", "The Crystal-Ridden", "The Void-Adjacent", "The Ruined",
+    "The Hollow-Field", "The Tangle-Wood", "The Plague-Bloom", "The Vapor-Trail",
+    "The Tectonic", "The Polluted", "The Storm-Wrought", "The Rift-Border",
+    "The River-Scarred", "The Fog-Silent", "The Depth-Narrowed"
+  ],
+
+  plant: [
+    "The Towering", "The Tiny", "The Luminous", "The Strange", "The Invasive",
+    "The Fragile", "The Parasitic", "The Cultivated", "The Wild", "The Crystalline",
+    "The Bioluminescent", "The Spined", "The Flowering", "The Poisonous",
+    "The Withered", "The Blooming", "The Thorn-Crowned", "The Sap-Dripping",
+    "The Root-Bound", "The Symbiotic", "The Animated", "The Ancient",
+    "The Shimmering", "The Glass-Leafed", "The Moss-Crested", "The Fungal-Hybrid",
+    "The Choked-Vine", "The Bark-Split", "The Soft-Petaled", "The Razor-Leafed",
+    "The Water-Fed", "The Shadow-Fed", "The Night-Blooming", "The Verdant",
+    "The Ash-Covered", "The Twisting", "The Spore-Bursting"
+  ],
+
+  creature: [
+    "The Majestic", "The Terrifying", "The Tiny", "The Playful", "The Skittish",
+    "The Patient", "The Ravenous", "The Watchful", "The Wounded", "The Experimental",
+    "The Spectral", "The Chimeric", "The Lumbering", "The Hyperactive",
+    "The Shivering", "The Winged", "The Scale-Covered", "The Fur-Matted",
+    "The Horn-Crowned", "The Many-Eyed", "The One-Eyed", "The Mimicking",
+    "The Camouflaged", "The Burrowing", "The Spined", "The Amphibious", "The Biotech-Spliced",
+    "The Hive-Minded", "The Silent-Pawed", "The Bounding", "The Gliding",
+    "The Predatory", "The Gentle", "The Curious", "The Dream-Strider",
+    "The Void-Born", "The Clever", "The Hesitant"
+  ],
+
+  scene: [
+    "A Tense", "A Quiet", "An Epic", "A Serene", "A Crowded", "A Lonely",
+    "A Chaotic", "A Ritual", "A Fleeting", "A Desperate", "A Hopeful",
+    "A Clandestine", "A Transitional", "A Dreamlike", "A Melancholic",
+    "A Stark", "A Cinematic", "A Nocturnal", "A Violent", "A Slow-Burn",
+    "A Timeless", "A Frozen-Moment", "A Reverent", "A Jarring",
+    "A Sunlit", "A Dust-Lit", "A Neon-Drenched", "A Backlit",
+    "A Confrontational", "An Intimate", "A Vast", "A Confined",
+    "A Labyrinthine", "A Minimalist", "A Suspenseful", "A Heavy-Atmosphere"
+  ]
+};
+
+
 
   let currentIdea = null;
 let currentPalette = null;
@@ -2129,10 +2282,23 @@ let isPaletteLocked = false; // NEW: palette lock flag
 
       if (!branchInfo) return; // Should not happen
 
-      const generator = branchGenerators[selectedBranch];
-      const ideaData = generator();
-      const titlePrefix = randChoice(ideaTitleMap[selectedBranch]);
-      const title = titlePrefix + " " + (ideaData.details[0].value || branchInfo.label);
+   const generator = branchGenerators[selectedBranch];
+const ideaData = generator();
+const titlePrefix = randChoice(ideaTitleMap[selectedBranch]);
+
+let titleCore;
+if (selectedBranch === "characterBuild") {
+  // Find the Gender row in the details and use that as the core noun
+  const genderDetail = ideaData.details.find(d => d.label === "Gender");
+  titleCore = genderDetail ? genderDetail.value : branchInfo.label;
+} else {
+  // All other branches keep using the first detail as before
+  titleCore = (ideaData.details[0] && ideaData.details[0].value) || branchInfo.label;
+}
+
+const title = `${titlePrefix} ${titleCore}`;
+
+
 
       currentIdea = {
         branchId: branchInfo.id,
