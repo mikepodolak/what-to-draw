@@ -1,0 +1,1970 @@
+  // ---------- BRANCHES (unchanged) ----------
+
+    const branches = [
+      { id: "characterType", label: "Type", icon: "🧙‍♂️" },
+      { id: "characterBuild", label: "Build", icon: "🧍" },
+      { id: "device", label: "Device", icon: "📟" },
+      { id: "weapon", label: "Weapon", icon: "⚔️" },
+      { id: "artifact", label: "Artifact", icon: "🗿" },
+      { id: "vehicle", label: "Vehicle", icon: "🚙" },
+      { id: "building", label: "Building", icon: "🏛️" },
+      { id: "environment", label: "Environment", icon: "🌆" },
+      { id: "plant", label: "Plant", icon: "🌿" },
+      { id: "creature", label: "Creature", icon: "🐾" },
+      { id: "scene", label: "Scene", icon: "🎬" }
+    ];
+
+    const randChoice = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+    function createDetailRows(container, details) {
+      container.innerHTML = "";
+      details.forEach((item) => {
+        const label = document.createElement("div");
+        label.className = "field-label";
+        label.textContent = item.label;
+
+        const value = document.createElement("div");
+        value.className = "field-value";
+        value.textContent = item.value || "—";
+        if (!item.value) value.classList.add("field-muted");
+
+        container.appendChild(label);
+        container.appendChild(value);
+      });
+    }
+
+    // ---------- BRANCH GENERATORS (unchanged) ----------
+
+    function genCharacterType() {
+      return {
+        subtitle: "Character type for your next project.",
+        details: [
+          { label: "Archetype", value: randChoice([
+            "Wanderer", "Mystic", "Soldier / Veteran",
+            "Scholar", "Outcast", "Detective", "Caretaker","Engineer / Tinkerer",
+			"Cultist / Believer", "Smuggler / Fixer", "Archivist of the Signal",
+			"Reluctant Leader", "Experiment / Test Subject", "Handler / Interrogator",
+			"Street Prophet"
+          ]) },
+          { label: "Genre Flavor", value: randChoice([
+            "Grounded modern", "Post-apocalyptic", "Low fantasy",
+            "Space opera", "Urban occult", "Soft sci-fi", "Retro-futurist",
+			"Corporate dystopia", "Cyberpunk-adjacent", "Solar-punk gone wrong",
+			"Weird West", "Cosmic horror", "Analog sci-fi (tapes, CRTs)", "Dreamlike / liminal"
+          ]) },
+          { label: "Social Role", value: randChoice([
+            "Underworld / criminal", "Corporate", "Nomadic",
+            "Academic", "Religious order", "Blue-collar", "Government agent / inspector",
+			"Security / paramilitary", "DCS bureaucrat / analyst", "Black-market dealer",
+			"Data broker / information trader", "Cult adherent / initiate", "Test facility staff",
+			"Off-grid drifter"
+
+          ]) },
+          { label: "Core Motivation", value: randChoice([
+            "Curiosity", "Revenge", "Survival", "Love / Connection",
+            "Power / Control", "Redemption", "Escape from the system", "Obsession with truth",
+			"Loyalty to a cause", "Fear of being replaced", "Guilt / atonement", "Preserving someone’s memory",
+			"Curating forbidden knowledge", "Proving they are the ‘original’"
+
+          ]) },
+          { label: "Typical Vibe", value: randChoice([
+            "Calm and observant", "Intense and focused", "Chaotic but charming",
+            "Detached and cold", "Playful and irreverent", "Secretive and paranoid",
+			"Burned-out but persistent", "Quietly furious", "Nervous but hopeful",
+			"Deadpan and sardonic", "Warm but guarded", "Cheerful mask over stress"
+
+          ]) }
+        ]
+      };
+    }
+
+  function genCharacterBuild() {
+  // Framing options
+  const framingView = ["Frontside", "Backside", "Profile"];
+  const framingAngle = [
+    "Bird's-eye (downward)",
+    "Eye level",
+    "Floor level (upward)"
+  ];
+  const framingOrientation = [
+    "Straight forward",
+    "3/4 perspective (left)",
+    "3/4 perspective (right)"
+  ];
+
+  // Pick components
+  const view  = randChoice(framingView);
+  const angle = randChoice(framingAngle);
+  let framingValue;
+
+  // If Profile, don't use any orientation (side view only)
+  if (view === "Profile") {
+    framingValue = `${view} • ${angle}`;
+  } else {
+    const orientation = randChoice(framingOrientation);
+    framingValue = `${view} • ${angle} • ${orientation}`;
+  }
+
+  return {
+    subtitle: "Randomized physical build & expression.",
+    details: [
+      // 👇 New field goes BEFORE Gender
+      { label: "Framing", value: framingValue },
+
+      { label: "Gender", value: randChoice(["Male","Female","Other"]) },
+      { label: "Height", value: randChoice(["Tall","Average","Short"]) },
+      { label: "Stature", value: randChoice(["Skinny","Athletic","Heavyset"]) },
+      { label: "Torso", value: randChoice([
+        "Balanced torso", "Long torso / short legs", "Short torso / long legs"
+      ]) },
+      { label: "Neck", value: randChoice([
+        "Thin long neck","Thick short neck","Standard"
+      ]) },
+      { label: "Arms", value: randChoice([
+        "Normal long arms","Short thick arms","Standard"
+      ]) },
+      { label: "Hands", value: randChoice([
+        "Thin small hands","Thick large hands","Standard"
+      ]) },
+      { label: "Feet", value: randChoice([
+        "Thin small feet","Thick large feet","Standard"
+      ]) },
+      { label: "Legs", value: randChoice([
+        "Normal long legs","Short stocky legs","Standard"
+      ]) },
+      { label: "Head Shape", value: randChoice([
+        "Circle","Vertical oval","Horizontal rectangle",
+        "Triangle up","Triangle down","Diamond"
+      ]) },
+      { label: "Feature Layout", value: randChoice([
+        "Features high on the head","Features mid on the head","Features low on the head"
+      ]) },
+      { label: "Posture", value: randChoice([
+        "Relaxed","Aggressive","Alert","Tired","Neutral","Slouched"
+      ]) },
+      { label: "Activity", value: randChoice([
+        "Standing casually","Moving gesturally","Behaving in a focused manner","Holding an object"
+      ]) },
+      { label: "Mouth", value: randChoice([
+        "Thin","Full","Smirk","Frown","Open","Basic line","Neutral"
+      ]) },
+      { label: "Nose", value: randChoice([
+        "Round","Straight","Squiggle","Wide","Short","Tall / long","No nose"
+      ]) },
+      { label: "Eyes", value: randChoice([
+        "Dots","Standard","Highly emotive","Droopy","Blank","Closed"
+      ]) },
+      { label: "Hair", value: randChoice([
+        "Short","Long","Average","Bald","Messy","Outlandish","Classy"
+      ]) },
+      { label: "Clothing", value: randChoice([
+        "Tight","Flowing","Casual","Formal","Sparse","Layered","Activewear",
+        "Monastic / ritual robes",
+        "Corporate uniform with badge",
+        "Layered streetwear / techwear",
+        "Heavy coat with hidden pockets",
+        "Utility jumpsuit / coveralls",
+        "Patchwork / scavenged layers",
+        "Traditional / cultural garments",
+        "Hospital / lab attire"
+      ]) },
+      { label: "Accessories", value: randChoice([
+        "Minimal jewelry", "Sunglasses, bag, patches", "Scarf & earphones", "Pouches & tools", "Visible tattoos & piercings",
+        "Bandages, braces, medical gear", "Analog gadgets (tapes, cameras)", "Charm chains / talismans",
+        "Headset / comm rigs", "Masks or respirators", "Gloves, wrist braces, tape", "Heavy backpack / field kit"
+      ]) },
+      { label: "Footwear", value: randChoice([
+        "Barefoot / minimal","Casual sneakers","Industrial / utility boots",
+        "Combat / military boots","Formal shoes","Experimental / unusual"
+      ]) },
+      { label: "Emotion", value: randChoice([
+        "Calm / relaxed","Focused / determined","Angry / tense","Sad / melancholic",
+        "Amused","Exhausted","Detached / blank", "On the verge of tears", "Suppressing laughter",
+        "Suspicious / side-eyeing", "Startled / recently interrupted", "Zen / meditative",
+        "Haunted / thousand-yard stare"
+      ]) },
+      { label: "Gaze", value: randChoice([
+        "Direct / forward","Downcast / avoidant","Sideward / glancing",
+        "Wide / startled","Half-lidded / tired","Closed",
+        "Looking slightly off-frame",
+        "Eyes locked on a small object",
+        "Staring into middle distance",
+        "Squinting as if against light",
+        "Averted toward the floor",
+        "Searching the crowd"
+      ]) },
+      { label: "Build Accent", value: randChoice([
+        "Broad shoulders","Narrow shoulders","Sloped shoulders",
+        "Large head relative to body","Small head relative to body",
+        "Uneven stance / hip drop","Asymmetry in limbs","Missing / augmented limb",
+        "Old injuries / scars visible",
+        "Prosthetic limb or implant",
+        "Noticeably hunched forward",
+        "Rigid, military bearing",
+        "Extremely flexible / loose posture",
+        "Weight shifted away from viewer"
+      ]) }
+    ]
+  };
+}
+
+    function genDevice() {
+      return {
+        subtitle: "Randomized device / gadget idea.",
+        details: [
+          { label: "Category", value: "Device" },
+          { label: "Form Factor", value: randChoice([
+            "Handheld","Wearable","Remote / drone unit","Mounted console", "Implanted module",
+			"Desk-sized console", "Suit-integrated system", "Floating orb / drone",
+			"Wall-mounted terminal", "Foldable / transforming unit"
+
+          ]) },
+          { label: "Interface", value: randChoice([
+            "Buttons / switches","Touchscreen","Voice-activated",
+            "Neural / bio-link","Hybrid controls", "Holographic controls", "Analog dials & gauges",
+			"Gesture / proximity sensors","Bio-feedback pads", "Card / token reader", "Voice + gesture hybrid"
+
+          ]) },
+          { label: "Power Source", value: randChoice([
+            "Battery / stored energy","Solar","Kinetic / manual",
+            "Fusion / high-density","Biological / symbiotic","Unknown", "Crystal / resonant core",
+			"Ambient signal / broadcast", "Chemical cartridges", "Tethered to infrastructure",
+			"Parasitic on other devices", "Stolen / jury-rigged feed"
+
+          ]) },
+          { label: "Material", value: randChoice([
+            "Plastic / polymer","Metal","Ceramic / glass",
+            "Carbon-fiber composite","Bio-grown material"
+          ]) },
+          { label: "Condition", value: randChoice([
+            "New / clean","Patched / modified","Worn / scuffed",
+            "Damaged / semi-functional","Ancient but working","Glitchy / unstable"
+          ]) },
+          { label: "Capabilities", value: randChoice([
+            "Recording & playback","Diagnostics & analysis",
+            "Remote control capability","Scanning / mapping",
+            "Life-support assistance","Communication relay", "Memory capture / playback",
+			"Reality-distortion overlay", "Environmental monitoring", "Signal translation / decoding",
+			"Door / lock override", "Medical diagnostics", "Drone or swarm control",
+			"Holographic projection"
+
+          ]) },
+          { label: "Aesthetic", value: randChoice([
+            "Sleek / modern","Brutalist / industrial","Ornate / retro-tech",
+            "Improvised / kitbashed","Organic / bio-sculpted","Alien", "Over-labeled corporate hardware",
+			"Medical / clinical white plastic", "Military-spec matte and angles", "Toy-like but dangerous",
+			"Brutalist slab with ports", "Delicate, jewelry-like device",
+			"Salvaged from multiple eras"
+
+          ]) },
+          { label: "Accents", value: randChoice([
+            "Warning labels, stickers, iconography",
+            "Exposed wiring & scratched surfaces",
+            "Runes / carvings in the casing",
+            "Custom paint & worn grip",
+            "No visible ornament", 
+            "Cracks in the casing with light leaking",
+			"Slotted cartridges / tapes visible",
+			"Strange residue around vents",
+			"Embedded symbols from unknown language",
+			"Owner’s scribbled notes / diagrams",
+			"Hanging tags and seals",
+			"Color-coded cables and clamps"
+
+          ]) }
+        ]
+      };
+    }
+
+    function genWeapon() {
+      return {
+        subtitle: "Randomized weapon idea.",
+        details: [
+          { label: "Category", value: "Weapon" },
+          { label: "Class", value: randChoice([
+            "Melee","Ranged","Thrown","Improvised","Exotic","Dual-purpose tool/weapon", "Non-lethal control",
+			"Ritual only", "Living / symbiotic", "Trap-based", "Heavy support"
+
+          ]) },
+          { label: "Subtype", value: randChoice([
+            "Sword","Knife / Dagger","Axe","Hammer / Maul","Spear / Polearm",
+            "Pistol","Rifle","Energy projector","Gravity weapon","Artifact blade", "Whip / chain",
+			"Staff / rod", "Launcher / grenade system", "Railgun / coil weapon", "Implanted weapon",
+			"Improvised tool weapon", "Energy blade", "Needle / spike weapon"
+
+          ]) },
+          { label: "Size", value: randChoice([
+            "Small","Medium","Large","Massive / two-handed"
+          ]) },
+          { label: "Material", value: randChoice([
+            "Metal","Wood","Stone","Synthetic / polymer","Crystal",
+            "Bone / organic","Composite / mixed", "Corroded alloy", "Glass / obsidian", "Bone and metal hybrid",
+			"Bio-grown chitin", "Translucent crystal shell", "Repurposed industrial parts"
+
+          ]) },
+          { label: "Condition", value: randChoice([
+            "Pristine","Well-kept","Worn","Damaged","Broken but usable"
+          ]) },
+          { label: "Style", value: randChoice([
+            "Sleek / modern","Brutal / heavy","Elegant / ornate",
+            "Primitive / crude","Ritualistic / decorated","Makeshift / assembled","Corporate clean / branded",
+			"Sacred artifact aesthetic", "Jury-rigged wasteland style", "High-ceremony, almost impractical",
+			"Stealth / low-profile", "Playful exterior hiding danger"
+
+          ]) },
+          { label: "Functional Features", value: randChoice([
+            "Sharpened & serrated edge","Energy emitter & trigger mechanism",
+            "Modular parts with sheath","Reinforced spine & counterweight",
+            "Elemental effect (fire/electric/chemical)", "Modular attachments / rail system",
+			"Built-in stabilizer or recoil sink", "Secondary hidden blade or barrel",
+			"Charge-up indicator lights", "Deployable shield or barrier", "Damage that marks / brands targets"
+
+          ]) },
+          { label: "Accents", value: randChoice([
+            "Engravings & blood grooves","Runes / glyphs along blade",
+            "Stickers & personal markings","Taped repairs & charms",
+            "None / unadorned", "Kill tallies or carved marks", "Charms and trinkets tied on",
+			"Warning tape or hazard stripes", "Dried bloodstains or scorch marks", "Religious or cult symbols",
+			"Owner’s name scratched in"
+
+          ]) },
+          { label: "Context", value: randChoice([
+            "Military-issued","Civilian-modified","Ritual / ceremonial",
+            "Ancient heirloom","Found object","Prototype / experimental", "Standard issue for a specific faction",
+			"Confiscated / evidence locker piece", "Ritual object never meant for combat",
+			"Museum display now re-weaponized", "Looted from a fallen enemy", "Prototype escaped quality control",
+			"Passed down through multiple owners"
+
+          ]) }
+        ]
+      };
+    }
+
+    function genArtifact() {
+      return {
+        subtitle: "Randomized artifact / relic idea.",
+        details: [
+          { label: "Category", value: randChoice([
+            "Relic / object of veneration","Idol / statue",
+            "Tool / implement","Text / tablet / scroll",
+            "Container / vessel","Key / seal / sigil","Map / chart / diagram", "Mask / faceplate",
+"Mechanical puzzle device",
+"Music-making object",
+"Reliquary / bone container",
+"Navigation instrument",
+"Timekeeping device"
+
+          ]) },
+          { label: "Origin", value: randChoice([
+            "Ancient civilization","Classical empire","Medieval culture",
+            "Industrial age society","Contemporary culture",
+            "Futuristic / high-tech","Alien / non-human","Unknown / disputed", "Failed utopian project",
+"Secret black-site lab",
+"Ancient underground cult",
+"Off-world colony",
+"Parallel timeline version",
+"Mythic or disputed origin story"
+
+          ]) },
+          { label: "Apparent Age", value: randChoice([
+            "Ancient","Old","Recent","Timeless / hard to date"
+          ]) },
+          { label: "Material", value: randChoice([
+            "Stone","Metal","Wood","Bone / organic","Clay / ceramic",
+            "Glass / crystal","Fabric / leather","Composite","Unidentifiable"
+          ]) },
+          { label: "Scale", value: randChoice([
+            "Tiny / palm-sized","Small / handheld","Medium / torso-sized",
+            "Large / body-scale","Monumental / hard to move"
+          ]) },
+          { label: "Design Style", value: randChoice([
+            "Geometric / symmetrical","Organic / flowing","Abstract / chaotic",
+            "Minimalist / sleek","Overly ornate / detailed","Runic / symbolic", "Brutalist blocky mass",
+"Clockwork / gear-heavy",
+"Minimal slab with one detail",
+"Organic bone-like growths",
+"Patchwork of repairs",
+"Child-like carvings but powerful"
+
+          ]) },
+          { label: "Condition", value: randChoice([
+            "Pristine","Weathered / patinated","Broken but whole",
+            "Shattered / fragmented","Repaired / pieced together", "Half-restored with visible repairs",
+"Encrusted with minerals / salt",
+"Burned or heat-warped",
+"Half-melted / fused to another object",
+"Surprisingly intact amid destruction"
+
+          ]) },
+          { label: "Primary Function", value: randChoice([
+            "Power source","Portal / gateway","Record keeper",
+            "Control mechanism","Warning device","Curse / blessing dispenser", "Anchor for a specific memory",
+"Failsafe shutdown for a system",
+"Key to a forgotten network",
+"Beacon for something else",
+"Test of worthiness / trial device",
+"Recorder of parallel outcomes"
+
+          ]) },
+          { label: "Accents", value: randChoice([
+            "Glows / emits light","Emits sound / music",
+            "Changes temperature","Floats / defies gravity",
+            "Covered in unknown script","Visibly humming with energy", "Whispers or faint voices near it",
+"Drips or bleeds unusual fluid",
+"Changes weight when held",
+"Shadow doesn’t match shape",
+"Reflections show a different scene",
+"Responds to certain symbols or words"
+
+          ]) }
+        ]
+      };
+    }
+
+    function genVehicle() {
+      return {
+        subtitle: "Randomized vehicle / mount idea.",
+        details: [
+          { label: "Category", value: "Vehicle" },
+          { label: "Type", value: randChoice([
+            "Car / Truck","Motorcycle / Bike","Aircraft (Fixed Wing)","Aircraft (Rotary/VTOL)",
+            "Ground Transport (Tracked/Multi-Wheeled)","Watercraft","Creature Mount"
+          ]) },
+          { label: "Primary Use", value: randChoice([
+            "Personal Transport","Cargo / Hauling","Military / Combat",
+            "Exploration / Scouting","Racing / Sport","Heavy Utility / Construction"
+          ]) },
+          { label: "Power/Propulsion", value: randChoice([
+            "Electric / Battery","Combustion / Fuel","Jet / Turbine",
+            "Gravitational / Repulsor","Steam / Mechanical","Biological / Muscle", "Hybrid improvised fuel mix",
+"Solar sail / panel arrays",
+"Signal-powered / anomalous",
+"Clockwork / spring-driven",
+"Magnetic rail / track-bound",
+"Pedal-assisted / human-augment"
+
+          ]) },
+          { label: "Aesthetic Era", value: randChoice([
+            "1950s Atomic Age","1980s Boxy Retro","Modern Minimalist",
+            "Brutalist Industrial","Cyberpunk Neo-Tokyo","Post-Apocalyptic Scavenged", "Art-deco rocket age",
+"Used future industrial",
+"Luxury corporate shuttle",
+"Patchwork refugee transport",
+"Ornate ceremonial carriage",
+"Military APC look-alike"
+
+          ]) },
+          { label: "Body Style", value: randChoice([
+            "Coupe / Sleek","Utility / Boxy","Open Cockpit","Armored Shell",
+            "Asymmetrical","Low Profile / Ground Hugging", "Multi-segment / articulated",
+"Sphere / pod-shaped",
+"Walking mech frame",
+"Hover platform / skiff",
+"Cargo container repurposed as vehicle",
+"Stealthy, featureless slab"
+
+          ]) },
+          { label: "Condition", value: randChoice([
+            "Showroom New","Rusted & Weathered","Heavily Modified",
+            "Patched with Scrap","Camo Painted","Covered in Decals", "Freshly repainted over rust",
+"Half-disassembled for parts",
+"Held together with cables and straps",
+"Battle-scarred but trusted",
+"Prototype with missing panels"
+
+          ]) },
+          { label: "Features", value: randChoice([
+            "Exposed Engine / Wiring","Oversized Tires / Tracks",
+            "Integrated Weapons System","Rooftop Cargo Rack / Bedroll",
+            "Advanced Sensor Array","Custom Decals / Nose Art", "Improvised armor plates",
+"Jammed or sealed doors",
+"Hanging charms / flags",
+"External fuel or cargo tanks",
+"Secret smuggling compartment",
+"Mounted tools (shovel, pick, etc.)"
+
+          ]) },
+          { label: "Context", value: randChoice([
+            "Abandoned in a dust field","Racing down a neon street",
+            "Docked at a busy port","Flying through an asteroid field",
+            "Stuck in the mud / snow", "Parked beneath a megastructure",
+"Half-buried in sand or snow",
+"Used as a static home / shelter",
+"Prepped at a clandestine checkpoint",
+"Mid-repair with parts scattered",
+"Abandoned in a flooded street"
+
+          ]) }
+        ]
+      };
+    }
+
+    function genBuilding() {
+      return {
+        subtitle: "Randomized building / architecture idea.",
+        details: [
+          { label: "Category", value: "Building" },
+          { label: "Function", value: randChoice([
+            "Residential Tower","Religious Site / Temple","Industrial Factory",
+            "Government/Military Base","Commercial Market","Entertainment Venue", "Data center / archive",
+"Clinic or improvised hospital",
+"Safehouse / hideout",
+"Transit hub / station",
+"Ritual hall / cult compound",
+"Corporate front with secret use"
+
+          ]) },
+          { label: "Architectural Style", value: randChoice([
+            "Brutalist / Concrete","Victorian / Gothic","Japanese Wood/Paper",
+            "Cyberpunk / Verticality","Ancient Stone / Mayan-inspired","Modern Glass & Steel", "Stacked shipping containers",
+"Neo-brutalist with light slits",
+"Organic growth over framework",
+"Modular prefab cubes",
+"Retro neon signage front",
+"Traditional façade hiding new core"
+
+          ]) },
+          { label: "Scale", value: randChoice([
+            "Small / Hut","Medium / Townhouse","Large / High-Rise",
+            "Massive / Megastructure","Underground Complex"
+          ]) },
+          { label: "Condition", value: randChoice([
+            "Pristine / New","Well-Maintained","Abandoned / Ruined",
+            "Under Construction","Overgrown by Nature","Heavy Water Damage", "Under heavy renovation",
+"Shell with only façade standing",
+"Burned out inside",
+"Reinforced and fortified",
+"Partially submerged",
+"Encased in scaffolding / tarps"
+
+          ]) },
+          { label: "Roof Type", value: randChoice([
+            "Flat / Helipad","Pitched / Slanted","Domed / Arched",
+            "Garden / Green Roof","Spired / Decorative"
+          ]) },
+          { label: "Window Style", value: randChoice([
+            "Small, high slits","Large, panoramic glass","Ornate stained glass",
+            "No visible windows","Shuttered / boarded up"
+          ]) },
+          { label: "Primary Material", value: randChoice([
+            "Concrete","Red Brick","Dark Wood","White Marble",
+            "Corrugated Metal","Aged Stone"
+          ]) },
+          { label: "Surroundings", value: randChoice([
+            "Busy Urban Center","Isolated Mountain Peak","Dense Jungle",
+            "Waterfront / Coast","Barren Desert","On another planet"
+          ]) },
+        { label: "Context", value: randChoice([
+            "Pressed against a highway or rail",
+"In a tight alley canyon",
+"Isolated on a hill / outcrop",
+"Built over older ruins",
+"Adjacent to improvised markets",
+"Border between two factions"
+          ]) }
+        ]
+      };
+    }
+
+    function genEnvironment() {
+      return {
+        subtitle: "Randomized environment / landscape idea.",
+        details: [
+          { label: "Category", value: "Environment" },
+          { label: "Type", value: randChoice([
+            "Forest / Woods","Mountain Range","Desert / Dune Sea",
+            "Coastal / Beach","Swamp / Marsh","Tundra / Ice Caps","Cave / Cavern", "Rooftop forest or garden",
+"Flooded city level",
+"Cliffside settlement",
+"Underground transit tunnel",
+"Factory interior maze",
+"Open plaza beneath towers"
+          ]) },
+          { label: "Weather / Atmosphere", value: randChoice([
+            "Sunny / Clear","Heavy Fog / Mist","Driving Rainstorm",
+            "Snow / Blizzard","Dust Storm","Eerie Green Sky", "Harsh, directional spotlighting",
+"Orange smog / wildfire haze",
+"Flashing emergency lights",
+"Heavy dust in the air",
+"Soft snow dampening sound",
+"Digital rain / glitch overlays"
+
+          ]) },
+          { label: "Time of Day", value: randChoice([
+            "Sunrise / Golden Hour","Midday / Harsh Light","Sunset / Dusk",
+            "Deep Night","Twilight / Blue Hour"
+          ]) },
+          { label: "Key Feature", value: randChoice([
+            "Massive Rock Formation","Ancient Ruin","Abandoned Road",
+            "Glowing River","Unusual Tree Species","Natural Archway"
+          ]) },
+          { label: "Man-made Element", value: randChoice([
+            "Single Tower / Lighthouse","Broken Fence / Barbed Wire",
+            "Small Camp / Tent","Satellite Dish","Hydroponics Farm",
+            "No Visible Man-made Element", "Monolithic statue or icon",
+"Improvised shrine or memorial",
+"Collapsed structure in mid-frame",
+"Massive screen or billboard",
+"Gateway / archway",
+"Vehicle or machine centerpiece"
+          ]) },
+          { label: "Mood / Vibe", value: randChoice([
+            "Peaceful / Serene","Dangerous / Foreboding","Mysterious / Unsettling",
+            "Epic / Grand","Familiar / Cozy","Alien / Uncanny"
+          ]) },
+          { label: "Composition Hint", value: randChoice([
+            "Use deep perspective (vanishing point)","Focus on a close-up texture",
+            "Use a wide, sweeping shot","Foreground element to frame the view"
+          ]) }
+        ]
+      };
+    }
+
+    function genPlant() {
+      return {
+        subtitle: "Randomized plant / flora species idea.",
+        details: [
+          { label: "Category", value: "Plant" },
+          { label: "Structure", value: randChoice([
+            "Tree / Canopy","Bush / Shrub","Ground Cover / Moss",
+            "Fungus / Mycelial Network","Vine / Climbing Plant","Floating Aquatic Plant"
+          ]) },
+          { label: "Habitat", value: randChoice([
+            "Deep Forest Floor","Desert Rock Crevice","Volcanic Soil",
+            "Deep Sea Vents","Urban Crack","Toxic Wasteland", "Grows in cracks of buildings",
+"Thrives in polluted soil",
+"Clustered around power sources",
+"Only in deep shade",
+"Found near water leaks or pipes",
+"Growing on old machinery"
+
+          ]) },
+          { label: "Key Feature", value: randChoice([
+            "Exaggerated Thorns / Spikes","Soft, Furry Texture","Emits a Strong Scent",
+            "Produces a Bio-Luminescence","Hollow/Cage-like Structure","Moves Slowly", "Bioluminescent vine",
+"Glass-like crystalline plant",
+"Floating seed cluster",
+"Carnivorous blossom",
+"Fungus colony / shelf growth",
+"Metallic leaf plant", "Leaves that resemble circuitry",
+"Flowers that close when watched",
+"Spines that drip sap",
+"Pods that rattle when shaken",
+"Roots that surface like cables",
+"Symmetrical, artificial-looking growth"
+
+
+          ]) },
+          { label: "Defense/Adaptation", value: randChoice([
+            "Camouflage","Poisonous Sap / Spores","Armored Bark",
+            "Rapid Growth / Self-Repair","Can photosynthesize non-sunlight energy"
+          ]) },
+          { label: "Foliage/Texture", value: randChoice([
+            "Broad, smooth leaves","Needle-like / Fine","Dense, fractal growth",
+            "Waxy / Oily","Scaly / Reptilian"
+          ]) },
+          { label: "Context", value: randChoice([
+            "Clinging to a cliff face","Growing through metal debris",
+            "Rooted in a perfectly clear pool","Illuminating a dark cavern", 
+          ]) },
+          { label: "Inspiration", value: randChoice([
+            "Cactus & Coral","Deep Sea Creature","Fungal Bloom & Moss",
+            "Architectural Model","Human Skeleton"
+          ]) }
+        ]
+      };
+    }
+
+    function genCreature() {
+      return {
+        subtitle: "Randomized creature / species idea.",
+        details: [
+          { label: "Category", value: "Creature" },
+          { label: "Body Plan", value: randChoice([
+            "Bipedal (Humanoid)","Quadrupedal (Mammalian)","Hexapodal (Insectile)",
+            "Serpentine / Legless","Avian (Winged)","Aquatic (Fish/Cephalopod)", "Elongated, eel-like body",
+"Thin, insectoid frame",
+"Bulky, quadruped mass",
+"Centaur-like hybrid",
+"Cloud / swarm of small bodies",
+"Amorphous slime / shadow"
+
+          ]) },
+          { label: "Size", value: randChoice([
+            "Tiny (Insect/Rodent)","Small (Cat/Dog)","Medium (Human/Deer)",
+            "Large (Bear/Horse)","Massive (Elephant/Whale)"
+          ]) },
+          { label: "Skin/Covering", value: randChoice([
+            "Scales","Feathers","Thick Fur","Smooth Skin","Chitinous Plates",
+            "Exoskeleton","Crystalline Growths"
+          ]) },
+          { label: "Adaptation Focus", value: randChoice([
+            "Stealth & Camouflage","Speed & Evasion","Strength & Defense",
+            "Intelligence & Tool Use","Sensory Overload (Light/Sound)"
+          ]) },
+          { label: "Key Feature", value: randChoice([
+            "Multiple Eyes / Limbs","A Massive Tail / Fin","Bioluminescent Spots",
+            "A Symmetrical Crest / Horns","An Exposed Organ / Skeleton"
+          ]) },
+ { label: "Locomotion", value: randChoice([
+           "Glides just above the ground",
+"Burrows quickly under surfaces",
+"Hops or jerks unpredictably",
+"Climbs with many limbs",
+"Floats with no visible support",
+"Moves in short, sudden bursts"
+
+          ]) },
+          { label: "Diet", value: randChoice([
+            "Carnivore (Hunter)","Herbivore (Grazer)","Omnivore (Scavenger)",
+            "Photosynthetic (Plant-like)","Energy Vampire"
+          ]) },
+           { label: "Accents", value: randChoice([
+           "Eyes that reflect symbols",
+"Translucent flesh with visible organs",
+"Patchwork cybernetic additions",
+"Mouths in unexpected places",
+"Sound it makes precedes its arrival",
+"Leaves strange residue where it walks"
+          ]) },
+          { label: "Behavior", value: randChoice([
+            "Solitary / Territorial","Pack Hunter / Social",
+            "Migratory / Nomadic","Burrowing / Sedentary", "Curious but easily spooked",
+"Predatory if cornered",
+"Guard dog for a location",
+"Parasitic but subtle",
+"Symbiotic if treated well",
+"Emotionally responsive to fear"
+
+          ]) }
+        ]
+      };
+    }
+
+    function genScene() {
+      return {
+        subtitle: "Randomized scene / moment idea.",
+        details: [
+          { label: "Category", value: "Scene" },
+          { label: "Focus", value: randChoice([
+            "Conflict / Battle","Quiet Moment / Introspection","Journey / Travel",
+            "Discovery / Reveal","Construction / Creation","Destruction / Aftermath"
+          ]) },
+          { label: "Setting", value: randChoice([
+            "A Busy Marketplace","A Forgotten Library","The Edge of a Cliff",
+            "Inside a Spaceship Cockpit","A Small Forest Clearing","An Underground Lab", "Overlook inside a megastructure",
+"Cluttered workbench space",
+"Threshold of a doorway",
+"Alley between glowing towers",
+"Interior of transit vehicle",
+"Bridge or catwalk over void"
+
+          ]) },
+          { label: "Time of Day", value: randChoice([
+            "Golden Hour (Sunset/Sunrise)","Mid-Day (Harsh Light)","Blue Hour (Twilight)",
+            "Deep Night (Single Light Source)","Stormy Day (Flat Light)"
+          ]) },
+          { label: "Key Prop / Element", value: randChoice([
+            "A Broken Statue","A Glowing Crystal","An Open Journal / Map",
+            "A Worn-out Tool","A Dead or Sleeping Creature","A Stack of Supplies"
+          ]) },
+          { label: "Action / Conflict", value: randChoice([
+            "A Chase is in Progress","Two Characters are Arguing","A Moment of Quiet Relief",
+            "Someone is Fixing Something","A Ritual is Being Performed", "Someone arriving late or out of breath",
+"A tense handoff or exchange",
+"Someone hiding or eavesdropping",
+"An experiment going wrong",
+"Cleanup after something terrible",
+"Characters waiting in uneasy silence"
+
+          ]) },
+          { label: "Weather / Mood", value: randChoice([
+            "Light Rain / Melancholy","Bright Sun / Optimistic","Heavy Fog / Mysterious",
+            "Windy / Tense","Eerie Silence / Dread", "Harsh backlighting / strong silhouettes",
+"Flickering artificial lights",
+"Power outage with emergency glow",
+"Dust motes or debris in air",
+"Sunset casting long shadows",
+"Muted, overcast light"
+
+          ]) },
+          { label: "Camera Angle", value: randChoice([
+            "Low Angle (Looking Up)","High Angle (Looking Down)","Eye Level (Direct View)",
+            "Extreme Close-up","Wide Establishing Shot"
+          ]) },
+          { label: "Composition Hint", value: randChoice([
+            "Use leading lines (roads, paths)","Use the rule of thirds",
+            "Focus on depth and layering","Symmetry and reflection", "Strong diagonal leading lines",
+"Foreground obstruction / over-the-shoulder",
+"Character framed in doorway or window",
+"Central object with characters orbiting",
+"Layered depth with haze / silhouettes",
+"Asymmetrical balance around a bright element"
+
+          ]) }
+        ]
+      };
+    }
+
+
+    const branchGenerators = {
+      characterType: genCharacterType,
+      characterBuild: genCharacterBuild,
+      device: genDevice,
+      weapon: genWeapon,
+      artifact: genArtifact,
+      vehicle: genVehicle,
+      building: genBuilding,
+      environment: genEnvironment,
+      plant: genPlant,
+      creature: genCreature,
+      scene: genScene,
+    };
+
+    // ---------- COLOR PALETTE SYSTEM (CUSTOM PALETTES ONLY) ----------
+
+    // Original 54 palettes, now the ONLY source
+    const fixedCustomPalettes = [
+      	 ["#A3331C","#D68D37","#F0C85C","#FAE4B4","#7F4F24"],
+    ["#900C3F","#C70039","#FFC300","#FF5733","#581845"],
+    ["#FF5714","#FF884B","#FFC3A0","#FFF4EC","#8C3F1B"],
+    ["#A63D40","#E9B872","#F0D7A3","#552A2D","#8C5E58"],
+    ["#BC5090","#FF6F61","#FFD2A5","#A8A28E","#474747"],
+    ["#f08080","#f4978e","#f8ad9d","#fbc4ab","#ffdab9"],
+    ["#ff6b35","#f7c59f","#efefd0","#004e89","#1a659e"],
+    ["#4c061d","#d17a22","#b4c292","#736f4e","#3b3923"],
+    ["#dd6e42","#e8dab2","#4f6d7a","#c0d6df","#eaeaea"],
+    ["#f79256","#fbd1a2","#7dcfb6","#00b2ca","#1d4e89"],
+    ["#ff6700","#ebebeb","#c0c0c0","#3a6ea5","#004e98"],
+    ["#007EA7","#00A8E8","#C1E0F7","#48BFE3","#003459"],
+    ["#335C67","#4F6D7A","#C3DDEE","#A0C4E2","#7A9CA3"],
+    ["#0057FF","#277DA1","#4CC9F0","#D9E8F5","#F2F7FA"],
+    ["#00293C","#005E7C","#66A5AD","#C4DFE6","#001017"],
+    ["#27187e","#758bfd","#aeb8fe","#f1f2f6","#ff8600"],
+    ["#2b2d42","#8d99ae","#edf2f4","#ef233c","#d90429"],
+    ["#006d77","#83c5be","#edf6f9","#ffddd2","#e29578"],
+    ["#264653","#2a9d8f","#e9c46a","#f4a261","#e76f51"],
+    ["#93b7be","#f1fffa","#d5c7bc","#785964","#454545"],
+    ["#3a606e","#607b7d","#828e82","#aaae8e","#e0e0e0"],
+    ["#233d4d","#fe7f2d","#fcca46","#a1c181","#619b8a"],
+    ["#9C7A97","#C9ADA7","#EBEBEA","#7F7B82","#3A3845"],
+    ["#463F3A","#8A817C","#BCB8B1","#F4F3EE","#E0AFA0"],
+    ["#A9B7C0","#DDE7E7","#8A9EA0","#58696D","#344955"],
+    ["#22223b","#4a4e69","#9a8c98","#c9ada7","#f2e9e4"],
+    ["#ccd5ae","#e9edc9","#fefae0","#faedcd","#d4a373"],
+    ["#e7ecef","#274c77","#6096ba","#a3cef1","#8b8c89"],
+    ["#d6ccc2","#f5ebe0","#e3d5ca","#d5bdaf","#edede9"],
+    ["#d5c5c8","#9da3a4","#604d53","#db7f8e","#ffdbda"],
+    ["#533747","#5f506b","#6a6b83","#76949f","#86bbbd"],
+    ["#000000","#333333","#666666","#999999","#CCCCCC"],
+    ["#1A1A1A","#333333","#555555","#FFD700","#C0C0C0"],
+    ["#0F0F0F","#2A2A2A","#454545","#A0A0A0","#FFFFFF"],
+    ["#000000","#1E1E1E","#3C3C3C","#B0B0B0","#E0E0E0"],
+    ["#100C08","#3A3330","#5C5450","#D9D7D6","#918E8B"],
+    ["#000000","#14213d","#fca311","#e5e5e5","#ffffff"],
+    ["#353531","#ec4e20","#ff9505","#016fb9","#000000"],
+    ["#0a0908","#22333b","#eae0d5","#c6ac8f","#5e503f"],
+    ["#606C38","#283618","#FEFAE0","#DDA15E","#BC6C25"],
+    ["#584B3B","#70665B","#B8A395","#E3DCCF","#3C352F"],
+    ["#A7C957","#386641","#6A994E","#F2E8CF","#BC4749"],
+    ["#f4f1de","#e07a5f","#3d405b","#81b29a","#f2cc8f"],
+    ["#cdb4db","#ffc8dd","#ffafcc","#bde0fe","#a2d2ff"],
+    ["#e63946","#f1faee","#a8dadc","#457b9d","#1d3557"],
+    ["#e76f51","#f4a261","#e9c46a","#2a9d8f","#264653"],
+    ["#f0ead2","#dde5b6","#adc178","#a98467","#6c584c"],
+    ["#ffd9da","#ea638c","#89023e","#30343f","#1b2021"],
+    ["#a41623","#f85e00","#ffb563","#ffd29d","#918450"],
+    ["#ebd4cb","#da9f93","#b6465f","#890620","#2c0703"],
+    ["#fffcf2","#ccc5b9","#403d39","#252422","#eb5e28"],
+    ["#4f000b","#720026","#ce4257","#ff7f51","#ff9b54"],
+    ["#FFC8DD","#FFAFCC","#BDE0FE","#A2D2FF","#CDB4DB"],
+    ["#F8BBD0","#E1BEE7","#C5CAE9","#B3E5FC","#B2EBF2"],
+    ["#FF00FF","#00FFFF","#FFFF00","#FF0000","#00FF00"],
+    ["#78290F","#B5460F","#ECA72C","#FFD700","#000000"],
+    ["#d9d2e9","#6fa8dc","#000000","#000000","#2986cc"],
+    ["#4c1130","#6aa84f","#c90076","#6fa8dc","#8f4f77"],
+    ["#f7f4ef","#d6ccc2","#1f3c5f","#457b9d","#718792"],
+    ["#ec4c24","#f44c24","#442814","#e58a43","#ff1493"],
+    ["#8c5c44","#422525","#b70202","#2d2b1a","#ba2be2"],
+    ["#fec84e","#ffb300","#e58a42","#6d4138","#3d1278"],
+    ["#ffd300","#0b0b0b","#1f1f1f","#fec84e","#1e1b51"],
+    ["#b1456a","#c0628f","#9d4f73","#a74368","#a74368"],
+    ["#8f4f77","#a65c87","#c87da8","#3c4c7d","#3c4c7d"],
+    ["#577a96","#577a96","#45647b","#324a60","#324a60"],
+    ["#dce7f2","#c3d7eb","#a8c0d8","#8caac7","#6f90ad"],
+    ["#cdc7e8","#beb8da","#9e94bf","#7b73a8","#685e91"],
+    ["#a8769f","#9a6e96","#9a6e96","#8c5d88","#8c5d88"],
+    ["#efddeb","#e2c8da","#dabfd3","#c8a7c3","#b48bb1"],
+    ["#b6bcc6","#9aa1ac","#7c8793","#5a616b","#2f3338"],
+    ["#f2f5f7","#e4ebf2","#e7e4ec","#d7d6e0","#c4c8cf"],
+    ["#9fb7cc","#345c8c","#f7f4ef","#2b2b2d","#f2c7d3"],
+    ["#96957b","#f6f0d1","#e19539","#606432","#d4c39b"],
+    ["#cba4a3","#f7d0d5","#cde2d0","#a7a6a2","#d9c7a3"],
+    ["#f4d8d6","#e8d9c9","#dadde2","#b7a89a","#cba4a3"],
+    ["#fedfe1","#e5e4e1","#d7c4a3","#2f2f31","#a89f91"],
+    ["#5944a6","#566aa6","#8582d9","#3dd9d9","#30c8d9"],
+    ["#ffffff","#ffd700","#00adff","#0040ff","#06008b"],
+    ["#7892cd","#7f9c20","#e53a5e","#0584b8","#ffdc3f"],
+    ["#758b97","#29486c","#528172","#a2ccb6","#e2f7f1"],
+    ["#d7c49e","#b49286","#758b97","#947474","#d5d5d5"],
+    ["#b3a294","#8d776f","#675a5e","#8d90a6","#b3b6c3"],
+    ["#faedcd","#edb458","#f8961e","#ffff57","#464646"],
+    ["#a19082","#837367","#665851","#4c4046","#838181"],
+    ["#5a5a5a","#8a8a8a","#b6b6b6","#e3e3e3","#a1a1a1"],
+    ["#aa170d","#ff6f6f","#ffc150","#b87333","#3b0f0f"],
+    ["#a21d1d","#ffc150","#b87333","#f7c59f","#f4ebc9"],
+    ["#36080a","#a91d34","#0c3c44","#e85326","#591e78"],
+    ["#800000","#ff0000","#ff8080","#f4f4f4","#c8c8c8"],
+    ["#53394a","#7e5f80","#a788b1","#d2b4da","#9c91b8"],
+    ["#8bb8b9","#529496","#377879","#683c3c","#924f4f"],
+    ["#1c4e80","#3a6e9f","#629fd9","#9dc4e5","#d8e4f0"],
+    ["#c8d7dd","#a3bec9","#889ea6","#5e696c","#424545"],
+    ["#e0dde5","#4d4451","#a8499c","#d27c59","#ac5bc3"],
+    ["#683058","#a14e91","#c87da8","#d29f8f","#b5937a"],
+    ["#1e2a3c","#3b4f69","#5c7391","#7f94b8","#a5b3d9"],
+    ["#845c04","#d32b28","#954f00","#606b04","#606b04"],
+    ["#0e4b3a","#e7d6ba","#1a243e","#b49345","#8a8f9a"],
+    ["#32002f","#7c2a49","#d25d6b","#ffd397","#f7f4ed"],
+    ["#494848","#ffabab","#ff9e56","#90b580","#ff75a4"],
+    ["#9800d0","#b045d8","#bb7adc","#c38fe1","#d9b2f3"],
+    ["#f7cac9","#f7b6a4","#f5a484","#f39268","#f5e6b7"],
+    ["#facbe5","#da9695","#5d7875","#89a097","#c1d0dc"],
+    ["#ced07e","#e99b46","#867835","#a64d00","#682c00"],
+    ["#8ee7e7","#aaeded","#c7f3f3","#e3f9f9","#ffffff"],
+    ["#00fcff","#4cc4ff","#3484ea","#236cc1","#1c4e80"],
+    ["#405566","#6a819b","#9bb2c8","#cddde5","#e7f0f6"],
+    ["#db8282","#f4b0b0","#f2eebe","#5fe0ce","#6e7d7c"],
+    ["#406a7c","#668fa3","#92b5c7","#c1d2e1","#e3e9f0"],
+    ["#c9b5e3","#bfaad9","#8e7bae","#9a6f90","#9a6f90"],
+    ["#f67756","#ec968d","#c9b6b7","#c44c7c","#5a1c55"],
+    ["#9bdf9b","#59a26d","#466247","#586b58","#3d4a3e"],
+    ["#a31f0f","#f09026","#ffdc46","#f4636d","#ffffff"],
+    ["#211103","#3d1308","#4a200b","#75391a","#945025"],
+    ["#531f12","#532a10","#534613","#374016","#2c2971"],
+    ["#52243a","#6a2b4b","#85345d","#9164a6","#44156e"],
+    ["#fc5434","#ebdad6","#d89081","#ad7d53","#ab89de"],
+    ["#7f0000","#ff4040","#ff8080","#ffc0c0","#ffffff"],
+    ["#e0b4b4","#c89596","#ad7b7c","#936567","#784f51"],
+    ["#000080","#0000cd","#4169e1","#1e90ff","#87cefa"],
+    ["#8b4513","#a0522d","#d2b48c","#deb887","#f5deb3"],
+    ["#228b22","#3cb371","#6b8e23","#808000","#556b2f"],
+    ["#ff0000","#8b0000","#b22222","#cd5c5c","#f08080"],
+    ["#d3d3d3","#a9a9a9","#808080","#696969","#404040"],
+    ["#ff1493","#ff69b4","#ffc0cb","#ffb6c1","#ff77aa"],
+    ["#800080","#9932cc","#ba55d3","#da70d6","#ee82ee"],
+    ["#483d8b","#6a5acd","#8470ff","#b0c4de","#add8e6"],
+    ["#4682b4","#5f9ea0","#87ceeb","#b0c4de","#add8e6"],
+    ["#008000","#228b22","#3cb371","#6b8e23","#8fbc8f"],
+    ["#ff6347","#ff7f50","#ffa07a","#ff8c00","#ff4500"],
+    ["#0000ff","#4169e1","#1e90ff","#87cefa","#add8e6"],
+    ["#ffff00","#ffd700","#ffa500","#ff8c00","#ff4500"],
+    ["#00ffff","#00ced1","#40e0d0","#48d1cc","#afeeee"],
+    ["#ffc0cb","#ffb6c1","#ff77aa","#ff1493","#c71585"],
+    ["#9370db","#8a2be2","#9400d3","#ba55d3","#ee82ee"],
+    ["#6a0f49","#851e5e","#a4367b","#c34b98","#e264b5"],
+    ["#9b499f","#713774","#462449","#b863a3","#904c81"],
+    ["#5b3252","#74476a","#8e5d83","#a8739b","#c188b3"],
+    ["#914d7b","#ae6798","#cb80b6","#e89ad3","#c17fb1"],
+    ["#9d4b68","#b46380","#cc7b98","#e393b0","#d687a4"],
+    ["#c26f8d","#b46782","#a75f77","#9a576c","#b56a81"],
+    ["#c94c4c","#d46f6f","#e09292","#ebc1c1","#c96262"],
+    ["#b73059","#d1577f","#eb7f9f","#f5a4b9","#d16a8b"],
+    ["#924b7a","#ad6493","#c87dac","#e396c5","#d470a6"],
+    ["#e36666","#d26666","#c16666","#b16666","#e37f7f"],
+    ["#5b1414","#763636","#915959","#ac7b7b","#c79e9e"],
+    ["#171717","#393939","#5c5c5c","#808080","#a4a4a4"],
+    ["#000000","#1a1a1a","#333333","#4d4d4d","#666666"],
+    ["#2c2c2c","#474747","#636363","#808080","#9d9d9d"],
+    ["#383838","#505050","#686868","#808080","#989898"],
+    ["#444444","#555555","#666666","#777777","#888888"],
+    ["#4b4b4b","#636363","#7b7b7b","#939393","#acacac"],
+    ["#949494","#808080","#6b6b6b","#575757","#424242"],
+    ["#a6a6a6","#949494","#828282","#707070","#5e5e5e"],
+    ["#b8b8b8","#a3a3a3","#8e8e8e","#797979","#646464"],
+    ["#c9c9c9","#b5b5b5","#a2a2a2","#8f8f8f","#7b7b7b"],
+    ["#dbdbdb","#c7c7c7","#b4b4b4","#a0a0a0","#8d8d8d"],
+    ["#e3e3e3","#d1d1d1","#bfbfbf","#acacac","#9a9a9a"],
+    ["#eaeaea","#d7d7d7","#c4c4c4","#b1b1b1","#9e9e9e"],
+    ["#f2f2f2","#dfdfdf","#cdcdcd","#bbbbbb","#a8a8a8"],
+    ["#fafafa","#e7e7e7","#d5d5d5","#c2c2c2","#b0b0b0"],
+    ["#5c3635","#744746","#8c5857","#a46968","#bc7b7a"],
+    ["#6c3c3a","#825452","#986c6a","#ae8482","#c49d9b"],
+    ["#804a48","#956260","#ab7977","#c0918f","#d6a9a7"],
+    ["#905b59","#a57371","#ba8a88","#d0a2a0","#e5b9b7"],
+    ["#a16d6b","#b68583","#cba09e","#e0bcbc","#f5d7d6"],
+    ["#b27e7c","#c79694","#dbb1ae","#f0c9c7","#e7c4c3"],
+    ["#c28f8d","#d6a7a5","#eabfc1","#f4d4d6","#e9c8cb"],
+    ["#d3a09e","#e7b7b9","#fbc9cd","#f7d4d8","#e8c5cc"],
+    ["#e3b1ae","#f7c9c7","#fbe3e6","#f9e0e3","#e8d1d5"],
+    ["#f4c2c0","#fbe0e3","#fce8eb","#faecef","#e9dadc"],
+    ["#d95b5b","#cc5656","#bf5050","#b24b4b","#a54545"],
+    ["#cc4c4c","#bf4747","#b24242","#a53d3d","#993838"],
+    ["#b33d3d","#a63838","#993333","#8c2e2e","#7f2929"],
+    ["#a12929","#942424","#871f1f","#7a1a1a","#6e1515"],
+    ["#8f1515","#821010","#750b0b","#680606","#5c0101"],
+    ["#b8860b","#d8a12d","#f8bc4f","#fbe8ac","#f0e082"],
+    ["#a57c0f","#c59631","#e5b153","#e9d18b","#e2c46f"],
+    ["#927214","#b28d36","#d2a859","#d7c784","#d1b65d"],
+    ["#7f6818","#9f833a","#bf9f5d","#c6bd7d","#c0a94b"],
+    ["#6c5e1c","#8c793f","#ac9562","#b5b376","#af9b39"],
+    ["#274652","#2B9D8E","#E8C469","#F3A161","#E76E51"],
+  ["#5E6C39","#283618","#FFFADF","#DDA15F","#BD6D27"],
+  ["#E63A46","#F1F9EC","#A8DADC","#457B9D","#1D3657"],
+  ["#8ECAE5","#229EBC","#023047","#FFB706","#FB8400"],
+  ["#CBB4DB","#FFC7DD","#FFB0CB","#BCE0FE","#A1D2FF"],
+  ["#CBD5AE","#E8ECC9","#FFFADF","#FAEDCE","#D4A273"],
+  ["#000000","#14213D","#FDA211","#E4E4E4","#FFFFFF"],
+  ["#FFCCB2","#FFB4A1","#E4999C","#B5828C","#6D6874"],
+  ["#003049","#D42929","#F77F03","#FDBF49","#EAE1B8"],
+  ["#FFBD0D","#FB5508","#FE016E","#8339EB","#3B86FF"],
+  ["#006E77","#84C4BE","#ECF6F9","#FFDDD2","#E29678"],
+  ["#2C2D43","#8B99AD","#ECF2F4","#EF233C","#D80529"],
+  ["#F5F1DD","#E17A5F","#3E405B","#80B29B","#F1CC8F"],
+  ["#DBD7CC","#A2B289","#578157","#3A5A40","#344F41"],
+  ["#F5BD60","#F8EDE1","#F4C9C3","#84A49D","#F28381"],
+  ["#EF466E","#FFD165","#00D69F","#1389B1","#083B4D"],
+  ["#790000","#C1131F","#FDF1D5","#003049","#659BBC"],
+  ["#22223B","#4A4E68","#9B8B98","#C9ACA6","#F3E8E3"],
+  ["#ECECE9","#D7CCC1","#F6EBDF","#E2D6C9","#D5BDAF"],
+  ["#D8E1DD","#FFE4D9","#FFC9D4","#F4ABB8","#9E8088"],
+  ["#001022","#001F3F","#02477A","#FFC900","#FFC400"],
+  ["#6687A9","#8ECAE6","#CBF0F8","#DBEFF8","#90B4D1"],
+  ["#DB4A6D","#FF7E6D","#FFBD59","#F0F2B0","#ADD2AA"],
+  ["#E8B4A9","#EF7B84","#B696C6","#9576A1","#67597D"],
+  ["#FFD7BA","#FEC89A","#FFB5A7","#D4A276","#8C5F4A"],
+  ["#FFE0AC","#FFD39A","#ECB390","#A38497","#B9A1B0"],
+  ["#FFCB69","#FFB5A7","#F1A9A0","#CF9CA7","#9882AC"],
+  ["#FFEFC5","#F3D9B1","#E7C6A0","#D7B8A9","#6C757D"],
+  ["#E8E8E4","#DEE2E6","#CED4DA","#ADB5BD","#6C757D"],
+
+  ["#F7E7D2","#FFD9C0","#FFB5A7","#D4A5C5","#8E7DBE"],
+  ["#F5E9E0","#FCE4D9","#FADAD2","#F3C9C2","#D8A6A0"],
+  ["#FBE7EA","#F7CFDC","#F0B7CE","#E79EC0","#D185B2"],
+  ["#FDE9DD","#F5D4C3","#EDBFA7","#E4A88A","#DA916D"],
+  ["#FDEAD7","#F4D6B4","#EBBF8F","#E1A666","#D88B3C"],
+  ["#FFE6E1","#F2C5C0","#E4A6A1","#D68783","#C16966"],
+  ["#FFEDE4","#F8D9C2","#F0C6A1","#E8B280","#E09D5D"],
+  ["#FEF0E1","#F9DCC4","#F3C7A7","#E8AD80","#DC935A"],
+  ["#FFEBDD","#F5D3C7","#EABAAC","#E0A192","#D88878"],
+  ["#FDE6EA","#FAD0DA","#F5BBCB","#EFA6BC","#E391AE"],
+  ["#FEEDE6","#F6D1C4","#EDB4A1","#E3977F","#D67A5E"],
+  ["#FEEFE8","#F7D6C8","#F0BDA9","#E8A58C","#E08E72"],
+  ["#FCE8E1","#F5CFC4","#EEB5A8","#E49C8B","#DB8272"],
+  ["#FCEBE6","#F6D4CC","#F0BDB3","#E9A89B","#E19584"],
+  ["#FFF0EA","#F7D9CD","#F1C2B5","#E9AB9D","#DF9487"],
+  ["#FFF0EC","#FCE0D7","#F7D0C7","#F1C0B6","#EBA1A0"],
+  ["#FFEFE1","#F7DFC9","#F0CFAF","#E8BF95","#E0AF7B"],
+  ["#FEEDE2","#F7D6C4","#F0BFA6","#E8A88A","#E0906F"],
+  ["#FFF1E0","#F6D9BD","#EEC297","#E5AB72","#DC9450"],
+  ["#FFEFE6","#F8DECE","#F1CCB7","#EABAA0","#E1A489"],
+  ["#FFF1E9","#F9DED0","#F3CBB7","#ECB8A0","#E6A389"],
+  ["#FFEFE5","#F7DEC9","#F0CCB0","#E8BA98","#E0A681"],
+  ["#FFF0E6","#F7DFC9","#EFCEAF","#E7BD96","#E0AA80"],
+  ["#FDF1E6","#F5DECC","#ECCAB2","#E3B799","#DAA381"],
+  ["#FCEFE4","#F4DDC8","#EDCBAE","#E5B895","#DDA47D"],
+  ["#FFF4E5","#F8E0C4","#F1CCA4","#E9B784","#E3A269"],
+  ["#FFF3E2","#F7DEBF","#F0C99E","#E9B47E","#E29F63"],
+  ["#FFF4E6","#F9E1C8","#F1CDA8","#E9B788","#E3A26B"],
+  ["#FFF5E8","#F7E2C7","#EFD0AA","#E7BE8E","#DEA873"],
+
+  ["#FF9F1C","#FFBE68","#FFFFFF","#CBF3F0","#2EC3B6"],
+  ["#9C5DE5","#F05AB5","#FFE33E","#02BBF9","#00F6D4"],
+  ["#355171","#6D597A","#B46576","#E56A6E","#E9AC8B"],
+  ["#0D1B2A","#1B263C","#405B76","#788DA9","#DFE0DE"],
+  ["#386542","#68994D","#A6C856","#F3E8CF","#BC4749"],
+  ["#8E9AAE","#CAC0D4","#EFD3D7","#FFE9FA","#DFE1FF"],
+  ["#6E1E1B","#BB9557","#432818","#99582B","#FFE5A6"],
+  ["#353535","#3C6E71","#FFFFFF","#D9D9D9","#294B62"],
+  ["#FF99C7","#FCF6BC","#D0F4DD","#A9DFF9","#E5C1F9"],
+  ["#07668C","#05808F","#05A896","#07C29A","#F1F3BC"],
+  ["#FF6384","#FFCD56","#4BC0C0","#36A2EB","#9966FF"],
+  ["#F97373","#F9A66C","#FADF76","#B4DE8C","#6EC5B8"],
+  ["#FF7F50","#FFC94A","#A7E9AF","#70D6FF","#FF70A6"],
+  ["#F94144","#F3722C","#F8961E","#F9C74F","#90BE6D"],
+  ["#277DA1","#577590","#4D908E","#43AA8B","#F9C74F"],
+  ["#F9627D","#FFB09E","#FFDAC1","#E2F0CB","#B5EAD7"],
+  ["#32A7E2","#5EC9F3","#90E0EF","#ADE8F4","#CAF0F8"],
+  ["#FFB4A2","#E5989B","#B5838D","#6D6875","#FFCDB2"],
+  ["#2B2D42","#8D99AE","#EDF2F4","#EF233C","#D90429"],
+  ["#2F3C4F","#384B61","#425973","#4C6785","#576597"],
+  ["#3C6E71","#284B63","#353535","#D9D9D9","#FFFFFF"],
+  ["#1B4965","#5FA8D3","#62B6CB","#BEE9E8","#CAE9FF"],
+  ["#86BBD8","#33658A","#2F4858","#F6AE2D","#F2A541"],
+  ["#0A369D","#4472CA","#5E7CE2","#92B4F4","#CFDDF5"],
+  ["#005F73","#0A9396","#94D2BD","#E9D8A6","#EE9B00"],
+  ["#3D5A80","#98C1D9","#E0FBFC","#EE6C4D","#293241"],
+  ["#004E89","#1A659E","#FFC857","#FCECC9","#493843"],
+  ["#720026","#CE4257","#FF7F51","#FF9B54","#FFB997"],
+  ["#13293D","#006494","#247BA0","#1B98E0","#E8F1F2"],
+
+  ["#FFBE0B","#FB5607","#FF006E","#8338EC","#3A86FF"],
+  ["#FF595E","#FFCA3A","#8AC926","#1982C4","#6A4C93"],
+  ["#F72585","#B5179E","#7209B7","#560BAD","#3A0CA3"],
+  ["#4361EE","#4895EF","#4CC9F0","#4895EF","#4361EE"],
+  ["#FF9F1C","#FFBF69","#FFCCD5","#FAD2E1","#CDB4DB"],
+  ["#F07167","#F4A261","#E9C46A","#2A9D8F","#264653"],
+  ["#BB3E03","#EE9B00","#CA6702","#AE2012","#9B2226"],
+  ["#588157","#A3B18A","#DAD7CD","#344E41","#283618"],
+  ["#003049","#D62828","#F77F00","#FCBF49","#EAE2B7"],
+  ["#03045E","#0077B6","#00B4D8","#48CAE4","#90E0EF"],
+  ["#E63946","#F1FAEE","#A8DADC","#457B9D","#1D3557"],
+  ["#780000","#C1121F","#FDF0D5","#003049","#669BBC"],
+  ["#001219","#005F73","#0A9396","#94D2BD","#E9D8A6"],
+  ["#001233","#0353A4","#006DAA","#048BA8","#0CBABA"],
+  ["#7400B8","#6930C3","#5E60CE","#5390D9","#4EA8DE"],
+  ["#FF4800","#FFA400","#F9C80E","#330036","#9AE1FF"],
+  ["#8E9AAF","#CBC0D3","#EFD3D7","#FEEAFA","#DEE2FF"],
+  ["#E07A5F","#3D405B","#81B29A","#F2CC8F","#F4F1DE"],
+  ["#F2CC8F","#3D405B","#81B29A","#E07A5F","#F4F1DE"],
+  ["#FFADAD","#FFD6A5","#FDFFB6","#CAFFBF","#9BF6FF"],
+  ["#A9DEF9","#E4C1F9","#F694C1","#F6D6AD","#CDF5F6"],
+  ["#3D5A80","#EE6C4D","#E0FBFC","#98C1D9","#293241"],
+  ["#5F0F40","#9A031E","#FB8B24","#E36414","#0F4C5C"],
+  ["#FF99C8","#FCF6BD","#D0F4DE","#A9DEF9","#E4C1F9"],
+  ["#F4D06F","#FF8811","#9DD9D2","#FFF8F0","#392F5A"],
+  ["#0B090A","#161A1D","#660708","#A4161A","#E5383B"],
+  ["#31393C","#2176AE","#33A1FD","#FDCA40","#F79824"],
+  ["#9B5DE5","#F15BB5","#FEE440","#00BBF9","#00F5D4"],
+  ["#540D6E","#EE4266","#FFD23F","#3BCEAC","#0EAD69"],
+  ["#073B4C","#118AB2","#06D6A0","#FFD166","#EF476F"],
+
+  ["#0B0C10","#1F2833","#C5C6C7","#66FCF1","#45A29E"],
+  ["#011627","#FDFFFC","#2EC4B6","#E71D36","#FF9F1C"],
+  ["#2E294E","#541388","#F1E9DA","#FFD400","#D90368"],
+  ["#D8F3DC","#B7E4C7","#95D5B2","#74C69D","#52B788"],
+  ["#001219","#005F73","#0A9396","#94D2BD","#E9D8A6"],
+  ["#10002B","#240046","#3C096C","#5A189A","#7B2CBF"],
+  ["#F72585","#B5179E","#7209B7","#560BAD","#480CA8"],
+  ["#FF9E00","#FF5400","#FF0054","#9B5DE5","#5A189A"],
+  ["#004B23","#006400","#007200","#38B000","#70E000"],
+  ["#3D348B","#7678ED","#F7B801","#F18701","#F35B04"],
+  ["#2B2D42","#8D99AE","#EDF2F4","#EF233C","#D90429"],
+  ["#000814","#001D3D","#003566","#FFC300","#FFD60A"],
+  ["#03071E","#370617","#6A040F","#9D0208","#D00000"],
+  ["#F4F1DE","#E07A5F","#3D405B","#81B29A","#F2CC8F"],
+  ["#FFB5A7","#FCD5CE","#F8EDEB","#F9DCC4","#FEC89A"],
+  ["#1B262C","#0F4C75","#3282B8","#BBE1FA","#FFFFFF"],
+  ["#0D1B2A","#1B263B","#415A77","#778DA9","#E0E1DD"],
+  ["#5D5FEF","#2D3A8C","#009FB7","#F4F4F6","#FF5C7A"],
+  ["#2E1F27","#41393E","#655560","#857F92","#D6D6D6"],
+  ["#241E4E","#543864","#8E5C7A","#FF6B6B","#FFE66D"],
+  ["#171123","#2E1F3F","#5C2751","#912F56","#FF9B71"],
+  ["#191308","#32322C","#5E5C5A","#C9C9C9","#F5F5F5"],
+  ["#261447","#3C2F73","#5E4AE3","#8C6FF7","#E4E4F4"],
+  ["#1A1B41","#2C2E61","#D7263D","#F49D37","#F9DC5C"],
+  ["#02010A","#04052E","#140152","#22007C","#0D00A4"],
+  ["#002855","#054A91","#027BCE","#93C6E7","#F5F7FA"],
+  ["#0B132B","#1C2541","#3A506B","#5BC0BE","#6FFFE9"],
+  ["#343A40","#495057","#6C757D","#ADB5BD","#CED4DA"],
+  ["#00171F","#003459","#007EA7","#00A8E8","#F4F4F9"],
+        ];
+
+function generatePalette(mode, count) {
+      // Always pull a random palette from the fixed list, but track which one
+      const palettes = fixedCustomPalettes;
+
+      // Pick a random index so we know *which* palette we got
+      const index = Math.floor(Math.random() * palettes.length);
+      const colors = palettes[index];
+
+      return {
+        // No mode label needed, but return is maintained for consistency
+        modeLabel: "Custom Palettes (Fixed)",
+        colors: colors.slice(0, Math.min(count, colors.length)),
+        paletteIndex: index // zero-based index into fixedCustomPalettes
+      };
+    }
+
+
+   const ideaTitleMap = {
+  characterType: [
+    "The", "A Lone", "The Forgotten", "An Ancient", "The Wandering", "The Displaced",
+    "The Haunted", "The Reluctant", "The Obsessive", "The Exile", "The Quiet",
+    "The Inscrutable", "The Broken", "The Watchful", "The Feral", "The Lost",
+    "The Unmoored", "The Drifting", "The Ghostlike", "The Hollow", "The Paradoxical",
+    "The Unnamed", "The Masked", "The Shifting", "The Disguised", "The Returning",
+    "The Unsettled", "The Nomadic", "The Vigilant", "The Exposed", "The Unspoken",
+    "The Dreaming", "The Rootless", "The Frayed", "The Unfinished", "The Silent",
+    "The Weathered", "The Mutable", "The Enduring", "The Burdened", "The Witness"
+  ],
+
+  characterBuild: [
+    "The Imposing", "The Graceful", "The Rugged", "The Smooth", "The Angular",
+    "The Compact", "The Towering", "The Slight", "The Weathered", "The Statuesque",
+    "The Hunched", "The Coiled", "The Relaxed", "The Taut", "The Grounded",
+    "The Fluid", "The Blocky", "The Elongated", "The Delicate", "The Massive",
+    "The Balanced", "The Off-Center", "The Composed", "The Crooked", "The Animated",
+    "The Still", "The Heavy-Set", "The Light-Boned", "The Symmetrical", "The Distorted",
+    "The Hardened", "The Soft-Edged", "The Awkward", "The Agile", "The Sturdy",
+    "The Intimidating", "The Slouching", "The Upright", "The Coarse", "The Refined"
+  ],
+
+  device: [
+    "The Obsolete", "The Strange", "The New", "The Powerful", "The Unstable",
+    "The Experimental", "The Forbidden", "The Jury-Rigged", "The Corporate",
+    "The Clinical", "The Improvised", "The Elegant", "The Noisy", "The Temperamental",
+    "The Compact", "The Arcane", "The Modular", "The Primitive", "The Holographic",
+    "The Transmitting", "The Broken-Down", "The Repaired", "The Prototype",
+    "The Miniaturized", "The Overclocked", "The Rust-Ridden", "The Glitching",
+    "The Encrypted", "The Smuggled", "The Unregistered", "The Reverse-Engineered",
+    "The Biotech", "The Solar-Fed", "The Quantum", "The Analog", "The Repurposed",
+    "The Tampered", "The Volatile", "The Heat-Warped", "The Signal-Bound"
+  ],
+
+  weapon: [
+    "The Rusty", "The Holy", "The Futuristic", "The Deadly", "The Brutal",
+    "The Elegant", "The Improvised", "The Ceremonial", "The Heirloom", "The Cursed",
+    "The Silent", "The Reckless", "The Experimental", "The Archaic", "The Shattered",
+    "The Balanced", "The Twin-Edged", "The Jagged", "The Forged", "The Blessed",
+    "The Tainted", "The Repurposed", "The Heavy", "The Lightweight", "The Reinforced",
+    "The Glowing", "The Serrated", "The Rapid-Strike", "The Ancient", "The Cybernetic",
+    "The Bone-Carved", "The Ritual", "The Impact-Driven", "The Ionic", "The Molten",
+    "The Fused-Metal", "The Alloy-Bound", "The Hyperdense", "The Phase-Shifted"
+  ],
+
+  artifact: [
+    "The Shattered", "The Glowing", "The Legendary", "The Cursed", "The Dormant",
+    "The Humming", "The Forgotten", "The Revered", "The Fractured", "The Disputed",
+    "The Impossible", "The Encoded", "The Veiled", "The Unstable", "The Whispering",
+    "The Blood-Marked", "The Luminous", "The Mosaic", "The Ancient", "The Unearthed",
+    "The Forbidden", "The Chiseled", "The Petrified", "The Radiant", "The Cracked",
+    "The Singing", "The Cryptic", "The Hollowed", "The Floating", "The Anchored",
+    "The Twisting", "The Breathing", "The Multi-Faceted", "The Idolized", "The Broken-Idol",
+    "The Runic", "The Weather-Stained", "The Fossilized", "The Divine"
+  ],
+
+  vehicle: [
+    "The Bulky", "The Fast", "The Salvaged", "The Massive", "The Agile",
+    "The Armored", "The Patched-Together", "The Ceremonial", "The Menacing",
+    "The Graceful", "The Silent-Running", "The Overworked", "The Prototype",
+    "The Smuggler’s", "The Retro-Fitted", "The Hovering", "The Turbocharged",
+    "The Long-Haul", "The Hybrid", "The Unregistered", "The Black-Market",
+    "The Low-Altitude", "The Multi-Jointed", "The Cargo-Heavy", "The Aerodynamic",
+    "The Camouflaged", "The Weather-Proofed", "The Experimental-Drive",
+    "The All-Terrain", "The Sand-Scoured", "The Ice-Tracked", "The Ridge-Skimmer",
+    "The Radiant-Engine", "The Ghost-Vehicle", "The Solar-Winged",
+    "The Reinforced-Shell", "The Tri-Tread", "The Micro-Shuttle", "The Noise-Damped"
+  ],
+
+  building: [
+    "The Collapsed", "The Perfect", "The Forgotten", "The Imposing", "The Overgrown",
+    "The Fortified", "The Condemned", "The Repurposed", "The Sacred", "The Corporate",
+    "The Windowless", "The Towering", "The Labyrinthine", "The Hidden", "The Subterranean",
+    "The Flooded", "The Derelict", "The Brutalist", "The Neo-Futurist", "The Spired",
+    "The Shuttered", "The Reinforced", "The Hollow", "The Multi-Layered", "The Fragmented",
+    "The Soundproof", "The Abandoned", "The Converted", "The Encrypted", "The Occupied",
+    "The Burned-Out", "The Renovated", "The Shifting", "The Suspended", "The Leaning",
+    "The Ion-Scorched", "The Mist-Bound", "The Gated", "The Perched"
+  ],
+
+  environment: [
+    "The Deep", "The Toxic", "The Calm", "The Hostile", "The Flooded",
+    "The Fog-Choked", "The Neon-Soaked", "The Dust-Heavy", "The Overgrown",
+    "The Abandoned", "The Crowded", "The Echoing", "The Liminal", "The Wind-Scoured",
+    "The Dusklit", "The Sun-Blasted", "The Frozen", "The Sweltering", "The Quiet",
+    "The Breathing", "The Shifting", "The Night-Drenched", "The Sand-Drowned",
+    "The Moss-Covered", "The Crystal-Ridden", "The Void-Adjacent", "The Ruined",
+    "The Hollow-Field", "The Tangle-Wood", "The Plague-Bloom", "The Vapor-Trail",
+    "The Tectonic", "The Polluted", "The Storm-Wrought", "The Rift-Border",
+    "The River-Scarred", "The Fog-Silent", "The Depth-Narrowed"
+  ],
+
+  plant: [
+    "The Towering", "The Tiny", "The Luminous", "The Strange", "The Invasive",
+    "The Fragile", "The Parasitic", "The Cultivated", "The Wild", "The Crystalline",
+    "The Bioluminescent", "The Spined", "The Flowering", "The Poisonous",
+    "The Withered", "The Blooming", "The Thorn-Crowned", "The Sap-Dripping",
+    "The Root-Bound", "The Symbiotic", "The Animated", "The Ancient",
+    "The Shimmering", "The Glass-Leafed", "The Moss-Crested", "The Fungal-Hybrid",
+    "The Choked-Vine", "The Bark-Split", "The Soft-Petaled", "The Razor-Leafed",
+    "The Water-Fed", "The Shadow-Fed", "The Night-Blooming", "The Verdant",
+    "The Ash-Covered", "The Twisting", "The Spore-Bursting"
+  ],
+
+  creature: [
+    "The Majestic", "The Terrifying", "The Tiny", "The Playful", "The Skittish",
+    "The Patient", "The Ravenous", "The Watchful", "The Wounded", "The Experimental",
+    "The Spectral", "The Chimeric", "The Lumbering", "The Hyperactive",
+    "The Shivering", "The Winged", "The Scale-Covered", "The Fur-Matted",
+    "The Horn-Crowned", "The Many-Eyed", "The One-Eyed", "The Mimicking",
+    "The Camouflaged", "The Burrowing", "The Spined", "The Amphibious", "The Biotech-Spliced",
+    "The Hive-Minded", "The Silent-Pawed", "The Bounding", "The Gliding",
+    "The Predatory", "The Gentle", "The Curious", "The Dream-Strider",
+    "The Void-Born", "The Clever", "The Hesitant"
+  ],
+
+  scene: [
+    "A Tense", "A Quiet", "An Epic", "A Serene", "A Crowded", "A Lonely",
+    "A Chaotic", "A Ritual", "A Fleeting", "A Desperate", "A Hopeful",
+    "A Clandestine", "A Transitional", "A Dreamlike", "A Melancholic",
+    "A Stark", "A Cinematic", "A Nocturnal", "A Violent", "A Slow-Burn",
+    "A Timeless", "A Frozen-Moment", "A Reverent", "A Jarring",
+    "A Sunlit", "A Dust-Lit", "A Neon-Drenched", "A Backlit",
+    "A Confrontational", "An Intimate", "A Vast", "A Confined",
+    "A Labyrinthine", "A Minimalist", "A Suspenseful", "A Heavy-Atmosphere"
+  ]
+};
+
+
+
+  let currentIdea = null;
+let currentPalette = null;
+// Fixed visibleColorCount to 5
+let visibleColorCount = 5; 
+let isRandomMode = true;
+let isPaletteLocked = false; // NEW: palette lock flag
+let isRolling = false; // prevent spam while animation is running
+
+    // --- UI Elements ---
+    const branchRow = document.getElementById("branch-row");
+    const branchTitle = document.getElementById("branch-title");
+    const branchSubtitle = document.getElementById("branch-subtitle");
+    const branchEyebrow = document.getElementById("branch-eyebrow");
+    const branchIcon = document.getElementById("branch-icon");
+    const detailGrid = document.getElementById("detail-grid");
+    const swatchRow = document.getElementById("swatch-row");
+    const hexRow = document.getElementById("hex-row");
+ const paletteLockBtn = document.getElementById("btn-palette-lock"); // NEW
+ const countdownOverlay = document.getElementById("countdown-overlay");
+const countdownNumberEl = countdownOverlay
+  ? countdownOverlay.querySelector(".countdown-number")
+  : null;
+
+
+
+    // --- FAVORITES (unchanged) ---
+    const FAVORITES_STORAGE_KEY = "wtd_favorites";
+    let favorites = [];
+
+    function loadFavorites() {
+      const storedFavorites = localStorage.getItem(FAVORITES_STORAGE_KEY);
+      if (storedFavorites) {
+        favorites = JSON.parse(storedFavorites);
+      }
+      renderFavorites();
+      updateFavoritesCount();
+    }
+
+    function saveFavorites() {
+      localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(favorites));
+      updateFavoritesCount();
+    }
+
+    function updateFavoritesCount() {
+      document.getElementById("favorites-count").textContent = favorites.length;
+    }
+
+    function summarizeIdeaForFavorite(idea) {
+      if (!idea || !idea.details || idea.details.length === 0) return "No details available";
+      // Concatenate the first 3 or 4 detail values
+      const parts = idea.details.slice(0, 4).map(d => d.value).filter(v => v && v !== '—');
+      return parts.slice(0, 3).join(" / ") + (parts.length > 3 ? "..." : "");
+    }
+
+    function currentIdeaText() {
+      if (!currentIdea) return "";
+      let text = `${currentIdea.title}\n`;
+      currentIdea.details.forEach(d => {
+        text += `${d.label}: ${d.value}\n`;
+      });
+      return text.trim();
+    }
+
+    function addFavorite(entry) {
+      favorites.unshift(entry);
+      saveFavorites();
+      renderFavorites();
+    }
+
+    function removeFavorite(timestamp) {
+      favorites = favorites.filter(fav => fav.timestamp !== timestamp);
+      saveFavorites();
+      renderFavorites();
+    }
+
+    function copyFavorite(fullText) {
+      navigator.clipboard.writeText(fullText).then(() => {
+        alert("Copied idea to clipboard!");
+      });
+    }
+
+    function renderFavorites() {
+      const list = document.getElementById("favorites-list");
+      const emptyMessage = document.getElementById("favorites-empty");
+      list.innerHTML = "";
+
+      if (favorites.length === 0) {
+        emptyMessage.style.display = "block";
+        return;
+      } else {
+        emptyMessage.style.display = "none";
+      }
+
+      favorites.forEach((fav) => {
+        const item = document.createElement("div");
+        item.className = "favorite-item";
+
+        const meta = document.createElement("div");
+        meta.className = "favorite-meta";
+        meta.innerHTML = `
+          <div class="favorite-branch">
+            ${branches.find(b => b.id === fav.branchId)?.icon || '❓'} ${fav.branchLabel}
+          </div>
+          <div class="favorite-timestamp">${fav.timestamp.split(', ')[0]}</div>
+        `;
+
+        const body = document.createElement("div");
+        body.className = "favorite-body";
+        body.textContent = fav.summary;
+
+        const swatchesContainer = document.createElement("div");
+        swatchesContainer.className = "favorite-swatches";
+        fav.palette.forEach(color => {
+          const swatch = document.createElement("div");
+          swatch.className = "favorite-swatch";
+          swatch.style.backgroundColor = color;
+          swatchesContainer.appendChild(swatch);
+        });
+
+        const actions = document.createElement("div");
+        actions.className = "favorite-actions";
+
+        const copyBtn = document.createElement("button");
+        copyBtn.className = "btn-mini";
+        copyBtn.textContent = "Copy";
+        copyBtn.addEventListener("click", () => copyFavorite(fav.fullText));
+
+        const removeBtn = document.createElement("button");
+        removeBtn.className = "btn-mini danger";
+        removeBtn.textContent = "Remove";
+        removeBtn.addEventListener("click", () => removeFavorite(fav.timestamp));
+
+        actions.appendChild(copyBtn);
+        actions.appendChild(removeBtn);
+
+        item.appendChild(meta);
+        item.appendChild(body);
+        item.appendChild(swatchesContainer);
+        item.appendChild(actions);
+        list.appendChild(item);
+      });
+    }
+
+
+    // --- IDEA GENERATION ---
+
+    function generateIdea(branchId = null) {
+      const selectedBranch = branchId || randChoice(branches.map(b => b.id));
+      const branchInfo = branches.find(b => b.id === selectedBranch);
+
+      if (!branchInfo) return; // Should not happen
+
+   const generator = branchGenerators[selectedBranch];
+const ideaData = generator();
+const titlePrefix = randChoice(ideaTitleMap[selectedBranch]);
+
+let titleCore;
+if (selectedBranch === "characterBuild") {
+  // Find the Gender row in the details and use that as the core noun
+  const genderDetail = ideaData.details.find(d => d.label === "Gender");
+  titleCore = genderDetail ? genderDetail.value : branchInfo.label;
+} else {
+  // All other branches keep using the first detail as before
+  titleCore = (ideaData.details[0] && ideaData.details[0].value) || branchInfo.label;
+}
+
+const title = `${titlePrefix} ${titleCore}`;
+
+
+
+      currentIdea = {
+        branchId: branchInfo.id,
+        branchLabel: branchInfo.label,
+        title: title,
+        ...ideaData
+      };
+
+      // Update UI with new idea
+      branchIcon.innerHTML = `<span>${branchInfo.icon}</span>`;
+      branchEyebrow.textContent = branchInfo.label;
+      branchTitle.textContent = title;
+      branchSubtitle.textContent = ideaData.subtitle;
+      createDetailRows(detailGrid, ideaData.details);
+
+      document.getElementById("btn-favorite-current").textContent =
+        "⭐"; // Reset button text
+
+      // Update branch pills state
+      updateBranchPills(branchInfo.id);
+    }
+
+   function resetAndRegeneratePalette() {
+  // If palette is locked, just re-render the existing one and bail out
+  if (isPaletteLocked && currentPalette) {
+    renderPalette();
+    return;
+  }
+
+  const mode = 'custom'; // Fixed mode
+  const count = 5; // Fixed count
+  currentPalette = generatePalette(mode, count);
+  renderPalette();
+}
+
+function renderPalette() {
+  if (!currentPalette) return;
+
+  swatchRow.innerHTML = "";
+  hexRow.innerHTML = ""; // allow multiple lines
+
+  // NEW: inline preview next to title (mobile/tablet)
+  const previewInline = document.getElementById("palette-preview-inline");
+  if (previewInline) {
+    previewInline.innerHTML = "";
+  }
+
+  const colorsToShow = currentPalette.colors.slice(0, visibleColorCount);
+
+  colorsToShow.forEach((hex) => {
+    const swatch = document.createElement("div");
+    swatch.className = "swatch";
+    swatch.style.backgroundColor = hex;
+    swatch.addEventListener("click", () => copyColor(hex));
+    swatchRow.appendChild(swatch);
+
+    // five tiny squares inline with the title
+    if (previewInline && previewInline.childElementCount < 5) {
+      const sq = document.createElement("div");
+      sq.style.backgroundColor = hex;
+      previewInline.appendChild(sq);
+    }
+  });
+
+  // Line 1: hex values
+  const hexLine = document.createElement("div");
+  hexLine.textContent = colorsToShow.join(" • ").toUpperCase();
+  hexRow.appendChild(hexLine);
+
+  // Line 2: Palette #xxx of N (keep your existing code here)
+  if (typeof currentPalette.paletteIndex === "number") {
+    const total = fixedCustomPalettes.length;
+    const humanIndex = currentPalette.paletteIndex + 1;
+    const padded = String(humanIndex).padStart(3, "0");
+
+    const idLine = document.createElement("div");
+    idLine.className = "palette-id-row";
+    idLine.textContent = `Palette #${padded} of ${total}`;
+    hexRow.appendChild(idLine);
+  }
+}
+
+
+
+
+    function copyColor(hex) {
+      navigator.clipboard.writeText(hex.toUpperCase()).then(() => {
+        alert(`Copied color: ${hex.toUpperCase()}`);
+      });
+    }
+
+    function buildBranchPills() {
+      branches.forEach((branch) => {
+        const pill = document.createElement("div");
+        pill.className = "branch-pill";
+        pill.setAttribute("data-id", branch.id);
+        pill.innerHTML = `<span class="icon">${branch.icon}</span> ${branch.label}`;
+        pill.addEventListener("click", () => {
+          isRandomMode = false;
+          updateBranchRowEnabled();
+          generateIdea(branch.id);
+          resetAndRegeneratePalette(); // Reroll palette on new idea generation
+        });
+        branchRow.appendChild(pill);
+      });
+    }
+
+    function updateBranchPills(activeId) {
+      document.querySelectorAll(".branch-pill").forEach((pill) => {
+        if (pill.getAttribute("data-id") === activeId) {
+          pill.classList.add("active");
+        } else {
+          pill.classList.remove("active");
+        }
+      });
+    }
+
+    function updateBranchRowEnabled() {
+  const row = document.getElementById("branch-row");
+  const randomBtn = document.getElementById("btn-random-mode");
+  const pickBtn = document.getElementById("btn-pick-mode");
+
+  // In this animated build we NEVER visually dim the branch row.
+  // We only switch which mode pill is "active".
+  row.classList.remove("disabled");
+
+  if (isRandomMode) {
+    randomBtn.classList.add("active");
+    pickBtn.classList.remove("active");
+  } else {
+    randomBtn.classList.remove("active");
+    pickBtn.classList.add("active");
+  }
+}
+
+    
+    function updatePaletteLockUI() {
+  if (!paletteLockBtn) return;
+
+  if (isPaletteLocked) {
+    paletteLockBtn.classList.add("active");
+    paletteLockBtn.textContent = "🔒";
+    paletteLockBtn.title = "Palette locked – click to unlock";
+  } else {
+    paletteLockBtn.classList.remove("active");
+    paletteLockBtn.textContent = "🔓";
+    paletteLockBtn.title = "Palette unlocked – click to lock";
+  }
+}
+
+
+    // ---------- EVENT LISTENERS ----------
+    
+    function performGenerate() {
+  // ➜ MOVE the existing contents of the click handler into here.
+       // If in random mode, randomize branch. If in pick mode, regenerate current branch idea.
+        generateIdea(isRandomMode ? null : currentIdea ? currentIdea.branchId : null);
+        resetAndRegeneratePalette(); // Always reroll the custom palette
+}
+
+// Show a temporary, throwaway idea during countdown (does NOT touch currentIdea)
+function showTempIdeaDuringCountdown() {
+  if (!branchRow || !detailGrid) return null;
+
+  // Decide which branch to roll:
+  // - Random mode: any branch
+  // - Pick mode: stay on the currently selected branch if we have one
+  let tempBranchId;
+  if (isRandomMode || !currentIdea) {
+    tempBranchId = randChoice(branches.map(b => b.id));
+  } else {
+    tempBranchId = currentIdea.branchId;
+  }
+
+  const branchInfo = branches.find(b => b.id === tempBranchId);
+  if (!branchInfo) return null;
+
+  const generator = branchGenerators[tempBranchId];
+  if (!generator) return null;
+
+  const ideaData = generator();
+
+  // Build a title the same way generateIdea does
+  const titlePrefix = randChoice(ideaTitleMap[tempBranchId] || ["The"]);
+  let titleCore;
+  if (tempBranchId === "characterBuild") {
+    // Use Gender as the core noun when available
+    const genderDetail = ideaData.details.find(d => d.label === "Gender");
+    titleCore = genderDetail ? genderDetail.value : branchInfo.label;
+  } else {
+    titleCore =
+      (ideaData.details[0] && ideaData.details[0].value) || branchInfo.label;
+  }
+  const title = `${titlePrefix} ${titleCore}`;
+
+  // Update ONLY the visible UI – do NOT change currentIdea or favorites
+  branchIcon.innerHTML = `<span>${branchInfo.icon}</span>`;
+  branchEyebrow.textContent = branchInfo.label;
+  branchTitle.textContent = title;
+  branchSubtitle.textContent = ideaData.subtitle;
+  createDetailRows(detailGrid, ideaData.details);
+  updateBranchPills(branchInfo.id);
+
+  // Let the caller know which branch we used so the pill highlight can sync
+  return tempBranchId;
+}
+
+
+function runAnimatedGenerate() {
+  if (isRolling) return;
+  isRolling = true;
+
+  // Still a 5 → 1 countdown visually…
+  const steps = [5, 4, 3, 2, 1];
+
+  // …but we spin multiple times PER step.
+  const spinsPerStep = 6; // try 4–6; higher = more chaos
+  const totalSpins = steps.length * spinsPerStep;
+  let spinIndex = 0;
+
+ // Everything that should "slot flicker":
+const getSlotElements = () =>
+  Array.from(
+    document.querySelectorAll(
+    ".branch-icon-circle, .branch-icon-circle span, " + // icon + white circle
+      ".card-title-eyebrow, " +      // blue eyebrow text
+      "#branch-title, .branch-title, " +  // main title (ID or class)
+      "#branch-subtitle, .branch-subtitle, " + // subtitle (ID or class)
+      ".field-label, " +             // left column labels in the grid
+      ".field-value"                 // right column values in the grid
+    )
+  );
+
+
+
+  const getBranchPills = () =>
+    Array.from(document.querySelectorAll(".branch-pill"));
+
+  if (countdownOverlay) {
+    countdownOverlay.classList.add("visible");
+  }
+
+  const spin = () => {
+    const stepIdx = Math.floor(spinIndex / spinsPerStep); // 0..4
+    const n = steps[stepIdx];
+
+    // Update big countdown number
+    if (countdownNumberEl) {
+      countdownNumberEl.textContent = n;
+      countdownNumberEl.classList.remove("pop");
+      void countdownNumberEl.offsetWidth; // reflow
+      countdownNumberEl.classList.add("pop");
+    }
+
+    // How “intense” we get near the end (for shake)
+    const strong = stepIdx >= steps.length - 2; // true for 2 and 1
+
+    // 🔸 Roll a temporary idea on EVERY spin
+    const tempBranchId = showTempIdeaDuringCountdown();
+
+    // Also spin the palette each spin, unless locked
+    if (!isPaletteLocked) {
+      resetAndRegeneratePalette();
+    }
+
+    // Blur/fade/slide all slot text: title + subtitle + detail values
+    const slots = getSlotElements();
+    slots.forEach((el) => {
+      el.classList.remove("slot-flicker", "slot-shake");
+      void el.offsetWidth; // reflow so animation restarts
+      el.classList.add("slot-flicker");
+      if (strong) el.classList.add("slot-shake");
+    });
+
+    // Highlight one branch pill as the “current reel”
+    const pills = getBranchPills();
+    if (pills.length) {
+      pills.forEach((p) => p.classList.remove("slot-focus"));
+
+      let pillToFocus = null;
+      if (tempBranchId) {
+        pillToFocus = pills.find(
+          (p) => p.getAttribute("data-id") === tempBranchId
+        );
+      }
+      if (!pillToFocus) {
+        const randomIndex = Math.floor(Math.random() * pills.length);
+        pillToFocus = pills[randomIndex];
+      }
+      pillToFocus.classList.add("slot-focus");
+    }
+
+    // Next spin or finish
+    spinIndex++;
+    if (spinIndex < totalSpins) {
+      // Speed of the “spin”
+      setTimeout(spin, 60); // 80ms feels like a slot wheel
+    } else {
+      // Done spinning → do the REAL generate
+      if (countdownOverlay) {
+        countdownOverlay.classList.remove("visible");
+      }
+
+      // Clear highlight
+      const pillsNow = getBranchPills();
+      pillsNow.forEach((p) => p.classList.remove("slot-focus"));
+
+      setTimeout(() => {
+        performGenerate(); // your real idea + palette
+        isRolling = false;
+      }, 180);
+    }
+  };
+
+  spin();
+}
+
+
+
+    // Main Generate Button (Randomize EVERYTHING)
+   document.getElementById("btn-generate").addEventListener("click", () => {
+  runAnimatedGenerate();
+});
+
+
+    document
+      .getElementById("btn-random-mode")
+      .addEventListener("click", () => {
+        isRandomMode = true;
+        updateBranchRowEnabled();
+        generateIdea(null); // Random branch
+        resetAndRegeneratePalette(); // Always reroll the custom palette
+      });
+
+    document
+      .getElementById("btn-pick-mode")
+      .addEventListener("click", () => {
+        isRandomMode = false;
+        updateBranchRowEnabled();
+        // If an idea exists, keep its selection active. Otherwise, select the first one and generate.
+        if (!currentIdea) {
+          // If no idea, select the first pill (Character Type) and generate
+          document.querySelector(".branch-pill")?.click();
+        } else {
+          updateBranchPills(currentIdea.branchId);
+        }
+      });
+
+    // Random Palette Button (Reroll Colors, Preserve Branch)
+    document
+      .getElementById("btn-palette-random")
+      .addEventListener("click", () => {
+        resetAndRegeneratePalette(); // Reroll palette from custom set
+      });
+
+    document
+      .getElementById("btn-copy-hex")
+      .addEventListener("click", () => {
+        if (currentPalette) {
+          // Use visibleColorCount (fixed at 5)
+          const hexString = currentPalette.colors.slice(0, visibleColorCount).join(", ").toUpperCase(); 
+          navigator.clipboard.writeText(hexString).then(() => {
+            alert("Copied HEX codes to clipboard!");
+          });
+        }
+      });
+
+    document
+      .getElementById("btn-copy-idea")
+      .addEventListener("click", () => {
+        if (currentIdea) {
+          navigator.clipboard.writeText(currentIdeaText()).then(() => {
+            document.getElementById("btn-copy-idea").textContent = "Copied! ✅";
+            setTimeout(() => {
+              document.getElementById("btn-copy-idea").textContent =
+                "Copy Idea 📋";
+            }, 1000);
+          });
+        }
+      });
+
+    document
+  .getElementById("btn-favorite-current")
+  .addEventListener("click", () => {
+    if (!currentIdea) return;
+    const visibleColors = currentPalette.colors.slice(0, visibleColorCount);
+    const entry = {
+      branchId: currentIdea.branchId,
+      branchLabel: currentIdea.branchLabel,
+      summary: summarizeIdeaForFavorite(currentIdea),
+      fullText: currentIdeaText(),
+      palette: visibleColors,
+      timestamp: new Date().toLocaleString()
+    };
+    addFavorite(entry);
+  });
+
+
+    const favoritesPanel = document.getElementById("favorites-panel");
+
+    document
+      .getElementById("btn-favorites-toggle")
+      .addEventListener("click", () => {
+        favoritesPanel.classList.toggle("visible");
+        document
+          .getElementById("btn-favorites-toggle")
+          .classList.toggle("active");
+      });
+
+    document
+      .getElementById("btn-favorites-close")
+      .addEventListener("click", () => {
+        favoritesPanel.classList.remove("visible");
+        document
+          .getElementById("btn-favorites-toggle")
+          .classList.remove("active");
+      });
+      
+      // Random Palette Button (Reroll Colors, Preserve Branch)
+document
+  .getElementById("btn-palette-random")
+  .addEventListener("click", () => {
+    resetAndRegeneratePalette(); // Reroll palette from custom set (unless locked)
+  });
+
+// NEW: Palette Lock Toggle
+if (paletteLockBtn) {
+  paletteLockBtn.addEventListener("click", () => {
+    isPaletteLocked = !isPaletteLocked;
+    updatePaletteLockUI();
+  });
+}
+
+
+    // ---------- INIT ----------
+
+    buildBranchPills();
+    updateBranchRowEnabled();
+    loadFavorites();
+    updatePaletteLockUI(); // NEW: initialize lock button state
+
+
+    // Initial load: generate an idea and an initial custom palette
+    generateIdea(null);
+    resetAndRegeneratePalette();
+    
+
+
+// --- Palette drawer toggle (mobile/tablet) ---
+(function() {
+  const paletteCard = document.querySelector(".palette-card");
+  const paletteHeader = paletteCard ? paletteCard.querySelector(".palette-header") : null;
+
+  function isSmallScreen() {
+    return window.innerWidth <= 1024;
+  }
+
+  function openDrawer() {
+    if (paletteCard && isSmallScreen()) {
+      paletteCard.classList.add("drawer-open");
+    }
+  }
+
+  function closeDrawer() {
+    if (paletteCard && isSmallScreen()) {
+      paletteCard.classList.remove("drawer-open");
+    }
+  }
+
+  // toggle drawer by tapping the palette header
+  if (paletteCard && paletteHeader) {
+    paletteHeader.addEventListener("click", () => {
+      if (!isSmallScreen()) return;
+      paletteCard.classList.toggle("drawer-open");
+    });
+  }
+
+  // collapse drawer after generating a new idea on small screens
+  const btnGenerate = document.getElementById("btn-generate");
+  if (btnGenerate) {
+    btnGenerate.addEventListener("click", () => {
+      closeDrawer();
+    });
+  }
+
+  // also collapse on resize up to desktop
+  window.addEventListener("resize", () => {
+    if (!isSmallScreen() && paletteCard) {
+      paletteCard.classList.remove("drawer-open");
+    }
+  });
+})();
