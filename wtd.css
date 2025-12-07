@@ -1,0 +1,813 @@
+
+    :root {
+      --bg: #050814;
+      --bg-elevated: #0c101f;
+      --bg-elevated-soft: #101528;
+      --bg-chip: #151a2b;
+      --accent: #4aa8ff;
+      --accent-soft: rgba(74, 168, 255, 0.2);
+      --border-subtle: rgba(255,255,255,0.06);
+      --text-main: #f7f8ff;
+      --text-muted: #a3acc7;
+      --text-soft: #6e7692;
+      --danger: #ff5c7a;
+      --corner-radius-lg: 18px;
+      --corner-radius-md: 12px;
+      --shadow-soft: 0 22px 60px rgba(0,0,0,0.6);
+      --font-sans: -apple-system, BlinkMacSystemFont, system-ui, "SF Pro Text",
+        -system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      color: var(--text-main);
+      background: radial-gradient(circle at top, #1a2340 0%, #050814 55%, #02030a 100%);
+      background-attachment: fixed;
+      background-size: cover;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(79, 185, 255, 0.16), transparent 55%),
+        radial-gradient(circle at 100% 0%, rgba(255, 88, 178, 0.16), transparent 55%);
+      opacity: 0.8;
+      mix-blend-mode: screen;
+      z-index: -1;
+    }
+
+    .app-shell {
+      max-width: 1240px;
+      margin: 26px auto 40px auto;
+      padding: 0 20px 40px 20px;
+    }
+    
+    .subtitle {
+  display: none;
+}
+
+    h1 {
+      margin: 0;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      font-size: clamp(32px, 4vw, 40px);
+    }
+
+    .subtitle {
+      margin-top: 6px;
+      font-size: 14px;
+      color: var(--text-soft);
+    }
+
+    .top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 22px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .controls-main {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+.mode-toggle-row {
+  display: flex;
+  gap: 8px;
+}
+
+/* Mobile / tablet adjustments */
+@media (max-width: 1024px) {
+  .top-row {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .controls-main {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .mode-toggle-row {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  /* Favorites: icon + count only */
+  #btn-favorites-toggle {
+    font-size: 0;
+    padding-inline: 14px;
+  }
+  #btn-favorites-toggle::before {
+    content: "⭐";
+    font-size: 16px;
+    margin-right: 4px;
+  }
+  #btn-favorites-toggle span#favorites-count {
+    font-size: 14px;
+  }
+}
+
+
+    .btn {
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: 10px 22px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      transition: background 0.14s ease, transform 0.08s ease, box-shadow 0.14s ease,
+        border-color 0.14s ease, color 0.14s ease;
+      background: transparent;
+      color: var(--text-main);
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, #45a2ff, #8b7bff);
+      color: white;
+      box-shadow: 0 12px 30px rgba(34, 142, 255, 0.55);
+      border-color: rgba(255,255,255,0.1);
+    }
+
+    .btn.primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 40px rgba(34, 142, 255, 0.7);
+    }
+
+    .btn.toggle {
+      background: rgba(10, 15, 30, 0.7);
+      border-color: rgba(255,255,255,0.04);
+      color: var(--text-muted);
+    }
+
+    .btn.toggle.active {
+      background: rgba(32, 45, 90, 0.95);
+      border-color: var(--accent-soft);
+      color: var(--text-main);
+      box-shadow: 0 0 0 1px rgba(113, 190, 255, 0.4);
+    }
+
+    .btn.ghost {
+      padding-inline: 16px;
+      border-color: rgba(255,255,255,0.08);
+      background: rgba(6, 9, 22, 0.7);
+      color: var(--text-soft);
+      font-size: 13px;
+    }
+
+    .btn.ghost.active {
+      background: rgba(22, 30, 55, 0.95);
+      border-color: rgba(255,255,255,0.18);
+      color: var(--text-main);
+    }
+
+    .emoji { font-size: 16px; }
+
+    .branch-row-wrapper { margin-top: 18px; }
+
+    .branch-label {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-bottom: 6px;
+    }
+
+    .branch-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .branch-pill {
+      border-radius: 999px;
+      background: rgba(10, 14, 30, 0.86);
+      border: 1px solid rgba(255,255,255,0.04);
+      padding: 6px 14px 7px 14px;
+      font-size: 13px;
+      color: var(--text-soft);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.14s ease, border-color 0.14s ease, color 0.14s ease,
+        box-shadow 0.14s ease, transform 0.08s ease;
+    }
+
+    .branch-pill span.icon { font-size: 14px; }
+
+    .branch-pill.active {
+      background: rgba(33, 52, 101, 0.98);
+      border-color: var(--accent-soft);
+      color: var(--text-main);
+      box-shadow: 0 10px 26px rgba(0,0,0,0.5);
+      transform: translateY(-0.5px);
+    }
+
+    .branch-row.disabled .branch-pill {
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    .card {
+      margin-top: 18px;
+      border-radius: var(--corner-radius-lg);
+      background: rgba(7, 10, 24, 0.96);
+      border: 1px solid rgba(255,255,255,0.04);
+      box-shadow: var(--shadow-soft);
+      padding: 18px 22px 18px 22px;
+      position: relative;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 10px;
+    }
+
+    .card-header-main {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .branch-icon-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 25% 20%, #ffffff, #d2d9ff);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 26px rgba(0,0,0,0.65);
+      flex-shrink: 0;
+    }
+
+    .branch-icon-circle span { font-size: 18px; }
+
+    .card-title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .card-title-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .card-title-main {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .card-title-sub {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .card-header-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: nowrap;      /* keep copy + star on one line */
+  align-items: center;
+}
+
+.card-header-actions .btn {
+  padding: 6px 10px;
+  font-size: 18px;
+}
+
+
+    .card-body {
+      margin-top: 6px;
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(260px, 1.1fr);
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 900px) {
+      .card-body {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .detail-block { padding-top: 4px; }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 140px minmax(0, 1fr);
+      column-gap: 16px;
+      row-gap: 4px;
+      font-size: 13px;
+    }
+
+    @media (max-width: 640px) {
+      .detail-grid {
+        grid-template-columns: 120px minmax(0, 1fr);
+      }
+    }
+
+    .field-label {
+      color: var(--text-soft);
+      font-weight: 500;
+      padding: 2px 0;
+      white-space: nowrap;
+    }
+
+    .field-value {
+      color: var(--text-main);
+      padding: 2px 0;
+    }
+
+    .field-muted {
+      color: var(--text-soft);
+      font-style: italic;
+    }
+
+    .palette-card {
+      border-radius: var(--corner-radius-md);
+      background: var(--bg-elevated-soft);
+      border: 1px solid var(--border-subtle);
+      padding: 10px 12px 12px 12px;
+    }
+
+    .palette-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .palette-title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .palette-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-soft);
+    }
+    
+/* default: no inline preview on desktop */
+.palette-preview-inline {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .palette-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    position: relative;     /* for absolute positioning of preview */
+  }
+
+  .palette-title-block {
+    display: flex;
+    flex-direction: row;    /* title in a row, not column */
+    align-items: center;
+    gap: 8px;
+  }
+
+  .palette-title {
+    white-space: nowrap;    /* keep "CUSTOM PALETTES" on one line */
+  }
+
+  /* Small preview squares, positioned top-right of the header */
+  .palette-preview-inline {
+    position: absolute;
+    right: 14px;
+    top: 8px;
+    display: inline-flex;
+    gap: 3px;
+  }
+
+  .palette-preview-inline div {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+  }
+
+  /* hide preview when drawer is open */
+  .palette-card.drawer-open .palette-preview-inline {
+    display: none;
+  }
+
+  /* hide controls when drawer is collapsed */
+  .palette-card:not(.drawer-open) .palette-controls {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* fully visible when drawer is open */
+  .palette-card.drawer-open .palette-controls {
+    opacity: 1;
+  }
+
+  /* hide swatches + hex line when drawer is collapsed */
+  .palette-card:not(.drawer-open) .swatch-row,
+  .palette-card:not(.drawer-open) .hex-row {
+    display: none;
+  }
+}
+
+
+
+
+
+    /* REMOVED .palette-sub and associated controls */
+
+   .swatch-row {
+      display: flex;
+      gap: 0;           /* no gaps so they touch */
+      flex-wrap: nowrap;/* keep in a single row; remove this if you want wrapping */
+      margin-top: 4px;
+    }
+
+   .swatch {
+      width: 60px;
+      height: 100px;                  /* taller */
+      border-radius: 0px;            /* a bit squarer so touching looks cleaner */
+      position: relative;
+      cursor: pointer;
+    }
+
+    .swatch::after {
+      content: attr(data-role);
+      position: absolute;
+      left: 50%;
+      bottom: -18px;
+      transform: translateX(-50%);
+      font-size: 9px;
+      color: var(--text-soft);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.12s ease;
+      white-space: nowrap;
+    }
+
+    .swatch:hover::after { opacity: 1; }
+
+	.palette-id-row {
+      margin-top: 2px;
+      font-size: 10px;
+      color: var(--text-soft);
+      opacity: 0.9;
+    }
+    
+    .hex-row {
+      margin-top: 6px;
+      font-size: 10px;
+      color: var(--text-soft);
+      word-break: break-all;
+    }
+
+    .hex-note {
+      font-size: 10px;
+      color: var(--text-soft);
+      opacity: 0.9;
+    }
+
+    .btn-mini {
+      border-radius: 999px;
+      padding: 3px 9px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(13, 16, 30, 0.95);
+      font-size: 10px;
+      color: var(--text-soft);
+      cursor: pointer;
+      transition: background 0.1s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-mini:hover { background: rgba(22, 26, 45, 0.95); }
+
+    .btn-mini.danger {
+      border-color: rgba(255,93,114,0.75);
+      color: #ff9aa9;
+    }
+
+    .btn-mini:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+    
+    .btn-mini.active {
+  background: rgba(22, 26, 45, 0.95);
+  border-color: rgba(117, 186, 255, 0.8);
+  color: var(--accent-soft);
+}
+
+    /* Favorites panel styles (unchanged) */
+    .favorites-panel {
+      margin-top: 16px;
+      border-radius: var(--corner-radius-lg);
+      background: rgba(5, 7, 17, 0.96);
+      border: 1px solid rgba(255,255,255,0.04);
+      padding: 10px 16px 12px 16px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.7);
+      display: none;
+    }
+
+    .favorites-panel.visible { display: block; }
+
+    .favorites-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .favorites-header-title {
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .favorites-empty {
+      padding: 6px 0 4px 0;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .favorites-list {
+      max-height: 400px; /* Limit height for long lists */
+      overflow-y: auto;
+    }
+    .favorites-list::-webkit-scrollbar {
+      width: 6px;
+    }
+    .favorites-list::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 3px;
+    }
+
+    .favorite-item {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 8px 0 9px 0;
+    }
+
+    .favorite-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-bottom: 4px;
+    }
+
+    .favorite-branch {
+      font-weight: 500;
+      color: var(--text-main);
+    }
+
+    .favorite-timestamp {
+      font-size: 10px;
+    }
+
+    .favorite-body {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-bottom: 4px;
+    }
+
+    .favorite-swatches {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 6px;
+    }
+
+    .favorite-swatch {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      border: 1px solid rgba(0,0,0,0.35);
+    }
+
+    .favorite-actions {
+      display: flex;
+      gap: 6px;
+    }
+    
+/* Tablet/phone layout tweaks */
+@media (max-width: 1024px) {
+  .detail-grid {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 4px;
+  }
+
+  .field-label {
+    white-space: normal;
+  }
+
+  /* Hide "Add to Favorites" text on iPad + phone, keep star visible */
+  .btn-fav-text {
+    display: none !important;
+  }
+}
+
+/* Hide the circular branch icon ONLY on small phones */
+@media (max-width: 640px) {
+  .branch-icon-circle {
+    display: none;
+  }
+}
+
+
+
+
+/* Palette drawer behavior on tablets/phones */
+@media (max-width: 1024px) {
+  .card-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  @media (max-width: 1024px) {
+  .palette-card {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    border-radius: 16px 16px 0 0;
+    padding: 8px 14px 16px 14px;
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.7);
+    transform: translateY(calc(100% - 52px)); /* show full header when collapsed */
+    transition: transform 0.2s ease;
+    z-index: 50;
+  }
+
+  .palette-card.drawer-open {
+    transform: translateY(0);
+  }
+}
+
+
+  .palette-header {
+    cursor: pointer;
+  }
+}
+
+/* ========= Animated Generate Countdown ========= */
+
+.countdown-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  /* Keep it pinned toward the top-right instead of true center */
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding-top: 80px;   /* adjust this up/down to taste */
+  padding-right: 80px; /* adjust this left/right to taste */
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.18s ease-out;
+  z-index: 5;
+}
+
+
+.countdown-overlay.visible {
+  opacity: 1;
+}
+
+.countdown-number {
+  font-size: clamp(16.5rem, 9vw, 6rem);
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 0 22px rgba(0, 0, 0, 0.8);
+  transform: scale(1);
+  opacity: 0.95;
+  transition: transform 0.18s ease-out;
+}
+
+.countdown-number.pop {
+  transform: scale(1.18);
+}
+
+
+/* subtle slot-like flicker on icon, title, eyebrow, labels, and values */
+.branch-icon-circle.slot-flicker,
+.branch-icon-circle span.slot-flicker,
+.card-title-eyebrow.slot-flicker,
+#branch-title.slot-flicker,
+.branch-title.slot-flicker,
+#branch-subtitle.slot-flicker,
+.branch-subtitle.slot-flicker,
+.field-label.slot-flicker,
+.field-value.slot-flicker {
+  animation: slotFlicker 0.22s ease-in-out;
+}
+
+/* stronger shake near the end */
+.branch-icon-circle.slot-shake,
+.branch-icon-circle span.slot-shake,
+.card-title-eyebrow.slot-shake,
+#branch-title.slot-shake,
+.branch-title.slot-shake,
+#branch-subtitle.slot-shake,
+.branch-subtitle.slot-shake,
+.field-label.slot-shake,
+.field-value.slot-shake {
+  animation: slotShake 0.35s ease-in-out;
+}
+
+
+
+@keyframes slotFlicker {
+  0% {
+    opacity: 0;
+    transform: translateY(-8px);
+    filter: blur(2px);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(4px);
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 0.9;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes slotShake {
+  0%   { transform: translateY(-2px); }
+  25%  { transform: translateY(3px); }
+  50%  { transform: translateY(-3px); }
+  75%  { transform: translateY(2px); }
+  100% { transform: translateY(0); }
+}
+
+/* highlight one branch pill as the 'current reel' */
+.branch-pill.slot-focus {
+  background: #2f6bff;      /* richer saturated blue */
+  color: #fff;
+  border-color: #1d4ed8;     /* darker outline */
+  opacity: 1;                /* full strength */
+}
+
+/* ===== Force branches to always be visible on all breakpoints ===== */
+
+.branch-row-wrapper,
+#branch-accordion {
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+/* Any "collapsed" / "closed" state classes get ignored */
+.branch-row-wrapper.collapsed,
+.branch-row-wrapper.is-collapsed,
+#branch-accordion.collapsed,
+#branch-accordion.is-collapsed {
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+/* Hide any accordion arrow/toggle if present */
+.branch-row-toggle,
+.branch-accordion-arrow,
+#branch-accordion .branch-toggle,
+#branch-accordion .branch-header {
+  cursor: default;
+}
+
+/* If you have a dedicated arrow element, you can hide it outright: */
+.branch-accordion-arrow,
+#branch-accordion .branch-arrow {
+  display: none !important;
+}
+
+
+  
