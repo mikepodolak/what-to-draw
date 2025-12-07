@@ -751,7 +751,7 @@
     filter: blur(2px);
   }
   50% {
-    opacity: 1;
+    opacity: .5;
     transform: translateY(4px);
     filter: blur(2px);
   }
