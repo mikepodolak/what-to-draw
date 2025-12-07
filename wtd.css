@@ -750,7 +750,7 @@
     transform: translateY(-8px);
     filter: blur(2px);
   }
-  30% {
+  50% {
     opacity: 1;
     transform: translateY(4px);
     filter: blur(2px);
