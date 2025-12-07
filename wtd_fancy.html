@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>What To Draw</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- External stylesheet -->
+  <link rel="stylesheet" href="wtd.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header>
+      <h1>WHAT TO DRAW</h1>
+    </header>
+
+    <div class="top-row">
+      <div class="controls-main">
+        <button id="btn-generate" class="btn primary">
+          <span class="emoji">🎲</span>
+        </button>
+
+        <div class="mode-toggle-row">
+          <button id="btn-random-mode" class="btn toggle active">
+            Random
+          </button>
+          <button id="btn-pick-mode" class="btn toggle">
+            Pick
+          </button>
+        </div>
+      </div>
+
+      <button id="btn-favorites-toggle" class="btn ghost">
+        ⭐ <span id="favorites-count">0</span>
+      </button>
+    </div>
+
+    <!-- Branches accordion wrapper (unchanged structure) -->
+    <div class="branch-row-wrapper" id="branch-accordion">
+      <div class="branch-label">Branches</div>
+      <div id="branch-row" class="branch-row"></div>
+    </div>
+
+    <!-- Result card -->
+    <section class="card" id="result-card">
+    <!-- Countdown overlay for animated generate -->
+      <div id="countdown-overlay" class="countdown-overlay">
+        <div class="countdown-number"></div>
+      </div>
+      <div class="card-header">
+        <div class="card-header-main">
+          <div class="branch-icon-circle" id="branch-icon">
+            <span>🎲</span>
+          </div>
+          <div class="card-title-block">
+            <div class="card-title-eyebrow" id="branch-eyebrow">Branch</div>
+            <div class="card-title-main" id="branch-title">Waiting for idea...</div>
+            <div class="card-title-sub" id="branch-subtitle">
+              Tap Generate to get started.
+            </div>
+          </div>
+        </div>
+
+        <div class="card-header-actions">
+          <button id="btn-copy-idea" class="btn toggle" title="Copy Idea">📋</button>
+          <button id="btn-favorite-current" class="btn toggle" title="Add to Favorites">
+            <span class="btn-fav-text">Add to Favorites</span>
+            <span aria-hidden="true">⭐+</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="detail-block">
+          <div class="detail-grid" id="detail-grid"></div>
+        </div>
+
+        <aside class="palette-card">
+          <div class="palette-header">
+            <div class="palette-title-block">
+              <div class="palette-title">Custom Palettes</div>
+              <div class="palette-preview-inline" id="palette-preview-inline"></div>
+            </div>
+
+            <div class="palette-controls">
+              <button id="btn-palette-lock" class="btn-mini" title="Palette unlocked – click to lock">🔓</button>
+              <button id="btn-palette-random" class="btn-mini" title="Randomize palette">🎲</button>
+              <button id="btn-copy-hex" class="btn-mini" title="Copy HEX codes">Copy HEX</button>
+            </div>
+          </div>
+
+          <!-- Swatches + hex rows -->
+          <div class="swatch-row" id="swatch-row"></div>
+          <div class="hex-row" id="hex-row"></div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Favorites panel -->
+    <section id="favorites-panel" class="favorites-panel">
+      <div class="favorites-header">
+        <div class="favorites-header-title">Saved Favorites</div>
+        <button id="btn-favorites-close" class="btn-mini">Close</button>
+      </div>
+      <div id="favorites-empty" class="favorites-empty">
+        No favorites yet.
+      </div>
+      <div id="favorites-list" class="favorites-list"></div>
+    </section>
+  </div>
+
+  <!-- External script -->
+  <script src="wtd.js"></script>
+</body>
+</html>
+
