@@ -721,6 +721,90 @@
   }
 }
 
+/* PAREIDOLIA ENGINE UI STYLES */
+.engine-content { display: none; padding: 15px; }
+#engine-accordion.open .engine-content { display: block; }
+
+.silhouette-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.thumb-container {
+  position: relative;
+  background: #e0e0e0;
+  border-radius: 8px;
+  padding: 5px;
+  transition: transform 0.2s;
+  cursor: zoom-in;
+}
+
+.thumb-container:hover { transform: scale(1.02); }
+
+.dl-btn {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(0,0,0,0.7);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 10px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.thumb-container:hover .dl-btn { opacity: 1; }
+
+#zoom-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.95);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  flex-direction: column;
+}
+
+#modal-canvas {
+  background: #e0e0e0;
+  max-width: 90vw;
+  max-height: 80vh;
+  border-radius: 12px;
+}
+
+/* PAREIDOLIA ENGINE UI STYLES */
+.engine-content { display: none; padding: 15px; }
+#engine-accordion.open .engine-content { display: block; }
+.silhouette-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+
+.thumb-container {
+  position: relative;
+  background: #e0e0e0;
+  border-radius: 8px;
+  padding: 5px;
+  cursor: zoom-in;
+  overflow: hidden;
+}
+
+.dl-btn {
+  position: absolute; bottom: 8px; right: 8px;
+  background: rgba(0,0,0,0.7); color: white; border: none;
+  border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer;
+  opacity: 0; transition: opacity 0.2s;
+}
+.thumb-container:hover .dl-btn { opacity: 1; }
+
+#zoom-modal {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+  display: none; align-items: center; justify-content: center;
+  z-index: 1000; flex-direction: column;
+}
+#modal-canvas { background: #e0e0e0; max-width: 90vw; max-height: 80vh; border-radius: 12px; }
 
   </style>
 </head>
@@ -755,6 +839,64 @@
     <div class="branch-row-wrapper" id="branch-accordion">
   <div class="branch-label">Branches</div>
   <div id="branch-row" class="branch-row"></div>
+</div>
+
+<div class="branch-row-wrapper" id="engine-accordion" style="margin-top:10px; border-radius:14px; background:rgba(7, 10, 24, 0.9); border: 1px solid rgba(255,255,255,0.05); padding:10px 12px;">
+  <div class="branch-label" style="cursor:pointer; display:flex; justify-content:space-between; align-items:center;" onclick="document.getElementById('engine-accordion').classList.toggle('open')">
+    Pareidolia Engine <span>▾</span>
+  </div>
+  <div class="engine-content" style="padding-top:15px;">
+    <style>
+      #engine-accordion .engine-content { display: none; }
+      #engine-accordion.open .engine-content { display: block; }
+      .silhouette-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+      .thumb-container { background: #e0e0e0; border-radius: 12px; padding: 10px; cursor: zoom-in; overflow:hidden; position:relative; }
+      @media (max-width: 768px) { .silhouette-grid { grid-template-columns: 1fr; } }
+      .engine-controls { display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:15px; }
+    </style>
+    <div class="engine-controls" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:15px;">
+    <div>
+        <label style="font-size:10px; color:var(--text-soft)">SUBSTANCE (Dense → Heavy)</label>
+        <input type="range" id="mass-slider" min="1" max="100" value="40" style="width:100%;">
+    </div>
+    <div>
+        <label style="font-size:10px; color:var(--text-soft)">TENSION (Shard → Fluid)</label>
+        <input type="range" id="tension-slider" min="0" max="100" value="50" style="width:100%;">
+    </div>
+    <div>
+        <label style="font-size:10px; color:var(--text-soft)">STRETCH (Tall → Wide)</label>
+        <input type="range" id="stretch-slider" min="0" max="100" value="50" style="width:100%;">
+    </div>
+    <div>
+        <label style="font-size:10px; color:var(--text-soft)">COUNT (Shapes)</label>
+        <input type="range" id="count-slider" min="4" max="25" value="12" style="width:100%;">
+    </div>
+    <div>
+        <label style="font-size:10px; color:var(--text-soft)">COMPLEXITY (Edge Detail)</label>
+        <input type="range" id="complexity-slider" min="0" max="100" value="30" style="width:100%;">
+    </div>
+    <div style="display:flex; flex-direction:column; gap:5px;">
+        <button onclick="rollNewShapes()" class="btn primary" style="width:100%; font-size:12px;">🎲 Roll New DNA</button>
+        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:4px;">
+          <button onclick="mutateCurrent()" class="btn toggle" style="font-size:9px; padding: 10px 0;">🧬 Mutate</button>
+          <button onclick="shuffleTones()" class="btn toggle" style="font-size:9px; padding: 10px 0;">🌓 Shuffle</button>
+          <button onclick="randomizeSliders()" class="btn toggle" style="font-size:9px; padding: 10px 0;">🔀 Random</button>
+        </div>
+    </div>
+</div>
+    <div id="silhouette-grid" class="silhouette-grid"></div>
+  </div>
+</div>
+<div id="zoom-modal" onclick="this.style.display='none'">
+    <canvas id="modal-canvas"></canvas>
+    <p style="color:white; margin-top:20px; font-size:12px;">Click to close</p>
+</div>
+
+
+
+<div id="zoom-modal" onclick="this.style.display='none'">
+    <canvas id="modal-canvas"></canvas>
+    <p style="color:white; margin-top:20px; font-size:12px;">Click anywhere to close</p>
 </div>
 
     <section class="card" id="result-card">
@@ -2681,7 +2823,253 @@ if (paletteLockBtn) {
   });
 })();
 
+//-*_*--*_*--*_*--*_*--*_*--*_*--*_*--*_*--*_*--*_*-
+//-*_*--*_*--*_*--*_*--*_*--*_*--*_*--*_*--*_*--*_*-
+// PAREIDOLIA ENGINE
+//-*_*--*_*--*_*--*_*--*_*--*_*--*_*--*_*--*_*--*_*-
+//-*_*--*_*--*_*--*_*--*_*--*_*--*_*--*_*--*_*--*_*-
 
+
+let shapeDNA = [];
+
+function shuffleTones() {
+    shapeDNA.forEach(dna => {
+        dna.masses.forEach(m => {
+            m.alpha = 0.4 + Math.random() * 0.6;
+            m.isEraser = Math.random() > 0.75;
+        });
+    });
+    updatePareidoliaDisplay();
+}
+
+function mutateCurrent() {
+    shapeDNA.forEach(dna => {
+        dna.masses.forEach(m => {
+            m.rot += (Math.random() * 0.4) - 0.2;
+            m.relX += (Math.random() * 0.04) - 0.02;
+            m.relY += (Math.random() * 0.04) - 0.02;
+        });
+    });
+    updatePareidoliaDisplay();
+}
+
+function rollNewShapes() {
+    shapeDNA = [];
+    for (let i = 0; i < 3; i++) {
+        shapeDNA.push(generateUnifiedDNA());
+    }
+    updatePareidoliaDisplay();
+}
+
+function generateUnifiedDNA() {
+    const dna = { masses: [] };
+    for (let i = 0; i < 25; i++) {
+        const points = [];
+        for (let p = 0; p < 10; p++) {
+            points.push({ x: Math.random() * 2 - 1, y: Math.random() * 2 - 1, jit: Math.random() });
+        }
+        dna.masses.push({
+            relX: Math.random() * 0.7 - 0.35, relY: Math.random() * 0.7 - 0.35,
+            points: points,
+            size: 0.3 + Math.random() * 1.5,
+            alpha: 0.4 + Math.random() * 0.6,
+            isEraser: Math.random() > 0.75,
+            rot: Math.random() * Math.PI * 2,
+            tendril: { ang: Math.random() * Math.PI * 2, len: Math.random() * 1.5, cp: Math.random() * 2 - 1 }
+        });
+    }
+    return dna;
+}
+
+function drawPareidolia(ctx, size, dna, massV, tensionV, stretchV, countV, compV) {
+    const scale = size / 300;
+    // Substance recalibration: 1% is now substantial, 100% is monolithic
+    const substance = (parseInt(massV) + 65) / 100; 
+    const tension = tensionV / 100; // 0.0 to 1.0
+    const stretch = (stretchV - 50) / 50;
+    const count = parseInt(countV);
+    const complexity = compV / 100;
+
+    ctx.clearRect(0, 0, size, size);
+    const center = 150 * scale;
+    const sX = 1 + (stretch > 0 ? stretch : 0);
+    const sY = 1 + (stretch < 0 ? Math.abs(stretch) : 0);
+
+    dna.masses.slice(0, count).forEach((m, idx) => {
+        ctx.save();
+        const posX = center + (m.relX * 180 * scale * sX);
+        const posY = center + (m.relY * 180 * scale * sY);
+        
+        ctx.globalAlpha = m.alpha;
+        if (m.isEraser) {
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.fillStyle = "white"; ctx.strokeStyle = "white";
+        } else {
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.fillStyle = "#111"; ctx.strokeStyle = "#111";
+        }
+
+        // Determine drawing style for this specific shape based on Tension Slider
+        let drawAsFluid = false;
+        if (tension < 0.33) {
+            drawAsFluid = false; // Shard Zone
+        } else if (tension > 0.66) {
+            drawAsFluid = true;  // Fluid Zone
+        } else {
+            // Crossover Zone: Use index to create a stable but mixed distribution
+            const threshold = (tension - 0.33) / 0.33; 
+            drawAsFluid = (idx / count) < threshold;
+        }
+
+        // 1. Draw Integrated Tendril
+        ctx.beginPath();
+        ctx.lineWidth = (m.size * 5 * substance) * scale;
+        ctx.moveTo(posX, posY);
+        const tx = posX + Math.cos(m.tendril.ang) * (m.tendril.len * 100 * scale * substance * sX);
+        const ty = posY + Math.sin(m.tendril.ang) * (m.tendril.len * 100 * scale * substance * sY);
+        
+        if (!drawAsFluid) {
+            ctx.lineTo(tx, ty); // Straight Shard Tendril
+        } else {
+            ctx.quadraticCurveTo(posX + (m.tendril.cp * 50), posY + (m.tendril.cp * 50), tx, ty); // Curved Tendril
+        }
+        ctx.stroke();
+
+        // 2. Draw Main Mass
+        ctx.translate(posX, posY);
+        ctx.rotate(m.rot);
+        const r = (m.size * 45 * substance + 5) * scale;
+        
+        const pts = m.points.map(p => ({
+            x: (p.x * r * sX) + (p.jit * complexity * 30 * scale),
+            y: (p.y * r * sY) + (p.jit * complexity * 30 * scale)
+        }));
+
+        ctx.beginPath();
+        if (!drawAsFluid) {
+            // SHARD LOGIC
+            pts.forEach((p, i) => {
+                if (i === 0) ctx.moveTo(p.x, p.y);
+                else ctx.lineTo(p.x, p.y);
+            });
+        } else {
+            // FLUID LOGIC
+            for (let i = 0; i < pts.length; i++) {
+                const p1 = pts[i];
+                const p2 = pts[(i + 1) % pts.length];
+                const midX = (p1.x + p2.x) / 2;
+                const midY = (p1.y + p2.y) / 2;
+                if (i === 0) ctx.moveTo(midX, midY);
+                ctx.quadraticCurveTo(p1.x, p1.y, midX, midY);
+            }
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+    });
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1.0;
+}
+
+function updatePareidoliaDisplay() {
+    const grid = document.getElementById('silhouette-grid');
+    if (!grid) return;
+    const params = [
+      document.getElementById('mass-slider').value,
+      document.getElementById('tension-slider').value,
+      document.getElementById('stretch-slider').value,
+      document.getElementById('count-slider').value,
+      document.getElementById('complexity-slider').value
+    ];
+    
+    grid.innerHTML = '';
+    shapeDNA.forEach((dna, index) => {
+        const container = document.createElement('div');
+        container.className = 'thumb-container';
+        const canvas = document.createElement('canvas');
+        canvas.width = 400; canvas.height = 400; canvas.style.width = "100%";
+        drawPareidolia(canvas.getContext('2d'), 400, dna, ...params);
+
+        container.onclick = () => {
+            const modal = document.getElementById('zoom-modal');
+            const mCan = document.getElementById('modal-canvas');
+            mCan.width = 1000; mCan.height = 1000;
+            const mCtx = mCan.getContext('2d');
+            mCtx.fillStyle = "#e0e0e0"; mCtx.fillRect(0,0,1000,1000);
+            drawPareidolia(mCtx, 1000, dna, ...params);
+            modal.style.display = 'flex';
+        };
+
+        const dlBtn = document.createElement('button');
+        dlBtn.innerHTML = '💾 Save';
+        dlBtn.style.cssText = "position:absolute; bottom:10px; right:10px; background:rgba(0,0,0,0.7); color:white; border:none; border-radius:4px; padding:4px 8px; font-size:10px; cursor:pointer;";
+        dlBtn.onclick = (e) => {
+            e.stopPropagation();
+            const link = document.createElement('a');
+            link.download = `ink-silhouette-${index}.png`;
+            link.href = canvas.toDataURL(); link.click();
+        };
+
+        container.appendChild(canvas);
+        container.appendChild(dlBtn);
+        grid.appendChild(container);
+    });
+}
+function randomizeSliders() {
+    const ids = ['mass-slider', 'tension-slider', 'stretch-slider', 'count-slider', 'complexity-slider'];
+    ids.forEach(id => {
+        const el = document.getElementById(id);
+        const min = parseInt(el.min);
+        const max = parseInt(el.max);
+        // Generates a random value within the slider's specific range
+        el.value = Math.floor(Math.random() * (max - min + 1)) + min;
+    });
+    // Immediately redraw the current DNA with the new slider positions
+    updatePareidoliaDisplay();
+}
+
+// Keep your existing roll, mutate, and shuffle functions as they were...
+
+function shuffleTones() {
+    shapeDNA.forEach(dna => {
+        dna.masses.forEach(m => {
+            m.alpha = 0.4 + Math.random() * 0.6;
+            m.isEraser = Math.random() > 0.75;
+        });
+    });
+    updatePareidoliaDisplay();
+}
+
+function mutateCurrent() {
+    shapeDNA.forEach(dna => {
+        dna.masses.forEach(m => {
+            m.rot += (Math.random() * 0.4) - 0.2;
+            m.relX += (Math.random() * 0.04) - 0.02;
+            m.relY += (Math.random() * 0.04) - 0.02;
+        });
+    });
+    updatePareidoliaDisplay();
+}
+
+function rollNewShapes() {
+    shapeDNA = [];
+    for (let i = 0; i < 3; i++) {
+        shapeDNA.push(generateUnifiedDNA());
+    }
+    updatePareidoliaDisplay();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    ['mass-slider', 'tension-slider', 'stretch-slider', 'count-slider', 'complexity-slider'].forEach(id => {
+        const el = document.getElementById(id);
+        if(el) el.addEventListener('input', updatePareidoliaDisplay);
+    });
+    rollNewShapes();
+});
   </script>
+  <div id="zoom-modal" style="position:fixed; inset:0; background:rgba(0,0,0,0.95); display:none; align-items:center; justify-content:center; z-index:1000; flex-direction:column;" onclick="this.style.display='none'">
+    <canvas id="modal-canvas" style="background:#e0e0e0; max-width:90vw; max-height:80vh; border-radius:12px;"></canvas>
+    <p style="color:white; margin-top:20px; font-size:12px;">Click anywhere to close</p>
+</div>
 </body>
 </html>
