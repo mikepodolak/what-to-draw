@@ -854,7 +854,7 @@
       @media (max-width: 768px) { .silhouette-grid { grid-template-columns: 1fr; } }
       .engine-controls { display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:15px; }
     </style>
-    <div class="engine-controls" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:15px;">
+<div class="engine-controls" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:15px;">
     <div>
         <label style="font-size:10px; color:var(--text-soft)">SUBSTANCE (Dense → Heavy)</label>
         <input type="range" id="mass-slider" min="1" max="100" value="40" style="width:100%;">
@@ -868,12 +868,20 @@
         <input type="range" id="stretch-slider" min="0" max="100" value="50" style="width:100%;">
     </div>
     <div>
-        <label style="font-size:10px; color:var(--text-soft)">COUNT (Shapes)</label>
-        <input type="range" id="count-slider" min="4" max="25" value="12" style="width:100%;">
-    </div>
-    <div>
         <label style="font-size:10px; color:var(--text-soft)">COMPLEXITY (Edge Detail)</label>
         <input type="range" id="complexity-slider" min="0" max="100" value="30" style="width:100%;">
+    </div>
+    <div>
+        <label style="font-size:10px; color:var(--text-soft)">SMART GRIT (Edge Splatter)</label>
+        <input type="range" id="grit-slider" min="0" max="100" value="15" style="width:100%;">
+    </div>
+    <div>
+        <label style="font-size:10px; color:var(--text-soft)">FLOW HATCHING (Directional)</label>
+        <input type="range" id="hatch-slider" min="0" max="100" value="0" style="width:100%;">
+    </div>
+    <div>
+        <label style="font-size:10px; color:var(--text-soft)">COUNT (Shapes)</label>
+        <input type="range" id="count-slider" min="4" max="25" value="12" style="width:100%;">
     </div>
     <div style="display:flex; flex-direction:column; gap:5px;">
         <button onclick="rollNewShapes()" class="btn primary" style="width:100%; font-size:12px;">🎲 Roll New DNA</button>
@@ -2832,63 +2840,85 @@ if (paletteLockBtn) {
 
 let shapeDNA = [];
 
-function shuffleTones() {
-    shapeDNA.forEach(dna => {
-        dna.masses.forEach(m => {
-            m.alpha = 0.4 + Math.random() * 0.6;
-            m.isEraser = Math.random() > 0.75;
-        });
+function randomizeSliders() {
+    ['mass-slider', 'tension-slider', 'stretch-slider', 'complexity-slider', 'grit-slider', 'hatch-slider', 'count-slider'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.value = Math.floor(Math.random() * (parseInt(el.max) - parseInt(el.min) + 1)) + parseInt(el.min);
     });
     updatePareidoliaDisplay();
 }
 
+function shuffleTones() {
+    shapeDNA.forEach(dna => dna.masses.forEach(m => {
+        m.alpha = 0.4 + Math.random() * 0.6;
+        const r = Math.random();
+        m.fillType = r > 0.75 ? 'eraser' : (r > 0.45 ? 'gradient' : 'black');
+    }));
+    updatePareidoliaDisplay();
+}
+
 function mutateCurrent() {
-    shapeDNA.forEach(dna => {
-        dna.masses.forEach(m => {
-            m.rot += (Math.random() * 0.4) - 0.2;
-            m.relX += (Math.random() * 0.04) - 0.02;
-            m.relY += (Math.random() * 0.04) - 0.02;
-        });
-    });
+    shapeDNA.forEach(dna => dna.masses.forEach(m => {
+        m.rot += (Math.random() * 0.4) - 0.2;
+        m.relX += (Math.random() * 0.04) - 0.02;
+        m.relY += (Math.random() * 0.04) - 0.02;
+    }));
     updatePareidoliaDisplay();
 }
 
 function rollNewShapes() {
     shapeDNA = [];
-    for (let i = 0; i < 3; i++) {
-        shapeDNA.push(generateUnifiedDNA());
-    }
+    for (let i = 0; i < 3; i++) shapeDNA.push(generateUnifiedDNA());
     updatePareidoliaDisplay();
 }
 
 function generateUnifiedDNA() {
     const dna = { masses: [] };
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < 30; i++) {
         const points = [];
-        for (let p = 0; p < 10; p++) {
-            points.push({ x: Math.random() * 2 - 1, y: Math.random() * 2 - 1, jit: Math.random() });
+        for (let p = 0; p < 20; p++) points.push({ x: Math.random() * 2 - 1, y: Math.random() * 2 - 1 });
+        
+        // PRE-CALCULATE THE "ACCIDENT" (Weathering DNA)
+        const weatheringDNA = [];
+        for (let w = 0; w < 40; w++) { // 40 potential damage sites per shape
+            const typeR = Math.random();
+            weatheringDNA.push({
+                type: typeR > 0.6 ? 'pit' : (typeR > 0.2 ? 'shard' : 'crack'),
+                relX: Math.random() * 2.4 - 1.2,
+                relY: Math.random() * 2.4 - 1.2,
+                rot: Math.random() * Math.PI * 2,
+                scale: Math.random() * 1.5 + 0.5,
+                // Random shard geometry
+                shardPts: Array.from({length: 3}, () => ({x: Math.random()*10-5, y: Math.random()*10-5}))
+            });
         }
+
+        const r = Math.random();
         dna.masses.push({
-            relX: Math.random() * 0.7 - 0.35, relY: Math.random() * 0.7 - 0.35,
+            relX: Math.random() * 0.8 - 0.4,
+            relY: Math.random() * 0.8 - 0.4,
             points: points,
-            size: 0.3 + Math.random() * 1.5,
+            weathering: weatheringDNA,
+            size: (i > 20) ? 0.2 + Math.random() * 0.5 : 0.4 + Math.random() * 1.5,
             alpha: 0.4 + Math.random() * 0.6,
-            isEraser: Math.random() > 0.75,
+            fillType: r > 0.75 ? 'eraser' : (r > 0.45 ? 'gradient' : 'black'),
             rot: Math.random() * Math.PI * 2,
-            tendril: { ang: Math.random() * Math.PI * 2, len: Math.random() * 1.5, cp: Math.random() * 2 - 1 }
+            branch: { ang: Math.random() * Math.PI * 2, len: Math.random() * 1.2, cp: Math.random() * 2 - 1 }
         });
     }
     return dna;
 }
 
-function drawPareidolia(ctx, size, dna, massV, tensionV, stretchV, countV, compV) {
+function drawPareidolia(ctx, size, dna, mVal, tVal, sVal, cVal, gVal, hVal, ctVal) {
     const scale = size / 300;
-    // Substance recalibration: 1% is now substantial, 100% is monolithic
-    const substance = (parseInt(massV) + 65) / 100; 
-    const tension = tensionV / 100; // 0.0 to 1.0
-    const stretch = (stretchV - 50) / 50;
-    const count = parseInt(countV);
-    const complexity = compV / 100;
+    const substance = (parseInt(mVal) + 65) / 100; 
+    const tension = tVal / 100;
+    const stretch = (sVal - 50) / 50;
+    const complexity = Math.max(3, Math.floor((cVal / 100) * 17) + 3); 
+    const weatheringLimit = Math.floor((gVal / 100) * 40); 
+    const hatch = hVal / 100;
+    const count = parseInt(ctVal);
 
     ctx.clearRect(0, 0, size, size);
     const center = 150 * scale;
@@ -2899,96 +2929,122 @@ function drawPareidolia(ctx, size, dna, massV, tensionV, stretchV, countV, compV
         ctx.save();
         const posX = center + (m.relX * 180 * scale * sX);
         const posY = center + (m.relY * 180 * scale * sY);
-        
         ctx.globalAlpha = m.alpha;
-        if (m.isEraser) {
+        const r = (m.size * 45 * substance + 5) * scale;
+
+        if (m.fillType === 'eraser') {
             ctx.globalCompositeOperation = 'destination-out';
-            ctx.fillStyle = "white"; ctx.strokeStyle = "white";
+            ctx.fillStyle = "white";
+        } else if (m.fillType === 'gradient') {
+            ctx.globalCompositeOperation = 'source-over';
+            const grad = ctx.createLinearGradient(-r, -r, r, r);
+            grad.addColorStop(0, "#111"); grad.addColorStop(1, "#fff");
+            ctx.fillStyle = grad;
         } else {
             ctx.globalCompositeOperation = 'source-over';
-            ctx.fillStyle = "#111"; ctx.strokeStyle = "#111";
+            ctx.fillStyle = "#111";
         }
 
-        // Determine drawing style for this specific shape based on Tension Slider
-        let drawAsFluid = false;
-        if (tension < 0.33) {
-            drawAsFluid = false; // Shard Zone
-        } else if (tension > 0.66) {
-            drawAsFluid = true;  // Fluid Zone
-        } else {
-            // Crossover Zone: Use index to create a stable but mixed distribution
-            const threshold = (tension - 0.33) / 0.33; 
-            drawAsFluid = (idx / count) < threshold;
-        }
+        let isFluid = tension > 0.66 || (tension >= 0.33 && (idx / count) < (tension - 0.33) / 0.33);
 
-        // 1. Draw Integrated Tendril
+        // 1. Branch
         ctx.beginPath();
-        ctx.lineWidth = (m.size * 5 * substance) * scale;
+        ctx.lineWidth = (m.size * 6 * substance) * scale;
         ctx.moveTo(posX, posY);
-        const tx = posX + Math.cos(m.tendril.ang) * (m.tendril.len * 100 * scale * substance * sX);
-        const ty = posY + Math.sin(m.tendril.ang) * (m.tendril.len * 100 * scale * substance * sY);
-        
-        if (!drawAsFluid) {
-            ctx.lineTo(tx, ty); // Straight Shard Tendril
-        } else {
-            ctx.quadraticCurveTo(posX + (m.tendril.cp * 50), posY + (m.tendril.cp * 50), tx, ty); // Curved Tendril
-        }
+        const bx = posX + Math.cos(m.branch.ang) * (m.branch.len * 100 * scale * substance * sX);
+        const by = posY + Math.sin(m.branch.ang) * (m.branch.len * 100 * scale * substance * sY);
+        if (isFluid) ctx.quadraticCurveTo(posX + (m.branch.cp * 50), posY + (m.branch.cp * 50), bx, by);
+        else ctx.lineTo(bx, by);
+        ctx.strokeStyle = ctx.fillStyle;
         ctx.stroke();
 
-        // 2. Draw Main Mass
+        // 2. Mass Body
         ctx.translate(posX, posY);
         ctx.rotate(m.rot);
-        const r = (m.size * 45 * substance + 5) * scale;
-        
-        const pts = m.points.map(p => ({
-            x: (p.x * r * sX) + (p.jit * complexity * 30 * scale),
-            y: (p.y * r * sY) + (p.jit * complexity * 30 * scale)
-        }));
+        const pts = m.points.slice(0, complexity).map(p => ({ x: p.x * r * sX, y: p.y * r * sY }));
 
         ctx.beginPath();
-        if (!drawAsFluid) {
-            // SHARD LOGIC
-            pts.forEach((p, i) => {
-                if (i === 0) ctx.moveTo(p.x, p.y);
-                else ctx.lineTo(p.x, p.y);
-            });
+        if (!isFluid) {
+            pts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
         } else {
-            // FLUID LOGIC
             for (let i = 0; i < pts.length; i++) {
-                const p1 = pts[i];
-                const p2 = pts[(i + 1) % pts.length];
-                const midX = (p1.x + p2.x) / 2;
-                const midY = (p1.y + p2.y) / 2;
-                if (i === 0) ctx.moveTo(midX, midY);
-                ctx.quadraticCurveTo(p1.x, p1.y, midX, midY);
+                const p1 = pts[i], p2 = pts[(i + 1) % pts.length];
+                const mx = (p1.x + p2.x) / 2, my = (p1.y + p2.y) / 2;
+                i === 0 ? ctx.moveTo(mx, my) : ctx.quadraticCurveTo(p1.x, p1.y, mx, my);
             }
         }
-        ctx.closePath();
-        ctx.fill();
+        ctx.closePath(); ctx.fill();
+
+        // 3. Subtractive Weathering (Permanent DNA Accident)
+        if (weatheringLimit > 0) {
+            ctx.save();
+            ctx.globalAlpha = 1.0; 
+            ctx.fillStyle = "#e0e0e0"; 
+            ctx.strokeStyle = "#e0e0e0";
+            ctx.globalCompositeOperation = 'source-over'; 
+            
+            m.weathering.slice(0, weatheringLimit).forEach(w => {
+                ctx.save();
+                ctx.translate(w.relX * r * sX, w.relY * r * sY);
+                ctx.rotate(w.rot);
+                
+                if (w.type === 'pit') {
+                    ctx.beginPath();
+                    ctx.arc(0, 0, (w.scale * 1.2) * scale, 0, Math.PI * 2);
+                    ctx.fill();
+                } else if (w.type === 'shard') {
+                    ctx.beginPath();
+                    w.shardPts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x * scale * w.scale, p.y * scale * w.scale) : ctx.lineTo(p.x * scale * w.scale, p.y * scale * w.scale));
+                    ctx.closePath(); ctx.fill();
+                } else { // crack
+                    ctx.beginPath();
+                    ctx.lineWidth = 0.6 * scale * w.scale;
+                    ctx.moveTo(-5 * scale * w.scale, 0);
+                    ctx.lineTo(5 * scale * w.scale, 0);
+                    ctx.stroke();
+                }
+                ctx.restore();
+            });
+            ctx.restore();
+        }
+
+        // 4. Hatching
+        if (hatch > 0.1 && m.fillType !== 'eraser') {
+            ctx.save(); ctx.clip();
+            ctx.strokeStyle = "rgba(255,255,255,0.2)";
+            ctx.lineWidth = 1 * scale;
+            const step = 10 - (hatch * 8);
+            for (let i = -r * 2; i < r * 2; i += step) {
+                ctx.beginPath();
+                if (sVal > 50) { ctx.moveTo(-r*2, i); ctx.lineTo(r*2, i); }
+                else { ctx.moveTo(i, -r*2); ctx.lineTo(i, r*2); }
+                ctx.stroke();
+            }
+            ctx.restore();
+        }
         ctx.restore();
     });
-    ctx.globalCompositeOperation = 'source-over';
-    ctx.globalAlpha = 1.0;
 }
 
 function updatePareidoliaDisplay() {
     const grid = document.getElementById('silhouette-grid');
     if (!grid) return;
-    const params = [
-      document.getElementById('mass-slider').value,
-      document.getElementById('tension-slider').value,
-      document.getElementById('stretch-slider').value,
-      document.getElementById('count-slider').value,
-      document.getElementById('complexity-slider').value
-    ];
+    
+    const m = document.getElementById('mass-slider').value;
+    const t = document.getElementById('tension-slider').value;
+    const s = document.getElementById('stretch-slider').value;
+    const c = document.getElementById('complexity-slider').value;
+    const g = document.getElementById('grit-slider').value;
+    const h = document.getElementById('hatch-slider').value;
+    const ct = document.getElementById('count-slider').value;
     
     grid.innerHTML = '';
-    shapeDNA.forEach((dna, index) => {
+    shapeDNA.forEach((dna) => {
         const container = document.createElement('div');
         container.className = 'thumb-container';
         const canvas = document.createElement('canvas');
         canvas.width = 400; canvas.height = 400; canvas.style.width = "100%";
-        drawPareidolia(canvas.getContext('2d'), 400, dna, ...params);
+        drawPareidolia(canvas.getContext('2d'), 400, dna, m, t, s, c, g, h, ct);
 
         container.onclick = () => {
             const modal = document.getElementById('zoom-modal');
@@ -2996,71 +3052,16 @@ function updatePareidoliaDisplay() {
             mCan.width = 1000; mCan.height = 1000;
             const mCtx = mCan.getContext('2d');
             mCtx.fillStyle = "#e0e0e0"; mCtx.fillRect(0,0,1000,1000);
-            drawPareidolia(mCtx, 1000, dna, ...params);
+            drawPareidolia(mCtx, 1000, dna, m, t, s, c, g, h, ct);
             modal.style.display = 'flex';
         };
-
-        const dlBtn = document.createElement('button');
-        dlBtn.innerHTML = '💾 Save';
-        dlBtn.style.cssText = "position:absolute; bottom:10px; right:10px; background:rgba(0,0,0,0.7); color:white; border:none; border-radius:4px; padding:4px 8px; font-size:10px; cursor:pointer;";
-        dlBtn.onclick = (e) => {
-            e.stopPropagation();
-            const link = document.createElement('a');
-            link.download = `ink-silhouette-${index}.png`;
-            link.href = canvas.toDataURL(); link.click();
-        };
-
         container.appendChild(canvas);
-        container.appendChild(dlBtn);
         grid.appendChild(container);
     });
 }
-function randomizeSliders() {
-    const ids = ['mass-slider', 'tension-slider', 'stretch-slider', 'count-slider', 'complexity-slider'];
-    ids.forEach(id => {
-        const el = document.getElementById(id);
-        const min = parseInt(el.min);
-        const max = parseInt(el.max);
-        // Generates a random value within the slider's specific range
-        el.value = Math.floor(Math.random() * (max - min + 1)) + min;
-    });
-    // Immediately redraw the current DNA with the new slider positions
-    updatePareidoliaDisplay();
-}
-
-// Keep your existing roll, mutate, and shuffle functions as they were...
-
-function shuffleTones() {
-    shapeDNA.forEach(dna => {
-        dna.masses.forEach(m => {
-            m.alpha = 0.4 + Math.random() * 0.6;
-            m.isEraser = Math.random() > 0.75;
-        });
-    });
-    updatePareidoliaDisplay();
-}
-
-function mutateCurrent() {
-    shapeDNA.forEach(dna => {
-        dna.masses.forEach(m => {
-            m.rot += (Math.random() * 0.4) - 0.2;
-            m.relX += (Math.random() * 0.04) - 0.02;
-            m.relY += (Math.random() * 0.04) - 0.02;
-        });
-    });
-    updatePareidoliaDisplay();
-}
-
-function rollNewShapes() {
-    shapeDNA = [];
-    for (let i = 0; i < 3; i++) {
-        shapeDNA.push(generateUnifiedDNA());
-    }
-    updatePareidoliaDisplay();
-}
 
 document.addEventListener('DOMContentLoaded', () => {
-    ['mass-slider', 'tension-slider', 'stretch-slider', 'count-slider', 'complexity-slider'].forEach(id => {
+    ['mass-slider', 'tension-slider', 'stretch-slider', 'count-slider', 'complexity-slider', 'grit-slider', 'hatch-slider'].forEach(id => {
         const el = document.getElementById(id);
         if(el) el.addEventListener('input', updatePareidoliaDisplay);
     });
